@@ -3,15 +3,31 @@ import Link from "next/link";
 import SidebarDropdown from "@/src/components/Sidebar/SidebarDropdown";
 import { usePathname } from "next/navigation";
 
+// User clicks a menu item
+// ↓
+// Run handleClick
+// ↓
+// Compare pageName and clicked item’s name
+// If not active → Set pageName to clicked item’s name
+// If already active → Set pageName to ""
+// ↓
+// Call setPageName to update state
+// ↓
+// Parent re-renders the sidebar with the updated active state
+// ↓
+// Sidebar highlights the active menu item
+
 const SidebarItem = ({ item, pageName, setPageName }: any) => {
   const handleClick = () => {
     const updatedPageName =
       pageName !== item.label.toLowerCase() ? item.label.toLowerCase() : "";
+      // condition ? value_if_true : value_if_false
+
     return setPageName(updatedPageName);
   };
 
   const pathname = usePathname();
-
+  // www.example.com/dashboard, pathname will be "/dashboard".
   const isActive = (item: any) => {
     if (item.route === pathname) return true;
     if (item.children) {
@@ -28,7 +44,7 @@ const SidebarItem = ({ item, pageName, setPageName }: any) => {
         <Link
           href={item.route}
           onClick={handleClick}
-          className={`${isItemActive ? "border border-black dark:bg-meta-4" : ""} group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-black duration-300 ease-in-out hover:bg-[#F8F8F8] dark:hover:bg-meta-4`}
+          className={`${isItemActive ? "border-2 border-black  dark:bg-meta-4" : ""} group relative flex items-center gap-2.5 rounded-lg px-4 py-2 font-medium text-black duration-300 ease-in-out hover:bg-[#F8F8F8] dark:hover:bg-meta-4`}
         >
           {item.icon}
           {item.label}

@@ -70,6 +70,7 @@ const config: Config = {
         danger: "#D34053",
         warning: "#FFA70B",
         pandit:"#F35C2C",
+        ypandit:"#F1DC1E",
         pg:"#A2D7A4"
       },
       fontSize: {
@@ -288,6 +289,10 @@ const config: Config = {
         linspin: {
           "100%": { transform: "rotate(360deg)" },
         },
+        "caret-blink": {
+          "0%,70%,100%": { opacity: "1" },
+          "20%,50%": { opacity: "0" },
+        },
         easespin: {
           "12.5%": { transform: "rotate(135deg)" },
           "25%": { transform: "rotate(270deg)" },
@@ -328,8 +333,19 @@ const config: Config = {
           "0%, 100%": { transform: "translateY(100%)" },
           "50%": { transform: "translateY(0)" },
         },
+        fadeInRight: {
+          '0%': {
+            opacity: '0',
+            transform: 'translateX(100%)',
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateX(0)',
+          },
+        },
       },
       animation: {
+        'fade-in-right': 'fadeInRight 0.5s ease-out forwards',
         linspin: "linspin 1568.2353ms linear infinite",
         easespin: "easespin 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both",
         "left-spin":
@@ -346,6 +362,7 @@ const config: Config = {
         line1: "line 10s infinite linear",
         line2: "line-revert 8s infinite linear",
         line3: "line 7s infinite linear",
+        "caret-blink": "caret-blink 1.25s ease-out infinite",
       },
     },
   },

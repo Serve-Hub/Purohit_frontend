@@ -1,6 +1,6 @@
 'use client'
 import React, { FC } from 'react';
-import { useState }  from 'react'
+import { useState } from 'react'
 import Link from 'next/link';
 import {
   Dialog,
@@ -43,37 +43,37 @@ export default function Navbar() {
     as?: React.ElementType; // For specifying the type of element
     children: React.ReactNode; // Add children to the props
 
-}
+  }
 
-const Disclosure: React.FC<DisclosureProps> = ({ className, as: Component = 'div', children }) => {
+  const Disclosure: React.FC<DisclosureProps> = ({ className, as: Component = 'div', children }) => {
     return (
-        <Component className={className}>
-            {children}
-        </Component>
+      <Component className={className}>
+        {children}
+      </Component>
     );
-};
-interface DisclosureButtonProps {
+  };
+  interface DisclosureButtonProps {
     as?: React.ElementType; // to allow any HTML element or custom component
     href?: string; // for anchor elements
     className?: string; // for styling
     children: React.ReactNode; // for the button content
-}
+  }
 
-// Create the DisclosureButton component
-const DisclosureButton: FC<DisclosureButtonProps> = ({
+  // Create the DisclosureButton component
+  const DisclosureButton: FC<DisclosureButtonProps> = ({
     as: Component = 'button', // Default to 'button' if as is not provided
     href,
     className,
     children,
-}) => {
+  }) => {
     return (
-        <Component href={href} className={className}>
-            {children}
-        </Component>
+      <Component href={href} className={className}>
+        {children}
+      </Component>
     );
-};
+  };
   return (
-    <header className="bg-white">
+    <header className="bg-transparent">
       <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-2 lg:px-8">
         <div className="flex lg:flex-1 ">
           <a href="#" className="">
@@ -81,7 +81,7 @@ const DisclosureButton: FC<DisclosureButtonProps> = ({
               alt=""
               src="/img/purohit-logo-04.png"
               className=""
-              width="80"
+              width="60"
             />
           </a>
         </div>
@@ -101,7 +101,7 @@ const DisclosureButton: FC<DisclosureButtonProps> = ({
               Product
               <ChevronDownIcon aria-hidden="true" className="h-5 w-5 flex-none text-gray-400" />
             </PopoverButton> */}
-{/* 
+            {/* 
             <PopoverPanel
               transition
               className="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
@@ -140,26 +140,26 @@ const DisclosureButton: FC<DisclosureButtonProps> = ({
             </PopoverPanel> */}
           </Popover>
 
-          <Link href="/" className="text-sm font-semibold leading-6 text-[#ABABAB]">
+          <Link href="/" className="text-sm  leading-6 text-[#ABABAB]">
             Home
           </Link>
-          <a href="#" className="text-sm font-semibold leading-6 text-[#ABABAB]">
+          <a href="#" className="text-sm f leading-6 text-[#ABABAB]">
             Features
           </a>
-          <a href="#" className="text-sm font-semibold leading-6 text-[#ABABAB]">
-            About us 
+          <a href="#" className="text-sm leading-6 text-[#ABABAB]">
+            About us
           </a>
-      
+
         </PopoverGroup>
         <div className="hidden space-x-4 lg:flex lg:flex-1 lg:justify-end items-center">
           {/* <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
             Log in <span aria-hidden="true">&rarr;</span>
           </a> */}
-                    <Link  href="/Login" className="">Sign In </Link>
+          <Link href="/Login" className="">Sign In </Link>
 
-                    <Link href="/Signup" className="rounded-md bg-[#A2D7A4] p-3 text-white">
-  Sign up
-</Link>
+          <Link href="/Signup" className="rounded-md bg-[#A2D7A4] p-3 text-white">
+            Sign up
+          </Link>
         </div>
       </nav>
       <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
@@ -172,7 +172,7 @@ const DisclosureButton: FC<DisclosureButtonProps> = ({
                 src="/img/purohit-logo-04.png"
                 className=""
                 width={80}
-               
+
               />
             </a>
             <button
@@ -205,7 +205,7 @@ const DisclosureButton: FC<DisclosureButtonProps> = ({
                     ))}
                   </DisclosurePanel>
                 </Disclosure> */}
-                
+
                 <a
                   href="#"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-[#ABABAB] hover:bg-gray-50"
@@ -218,12 +218,12 @@ const DisclosureButton: FC<DisclosureButtonProps> = ({
                 >
                   Features
                 </a>
-               
+
                 <a
                   href="#"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-[#ABABAB] hover:bg-gray-50"
                 >
-                    About us 
+                  About us
                 </a>
               </div>
               <div className="py-6">

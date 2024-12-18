@@ -63,9 +63,11 @@ export const ModalTrigger = ({
 export const ModalBody = ({
   children,
   className,
+  position = { x: "50%", y: "50%" },
 }: {
   children: ReactNode;
   className?: string;
+  position?:object
 }) => {
   const { open } = useModal();
 

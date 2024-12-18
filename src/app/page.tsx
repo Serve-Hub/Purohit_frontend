@@ -10,21 +10,24 @@ import Popularblog from '../components/Popularblog';
 import { Popularpuja } from '../components/Popularpuja';
 import Team from '../components/Team';
 import Navbar from '../components/Navbar';
+import { useEffect } from "react";
+import PoojaProvider from '../context/poojacontext';
 
 
 
  export default function LoginPage() {
   return (
     <>
+
 <Navbar/>
 <Landinghero />
 <AnimatedCounter/>
 <Features/>
 <Howitworks/>
-<Popularpuja/>
-<Popularblog/>
 <Team/>
 <Footer/>
+
+
     {/* <Logi4n/> */}
  </>
   );

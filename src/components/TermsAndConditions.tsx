@@ -8,7 +8,7 @@ const TermsAndConditions = ({
 
 }) => {
     return (
-      <div className="flex items-center mb-4 text-gray-700">
+      <div className="flex items-center mb-4 text-white">
         <label className="flex items-center">
           <input
             type="checkbox"

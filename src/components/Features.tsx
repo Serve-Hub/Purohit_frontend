@@ -1,8 +1,20 @@
 import React from 'react'
 import { ArrowPathIcon, CloudArrowUpIcon, FingerPrintIcon, LockClosedIcon } from '@heroicons/react/24/outline'
-
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useEffect } from 'react';
 function Features() {
-    
+
+  
+  AOS.init();
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      easing: 'ease-in-out',
+      once: true,
+    });
+  }, []);
+  
 type Feature = {
     name: string;
     description: string;
@@ -49,9 +61,9 @@ type Feature = {
       
   return (
     <>
-    <div className=" py-24 sm:py-32 bg-[url('/img/bg.png')] bg-cover bg-center container mt-20">
+    <div className=" py-24 sm:py-32 bg-[url('/img/bg.png')] bg-cover bg-center container mt-20" >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl lg:text-center">
+        <div className="mx-auto max-w-2xl lg:text-center" data-aos="fade-right">
           <h2 className="text-base font-semibold leading-7 text-pandit">Our Services</h2>
           <p className="mt-2 text-pretty text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl lg:text-balance">
           What We Offer
@@ -64,7 +76,7 @@ type Feature = {
         <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-6xl ">
           <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-3 lg:gap-y-16">
             {features.map((feature) => (
-              <div key={feature.name} className="bg-white relative pl-16 p-10 rounded-lg hover:shadow">
+              <div key={feature.name} className="bg-white relative pl-16 p-10 rounded-lg hover:shadow" data-aos="fade-up">
                 <dt className="text-base font-semibold leading-7 text-gray-900">
                   <div className="absolute left-2 top-11 flex h-12 w-10 items-center justify-center rounded-lg">
                   <img src={feature.src} alt="" />

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "@/src/app/globals.css";
 import Navbar from '@/src/components/Navbar';
 import Footer from "@/src/components/Footer";
+import Hnavbar from "@/src/components/Hnavbar";
 
 
 
@@ -33,10 +34,8 @@ export default function RootLayout({
       <body
         // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-<Navbar/>
-
+<Hnavbar/>
         {children}
-
   <Footer/>
       </body>
     </html>

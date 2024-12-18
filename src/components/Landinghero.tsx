@@ -2,7 +2,19 @@ import React from "react";
 import { TypewriterEffect } from "@/src/components/ui/typewriter-effect";
 import { Button } from "@/src/components/ui/button";
 import Link from "next/link";
+import AOS from "aos";
+import { useEffect } from "react";
+
 export default function Landinghero() {
+   AOS.init();
+      useEffect(() => {
+        AOS.init({
+          duration: 1000,
+          easing: 'ease-in-out',
+          once: true,
+        });
+      }, []);
+
   const words = [
     {
       text: "Bringing",
@@ -29,7 +41,7 @@ export default function Landinghero() {
       <div className="flex flex-col space-x-3  h-[60vh] lg:h-[75vh] relative lg:flex-row  bg-pg lg:bg-transparent p-8">
         <div className="flex flex-col gap-5 lg:w-1/2 w-full   my-auto  order-1 ">
           <TypewriterEffect words={words} className="text-4xl" />
-          <p className="text-[#F2562B] ">
+          <p className="text-[#F2562B] " data-aos="fade-right">
             Easily book qualified pandits for your religious rituals from the
             comfort of your home.
           </p>
@@ -70,7 +82,7 @@ export default function Landinghero() {
 </div>
         </div>
         </div>
-        <div className="lg:w-1/2 flex lg:order-3 order-2  justify-center items-center">
+        <div className="lg:w-1/2 flex lg:order-3 order-2  justify-center items-center" data-aos="fade-left">
           <img
             src="img/fullthali.png"
             alt=""
