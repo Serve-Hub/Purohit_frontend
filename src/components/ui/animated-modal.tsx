@@ -63,7 +63,7 @@ export const ModalTrigger = ({
 export const ModalBody = ({
   children,
   className,
-  position = { x: "50%", y: "50%" },
+  // position = { x: "50%", y: "50%" },
 }: {
   children: ReactNode;
   className?: string;
@@ -105,7 +105,8 @@ export const ModalBody = ({
           <motion.div
             ref={modalRef}
             className={cn(
-              " min-h-[80%]  md:max-w-[40%]  lg:max-h-[90%] lg:max-w-[60%] bg-white dark:bg-neutral-950 border border-transparent dark:border-neutral-800 md:rounded-2xl relative z-50 flex flex-col flex-1 overflow-y-scroll",
+              //incase body ko position milena vani,i added top-10 and start-25 
+              "  top-20 start-25 min-h-[80%]  md:max-w-[40%]  lg:max-h-[90%] lg:max-w-[60%] bg-white dark:bg-neutral-950 border border-transparent dark:border-neutral-800 md:rounded-2xl relative z-50 flex flex-col flex-1 overflow-y-scroll",
               className
             )}
             initial={{
@@ -148,7 +149,7 @@ export const ModalContent = ({
   className?: string;
 }) => {
   return (
-    <div className={cn("flex flex-col flex-1 p-8 md:p-10", className)}>
+    <div className={cn("flex flex-col flex-1 p-8 md:p-10 border ", className)}>
       {children}
     </div>
   );

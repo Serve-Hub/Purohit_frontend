@@ -1,3 +1,4 @@
+'use client';
 import React, { createContext, useEffect, useState,} from 'react'
 import axios from 'axios';
 
@@ -27,67 +28,59 @@ function authcontext({children}: { children: React.ReactNode }) {
   // })
 
 
-  const getpooja=async ()=>{
 
-    console.log("after context getpooja function is hit");
-    const token=localStorage.getItem("token_id");
-    console.log(token);
+
+  const loginfo = async () => {
+    console.log("after context loginfo function is hit");
+    const token = localStorage.getItem("token_id");
+    console.log("Token is:", token);
+  
     try {
       const res = await axios.get(
-        "https://purohit-backend.onrender.com/api/v1/users/getPujas",
+        "https://purohit-backend.onrender.com/api/v1/users/getCurrentUser",
         {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
-      )
-      .then((res)=>{
-        console.log("data returned from the context",res.data.data);
-        return res.data.data
-  
-      })    
+      );
+      console.log("data returned from the context", res.data.data);
+      return res.data.data; // Ensure this data is returned
     } catch (error) {
-      console.log("error occured in the getPooja Context",error)
-      return 0;
+      console.error("Error occurred in the getUser Context", error);
+      return null; // Return null or an appropriate fallback value
     }
-}
+  };
+
+
+//   const getpooja=async ()=>{
+
+//     console.log("after context getpooja function is hit");
+//     const token=localStorage.getItem("token_id");
+//     console.log(token);
+//     try {
+//       const res = await axios.get(
+//         "https://purohit-backend.onrender.com/api/v1/users/getPujas",
+//         {
+//           headers: {
+//             'Authorization': `Bearer ${token}`,
+//           },
+//         }
+//       )
+//       .then((res)=>{
+//         console.log("data returned from the context",res.data.data);
+//         return res.data.data
+  
+//       })    
+//     } catch (error) {
+//       console.log("error occured in the getPooja Context",error)
+//       return 0;
+//     }
+// }
 
 
 const token=localStorage.getItem("token_id");
-const context={token,getpooja}//login,setLoginfo,loginfo,
-
-  
-
-
-
-//   const login= async ()=>{
-
-//     console.log("after contextfunction is hit");
-//     const token=localStorage.getItem("token_id");
-//     console.log(token);
-//     const res = await axios.get(
-//       "https://purohit-backend.onrender.com/api/v1/users/getCurrentUser",
-//       {
-//         headers: {
-//           'Authorization': `Bearer ${token}`,
-//         },
-//       }
-//     )
-//     .then((res)=>{
-//       console.log(res.data);
-//       const na=res.data.imagepath;
-//       console.log(na);
-//       setLoginfo({
-//         name:res.data.username,
-//         usertype:res.data.usertype,
-//         email:res.data.email,
-//         // uid:res.data.uid,
-//         // imagepath:na,
-//       }
-//       )
-//       console.log(loginfo);
-//     })    
-// }
+const context={token,loginfo}//login,setLoginfo,loginfo,
 
   return (
      

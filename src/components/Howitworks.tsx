@@ -20,13 +20,11 @@ function Howitworks() {
       title: " Get Started",
       content: (
         <div>
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
-            <ol>
+            <ol className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
               <li> Click on the get started or Sign up</li>
               <li> Signup with your email or whatsapp number</li>
             </ol>
              
-           </p>
            <div className="grid grid-cols-2 gap-4">
             <Image
               src="/img/card_2.jpg"
@@ -65,13 +63,11 @@ function Howitworks() {
       title: "Search and select poojas",
       content: (
         <div>
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
-            <ol>
+            <ol className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
               <li> Click on the get started or Sign up</li>
               <li> Signup with your email or whatsapp number</li>
             </ol>
              
-           </p>
            <div className="grid grid-cols-2 gap-4">
             <Image
               src="/img/card_2.jpg"

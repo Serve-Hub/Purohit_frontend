@@ -1,8 +1,18 @@
-import React from "react";
+'use client';
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
 
 const Footer = () => {
+  // State to check if it's client-side
+  const [isClient, setIsClient] = useState(false);
+
+  // Set state to true after component mounts to ensure client-side rendering
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   return (
-    <footer className="bg-gray-900 text-gray-300 py-10 ">
+    <footer className="bg-gray-900 text-gray-300 py-10 w-full">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex flex-col lg:flex-row justify-between space-y-8 lg:space-y-0 lg:items-start">
           {/* Company Info */}
@@ -18,36 +28,38 @@ const Footer = () => {
           <div className="flex-1">
             <h3 className="text-lg font-semibold text-white mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><a href="#" className="hover:text-white">Home</a></li>
-              <li><a href="#" className="hover:text-white">About</a></li>
-              <li><a href="#" className="hover:text-white">Services</a></li>
-              <li><a href="#" className="hover:text-white">Contact</a></li>
+              <li><Link href="#" className="hover:text-white">Home</Link></li>
+              <li><Link href="#" className="hover:text-white">About</Link></li>
+              <li><Link href="#" className="hover:text-white">Services</Link></li>
+              <li><Link href="#" className="hover:text-white">Contact</Link></li>
             </ul>
           </div>
 
           {/* Contact Info */}
           <div className="flex-1">
             <h3 className="text-lg font-semibold text-white mb-4">Contact Us</h3>
-            <p className="text-gray-400">Balkumari,Lalitpur</p>
+            <p className="text-gray-400">Balkumari, Lalitpur</p>
             <p className="text-gray-400">Email: purohit@gmail.com</p>
             <p className="text-gray-400">Phone: +977 9866396831</p>
           </div>
 
-          {/* Social Media */}
-          <div className="flex space-x-4 mt-4 lg:mt-0">
-            <a href="#" className="text-gray-300 hover:text-white">
-              <i className="fab fa-facebook-f"></i>
-            </a>
-            <a href="#" className="text-gray-300 hover:text-white">
-              <i className="fab fa-twitter"></i>
-            </a>
-            <a href="#" className="text-gray-300 hover:text-white">
-              <i className="fab fa-instagram"></i>
-            </a>
-            <a href="#" className="text-gray-300 hover:text-white">
-              <i className="fab fa-linkedin-in"></i>
-            </a>
-          </div>
+          {/* Social Media (client-side only) */}
+          {isClient && (
+            <div className="flex space-x-4 mt-4 lg:mt-0">
+              <Link href="#" className="text-gray-300 hover:text-white">
+                <i className="fab fa-facebook-f"></i>
+              </Link>
+              <Link href="#" className="text-gray-300 hover:text-white">
+                <i className="fab fa-twitter"></i>
+              </Link>
+              <Link href="#" className="text-gray-300 hover:text-white">
+                <i className="fab fa-instagram"></i>
+              </Link>
+              <Link href="#" className="text-gray-300 hover:text-white">
+                <i className="fab fa-linkedin-in"></i>
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Divider and Copyright */}

@@ -1,14 +1,22 @@
 'use client'
 import React from 'react'
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
 import { useRouter } from 'next/navigation';
-
+import AOS from "aos";
 
 function Login() {
+   AOS.init();
+        useEffect(() => {
+          AOS.init({
+            duration: 1000,
+            easing: 'ease-in-out',
+            once: true,
+          });
+        }, []);
   const router = useRouter();
   const[error,setError]=useState(false);
   const[wait,setWait]=useState(false)
@@ -42,12 +50,14 @@ const[errordata,setErrordata]=useState("");
         console.log("accesstokenis ",res.data.data.accessToken)
         localStorage.setItem("token_id",res.data.data.accessToken)
         console.log(localStorage.getItem("token_id"));
-        alert("Successful registration");
+        // alert("Successful registration");
+        console.log("admin is",res.data.data.user.isAdmin)
         if(res.data.data.user.isAdmin){
-          router.push(`/admin`);
-
+         return router.push(`/admin`);
         }
-      } else {
+        router.push(`/user`)
+      } 
+      else {
         alert("Login failed");
       }
     } catch (error:any) {
@@ -63,7 +73,7 @@ const[errordata,setErrordata]=useState("");
     <>
       <Navbar />
       <div className="flex flex-col items-center justify-center min-h-[90vh] bg-white md:flex-row bg-[url('/img/card_1.jpg')] bg-cover bg-center ">
-      <div className="flex flex-col  justify-center   md:flex-row  rounded w-2/4  backdrop-blur-lg bg-black/10 shadow-lg shadow-black/50 p-8">
+      <div className="flex flex-col  justify-center   md:flex-row  rounded w-2/4  backdrop-blur-lg bg-black/10 shadow-lg shadow-black/50 p-8" data-aos="fade-left">
       <div className="flex flex-col  lg:w-1/3 md:w-1/2 p-6 items-center justify-center">
       <h2 className="mt-4 text-4xl font-semibold text-center text-white ">
             Your Personalized <span className="text-orange-600">Pandit</span> Service,<br />
@@ -141,9 +151,36 @@ const[errordata,setErrordata]=useState("");
                   {errordata}
                 </div>
               )}
-            <button type="submit" className="w-80 bg-pandit text-white font-bold py-2 rounded-md">
-            {wait ? 'Processing...' : 'Sign In'}
-            </button>
+          <button type="submit" className="w-80 bg-pandit flex gap-2 justify-center text-white font-bold py-2 rounded-md">
+  {wait ? (
+    <>
+      Please wait
+      <svg
+        className="ml-2 animate-spin h-5 w-5 text-white"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="4"
+        ></circle>
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z"
+        ></path>
+      </svg>
+    </>
+  ) : (
+    'Sign In'
+  )}
+</button>
+
             <div className="mt-4 text-center">
               <a href="/" className="text-blue-600">Forgot password?</a>
 

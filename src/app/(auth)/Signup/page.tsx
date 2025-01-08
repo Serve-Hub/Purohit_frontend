@@ -3,8 +3,18 @@ import React from "react";
 import SignupForm from "@/src/components/Signupform";
 import Navbar from "@/src/components/Navbar";
 import Footer from "@/src/components/Footer";
+import AOS from "aos";
+import { useEffect } from "react";
 
 function SignupPage() {
+   AOS.init();
+      useEffect(() => {
+        AOS.init({
+          duration: 1000,
+          easing: 'ease-in-out',
+          once: true,
+        });
+      }, []);
   return (
     <div >
       <Navbar />
@@ -21,7 +31,7 @@ function SignupPage() {
             </h2>
           </div> */}
           {/* Right Side: Signup Form */}
-          <div className="flex flex-col gap-10 lg:w-2/3 md:w-1/2 ps-4 pt-5 relative z-10  justify-center items-center  rounded  ">
+          <div className="flex flex-col gap-10 lg:w-2/3 md:w-1/2 ps-4 pt-5 relative z-10  justify-center items-center  rounded " data-aos="fade-right">
        
             <SignupForm />
           </div>

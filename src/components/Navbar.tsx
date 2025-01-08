@@ -76,14 +76,14 @@ export default function Navbar() {
     <header className="bg-transparent">
       <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-2 lg:px-8">
         <div className="flex lg:flex-1 ">
-          <a href="#" className="">
+          <Link href="/" className="">
             <img
               alt=""
               src="/img/purohit-logo-04.png"
               className=""
               width="60"
             />
-          </a>
+          </Link>
         </div>
         <div className="flex lg:hidden ">
           <button
@@ -140,13 +140,13 @@ export default function Navbar() {
             </PopoverPanel> */}
           </Popover>
 
-          <Link href="/" className="text-sm  leading-6 text-[#ABABAB]">
+          <Link href="/" className="text-sm  font-medium leading-6 text-[#ABABAB]">
             Home
           </Link>
-          <a href="#" className="text-sm f leading-6 text-[#ABABAB]">
+          <a href="#" className="text-sm font-medium leading-6 text-[#ABABAB]">
             Features
           </a>
-          <a href="#" className="text-sm leading-6 text-[#ABABAB]">
+          <a href="#" className="text-sm font-medium leading-6 text-[#ABABAB]">
             About us
           </a>
 

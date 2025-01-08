@@ -1,8 +1,14 @@
+'use client';
 import React from 'react'
 import { Button } from "@/src/components/ui/button";
-import Bcpandit from '@/src/components/Bcpandit';
+import Bcpandit from '@/src/components/User/Bcpandit';
+import { Popularpuja } from '@/src/components/Popularpuja';
+import { useRouter } from "next/navigation";
+
+
 
 function page() {
+  const router = useRouter();
 
   const feature=[
     {
@@ -141,6 +147,30 @@ function page() {
     </div>
 {/* end of landing hero */}
 <Bcpandit/>
+
+<Popularpuja/>
+
+<Button
+                className=" bg-pandit  text-white mt-10 ms-30 w-30"
+                variant="default"
+                size="default"
+                onClick={() => router.push("/user/viewPuja")}
+                >
+          View all the pujas 
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.19l-6.22-6.22a.75.75 0 0 1 0-1.06Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              
+              </Button>
 </>
   );
 }

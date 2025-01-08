@@ -4,16 +4,19 @@ import { usePathname } from "next/navigation";
 
 const SidebarDropdown = ({ item }: any) => {
   const pathname = usePathname();
-
+  console.log("item children is ",item)
+console.log("path is",pathname)
   return (
     <>
       <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
         {item.map((item: any, index: number) => (
+          
           <li key={index}>
+            {/* {console.log("item routeis ",item.route)} */}
             <Link
               href={item.route}
-              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${
-                pathname === item.route ? "text-white" : ""
+              className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-pandit ${
+                pathname === item.route ? "text-pandit" : ""
               }`}
             >
               {item.label}

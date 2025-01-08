@@ -1,8 +1,13 @@
+'use client';
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Description, Field, Label, Select } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
+import Link from 'next/link'
+import { useState } from 'react'
+import Notification from './Notification';
+
 const navigation = [
   // { name: 'Dashboard', href: '#', current: true },
   {name:'Home',href:"#", current:true},
@@ -17,6 +22,7 @@ function classNames(...classes) {
 }
 
 export default function Hnavbar() {
+ 
   return (
     <Disclosure as="nav" className="bg-white border ">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -41,17 +47,17 @@ export default function Hnavbar() {
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
                 {navigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
                     href={item.href}
                     aria-current={item.current ? 'page' : undefined}
                     className={classNames(
-                      item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                      item.current ? 'bg-pandit text-white' : 'text-slate-500 hover:bg-pandit/70 hover:text-white',
                       'rounded-md px-3 py-2 text-sm font-medium',
                     )}
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -96,31 +102,44 @@ export default function Hnavbar() {
           <div className="relative w-25 border rounded-full hidden lg:block">
           <Select
             className={clsx(
-              '  border block w-full appearance-none  border-none bg-transparent py-1.5 px-3 text-sm/6 text-white ',
+              '  border block w-full appearance-none  border-none bg-transparent py-1.5 px-3 text-sm/6 text-black ',
               'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25',
               // Make the text of each option black on Windows
-              '*:text-black'
+             
             )}
           >
-            <option value="active">English</option>
-            <option value="paused">Nepali</option>
+            <option value="english" >English</option>
+            <option value="nepali">Nepali</option>
            
           </Select>
           <ChevronDownIcon
-            className="group pointer-events-none absolute top-2.5 right-2.5 size-4 fill-white/60"
+            className="group pointer-events-none absolute top-2.5 right-2.5 size-4 fill-black/60"
             aria-hidden="true"
           />
         </div>
-            <button
-              type="button"
-              className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-            >
-              <span className="absolute -inset-1.5" />
+            
+            
+            <Menu as="div" className="relative ml-3">
+              <div>
+                <MenuButton className=" p-1 relative flex rounded-full  text-pandit text-sm focus:outline-none ">
+                  <span className="absolute -inset-1.5" />
+                  <span className="sr-only">Open user menu</span>
+              
+                         <span className="absolute -inset-1.5" />
               <span className="sr-only">View notifications</span>
               <BellIcon aria-hidden="true" className="size-6" />
-            </button>
-            
-
+                </MenuButton>
+              </div>
+              <MenuItems
+                transition
+                className="absolute right-0 z-10 mt-2 w-90 p-5 pt-7 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+              >
+                <MenuItem>
+              <Notification/>
+                </MenuItem>
+                
+              </MenuItems>
+            </Menu>
             {/* Profile dropdown */}
             <Menu as="div" className="relative ml-3">
               <div>
@@ -136,31 +155,31 @@ export default function Hnavbar() {
               </div>
               <MenuItems
                 transition
-                className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                className=" border absolute right-0 z-10 mt-2 w-45 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
               >
                 <MenuItem>
-                  <a
+                  <Link
                     href="#"
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                   >
                     Your Profile
-                  </a>
+                  </Link>
                 </MenuItem>
                 <MenuItem>
-                  <a
+                  <Link
                     href="#"
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                   >
                     Settings
-                  </a>
+                  </Link>
                 </MenuItem>
                 <MenuItem>
-                  <a
+                  <Link
                     href="#"
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                   >
                     Sign out
-                  </a>
+                  </Link>
                 </MenuItem>
               </MenuItems>
             </Menu>

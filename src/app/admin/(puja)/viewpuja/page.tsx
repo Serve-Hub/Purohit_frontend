@@ -12,6 +12,7 @@ const Pujatable = () => {
   const [currentPage, setCurrentPage] = useState(1); // Initialize with page 1
   const [totalPages, setTotalPages] = useState(0); // Total pages from the response
   const [pujas, setPujas] = useState([]);
+  const [fetchloader,setFetchloader]=useState(true);
   const [filters, setFilters] = useState({
     category: "",
     minPrice: "",
@@ -39,6 +40,7 @@ const Pujatable = () => {
       console.log("response is ", response);
 
       if (response) {
+        setFetchloader(false);
         // Set the fetched data
         setPujas(response.pujas);
         // Convert currentPage to an integer and set the totalPages
@@ -75,12 +77,12 @@ const Pujatable = () => {
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Puja" />
-      {visible && (
+      {/* {visible && (
         <div
           className="fixed inset-0 bg-black opacity-70 z-10"
           onClick={toggle}
         ></div>
-      )}
+      )} */}
       <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className="px-4 py-6 md:px-6 xl:px-7.5 flex justify-between items-center">
           <h4 className="text-xl font-semibold text-black dark:text-white">
@@ -99,7 +101,7 @@ const Pujatable = () => {
               Filter
             </h1>
             <Link
-              href="pujatable/addpuja"
+              href="admin/pujatable/addpuja"
               className="px-4 py-2 bg-pg font-semibold text-white rounded-lg "
             >
               Add Puja
@@ -231,7 +233,14 @@ const Pujatable = () => {
                 </th>
               </tr>
             </thead>
-            <tbody>
+             {fetchloader &&( 
+<div className="flex justify-center items-center w-full  ms-70">
+
+  <div className="w-[15px] aspect-square rounded-full animate-l5  my-10 ms-1/2 "></div>
+</div>
+
+)}        
+     <tbody className="w-full border">
               {pujas.map((puja, key) => (
                 <tr key={key}>
                   <td className="border-b flex  gap-2 items-center border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
@@ -342,7 +351,7 @@ const Pujatable = () => {
             </tbody>
           </table>
           
-          <div className="flex justify-center items-center space-x-4 mt-6">
+          <div className="flex justify-center items-center space-x-4 m-8">
       {/* Previous Button */}
       <button
         onClick={() => onPageChange(currentPage - 1)}

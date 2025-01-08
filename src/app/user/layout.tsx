@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import "@/src/app/globals.css";
 import Navbar from '@/src/components/Navbar';
 import Footer from "@/src/components/Footer";
-import Hnavbar from "@/src/components/Hnavbar";
+import Hnavbar from "@/src/components/User/Hnavbar";
+import AuthProvider from "@/src/context/authcontext";
 
 
 
@@ -34,9 +35,13 @@ export default function RootLayout({
       <body
         // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <AuthProvider>
+
 <Hnavbar/>
         {children}
   <Footer/>
+
+        </AuthProvider>
       </body>
     </html>
   

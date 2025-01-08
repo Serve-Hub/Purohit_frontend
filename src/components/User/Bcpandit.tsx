@@ -1,5 +1,5 @@
 import React from 'react'
-import Bctab from './Bctab'
+import Bctab from '../Bctab'
 
 function Bcpandit() {
   return (
@@ -15,7 +15,7 @@ function Bcpandit() {
         </div>
 <div className="flex gap-8 border ps-20">
 
-    <img src="/img/cutepandit.png" alt="" className='w-1/2  object-contain border' />
+      <img src="/img/cutepandit.png" alt="" className='w-1/2  object-contain border' />
 
 <Bctab/>
 </div>

@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { Button } from './ui/button';
-
+import { useRouter } from 'next/navigation';
 const Bctab = () => {
   const [activeTab, setActiveTab] = useState(1);
   const [animateTab, setAnimateTab] = useState(false);
@@ -14,6 +14,10 @@ const Bctab = () => {
     }, 300); // Match animation duration
   };
 
+  const router=useRouter()
+const ckyp=async()=>{
+  router.push('/user/kyp')
+}
   return (
     <div className="w-full border border-gray-300 p-5 relative ">
       {/* Tab Buttons */}
@@ -127,6 +131,7 @@ const Bctab = () => {
                 className=" bg-pandit  text-white mt-10 ms-30 w-30"
                 variant="default"
                 size="default"
+                onClick={ckyp}
               >
                 Get started
                 <svg
@@ -141,6 +146,7 @@ const Bctab = () => {
                     clipRule="evenodd"
                   />
                 </svg>
+              
               </Button>
       </>
       

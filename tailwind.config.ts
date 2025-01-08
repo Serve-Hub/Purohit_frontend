@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
 import defaultTheme from "tailwindcss/defaultTheme";
-const colors = require("tailwindcss/colors");
+import colors from 'tailwindcss/colors';
 
 const config: Config = {
   content: [
@@ -9,6 +9,7 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   darkMode: "class",
+  
   theme: {
     fontFamily: {
       satoshi: ["Satoshi", "sans-serif"],
@@ -286,6 +287,24 @@ const config: Config = {
         5: "0px 1px 5px rgba(0, 0, 0, 0.2)",
       },
       keyframes: {
+        l5: {
+          '0%': {
+            boxShadow: '20px 0 #000, -20px 0 #0002',
+            background: '#000',
+          },
+          '33%': {
+            boxShadow: '20px 0 #000, -20px 0 #0002',
+            background: '#0002',
+          },
+          '66%': {
+            boxShadow: '20px 0 #0002, -20px 0 #000',
+            background: '#0002',
+          },
+          '100%': {
+            boxShadow: '20px 0 #0002, -20px 0 #000',
+            background: '#000',
+          },
+        },
         linspin: {
           "100%": { transform: "rotate(360deg)" },
         },
@@ -345,6 +364,7 @@ const config: Config = {
         },
       },
       animation: {
+        l5: 'l5 1s infinite linear alternate',
         'fade-in-right': 'fadeInRight 0.5s ease-out forwards',
         linspin: "linspin 1568.2353ms linear infinite",
         easespin: "easespin 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both",

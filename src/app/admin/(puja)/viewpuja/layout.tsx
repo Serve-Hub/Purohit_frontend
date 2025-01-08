@@ -26,6 +26,7 @@ export default function RootLayout({
       <body suppressHydrationWarning={true}>
         <div className="dark:bg-boxdark-2 dark:text-bodydark">
             <PoojaProvider>
+
           {loading ? <Loader /> : children}
 
             </PoojaProvider>
