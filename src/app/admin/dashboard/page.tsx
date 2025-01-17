@@ -125,10 +125,10 @@ import React from 'react'
 
 function page() {
   return (
-    <DefaultLayout>
+    // <DefaultLayout>
 
         <div>nice dashboard</div>
-    </DefaultLayout>
+    // </DefaultLayout>
   )
 }
 

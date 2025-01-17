@@ -5,7 +5,8 @@ import Breadcrumb from '@/src/components/Breadcrumbs/Breadcrumb';
 
 function page() {
   return (
-   < DefaultLayout>
+    <>
+   {/* < DefaultLayout> */}
    <div className="">
 
    <Breadcrumb pageName=" Puja / Edit Puja" />
@@ -254,7 +255,9 @@ function page() {
           </div>
         </div>
       </div>
-         </DefaultLayout>
+         {/* </DefaultLayout> */}
+    </>
+
   )
 }
 

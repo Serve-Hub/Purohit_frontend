@@ -384,6 +384,7 @@ const config: Config = {
         line3: "line 7s infinite linear",
         "caret-blink": "caret-blink 1.25s ease-out infinite",
       },
+      
     },
   },
   plugins: [],

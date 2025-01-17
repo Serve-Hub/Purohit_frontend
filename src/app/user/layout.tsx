@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 // import localFont from "next/font/local";
-import "@/src/app/globals.css";
+// import "@/src/app/globals.css";
 import Navbar from '@/src/components/Navbar';
 import Footer from "@/src/components/Footer";
 import Hnavbar from "@/src/components/User/Hnavbar";
@@ -30,20 +30,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-
     <html lang="en">
-      <body
-        // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <AuthProvider>
-
-<Hnavbar/>
+    <body>
+      <AuthProvider>
+        <Hnavbar />
         {children}
-  <Footer/>
-
-        </AuthProvider>
-      </body>
-    </html>
+        <Footer />
+      </AuthProvider>
+    </body>
+  </html>
   
 
 

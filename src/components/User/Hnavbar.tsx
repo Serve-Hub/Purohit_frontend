@@ -7,6 +7,8 @@ import clsx from 'clsx'
 import Link from 'next/link'
 import { useState } from 'react'
 import Notification from './Notification';
+import  { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 const navigation = [
   // { name: 'Dashboard', href: '#', current: true },
@@ -22,7 +24,39 @@ function classNames(...classes) {
 }
 
 export default function Hnavbar() {
- 
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+
+  const handleLogout = async () => {
+    try {
+      setLoading(true);
+
+
+      const response = await axios('https://purohit-backend.onrender.com/api/v1/users/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token_id')}`,  
+        },
+      });
+
+      console.log("response is ",response)
+
+      // if (!response.ok) {
+      //   throw new Error('Logout failed');
+      // }
+
+      // Clear token or session data
+      localStorage.removeItem('token_id'); // Or any storage key you use
+      setLoading(false);
+
+      router.push('/');
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
+
   return (
     <Disclosure as="nav" className="bg-white border ">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -132,10 +166,10 @@ export default function Hnavbar() {
               </div>
               <MenuItems
                 transition
-                className="absolute right-0 z-10 mt-2 w-90 p-5 pt-7 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                className="absolute right-0 z-10 mt-2 w-95 p-5 pt-7 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
               >
-                <MenuItem>
-              <Notification/>
+                <MenuItem >
+              <Notification />
                 </MenuItem>
                 
               </MenuItems>
@@ -159,7 +193,7 @@ export default function Hnavbar() {
               >
                 <MenuItem>
                   <Link
-                    href="#"
+                    href="/user/profile"
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                   >
                     Your Profile
@@ -174,12 +208,12 @@ export default function Hnavbar() {
                   </Link>
                 </MenuItem>
                 <MenuItem>
-                  <Link
-                    href="#"
+                  <p
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
+                  onClick={handleLogout}
                   >
-                    Sign out
-                  </Link>
+            {loading ? 'Logging out...' : 'Log out'}
+            </p>
                 </MenuItem>
               </MenuItems>
             </Menu>

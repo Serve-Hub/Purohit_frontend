@@ -1,10 +1,7 @@
-'use client';
 import React, { useState } from 'react';
-import { Button } from '../ui/button';
 import Link from 'next/link';
-
-function Notification() {
-  const [activeTab, setActiveTab] = useState('Inbox');
+function NotificationFull() {
+  // Static data for notifications
   const notifications = [
     {
       id: 1,
@@ -83,51 +80,37 @@ function Notification() {
       Address:' aksdhsa Imadol,Lalitpur'
     },
   ];
-  const tabs = [
-    { title: 'Inbox', content: 'This is the Inbox content.' },
-    { title: 'General', content: 'This is the General content.' },
-  ];
-    // Pagination logic
-    const [currentPage, setCurrentPage] = useState(1); // Current page number
-    const notificationsPerPage = 5; // Number of notifications per page
-    const totalPages = Math.ceil(notifications.length / notificationsPerPage);
-  
-    const startIndex = (currentPage - 1) * notificationsPerPage;
-    const currentNotifications = notifications.slice(
-      startIndex,
-      startIndex + notificationsPerPage
-    );
 
+  // Static disaster alert
+  const alertMessage = 'Severe weather conditions expected tomorrow. Stay safe!';
+
+  // Pagination logic
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
+  const notificationsPerPage = 5; // Number of notifications per page
+  const totalPages = Math.ceil(notifications.length / notificationsPerPage);
+
+  const startIndex = (currentPage - 1) * notificationsPerPage;
+  const currentNotifications = notifications.slice(
+    startIndex,
+    startIndex + notificationsPerPage
+  );
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  // Delete notification handler (for now, just a console log)
   const handleDeleteNotification = (id) => {
     console.log(`Notification with ID ${id} deleted.`);
   };
 
   return (
-    <>
-      <div className='z-[9999999] relative '>
-        <h1 className='text-black font-bold'>Notifications</h1>
-        <hr />
-        <div className="flex border-b border-gray-300 ">
-          {tabs.map((tab) => (
-            <button
-              key={tab.title}
-              onClick={() => setActiveTab(tab.title)}
-              className={`px-4 py-2 text-sm font-medium ${
-                activeTab === tab.title
-                  ? 'text-blue-600 border-b-2 border-blue-600'
-                  : 'text-gray-600 hover:text-blue-600'
-              }`}
-            >
-              {tab.title}
-            </button>
-          ))}
-        </div>
+    <div className="max-w-5xl mx-auto p-4">
+      <h1 className="text-3xl font-semibold text-center mb-6 text-pandit"> All Notifications</h1>
 
-        <div className="mt-4 h-60 overflow-y-scroll border ">
-          {/* Conditional Rendering based on activeTab */}
-          {activeTab === 'Inbox' && (
-            <>
-            <div className="space-y-10">
+      <div className="space-y-10">
         {notifications.length === 0 ? (
           <div className="text-center text-gray-600">No notifications available.</div>
         ) : (
@@ -175,7 +158,17 @@ function Notification() {
           
               </div>
               <div className="flex justify-between items-center ">
-   
+      <div className="flex gap-3">
+      
+        <button className="px-4 py-2 rounded-md bg-green-400 text-white text-sm font-medium hover:bg-pandit-dark transition">
+          Accept
+        </button>
+        <button 
+         onClick={() => handleDeleteNotification(notification.id)}
+        className="px-4 py-2 rounded-md bg-red-400 text-white text-sm font-medium hover:bg-danger-dark transition">
+          Dismiss
+        </button>
+      </div>
     
     </div>
             
@@ -183,21 +176,43 @@ function Notification() {
           ))
         )}
       </div>
-            </>
-          )}
 
-          {activeTab === 'General' && (
-            
-            <div className="p-4 border rounded-md shadow-sm">
-              <h2 className="text-lg font-medium">General</h2>
-              <p>This is the General content.</p>
-              {/* Add more dynamic content here */}
-            </div>
-          )}
+      {/* Pagination Controls */}
+      {notifications.length > notificationsPerPage && (
+        <div className="flex justify-center items-center mt-6 space-x-2">
+          <button
+            className={`px-4 py-2 text-sm font-medium rounded-lg ${
+              currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-gray-100 hover:bg-gray-200'
+            }`}
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <span className="text-sm">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            className={`px-4 py-2 text-sm font-medium rounded-lg ${
+              currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-gray-100 hover:bg-gray-200'
+            }`}
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
         </div>
-      </div>
-    </>
+      )}
+
+      {/* Display the disaster alert message at the bottom */}
+      {alertMessage && (
+        <div className="mt-4 p-4 rounded-lg bg-red-100 text-red-800">
+          <h2 className="font-semibold">Disaster Alert</h2>
+          <p>{alertMessage}</p>
+        </div>
+      )}
+    </div>
   );
 }
 
-export default Notification;
+export default NotificationFull;

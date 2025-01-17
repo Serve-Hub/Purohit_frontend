@@ -6,7 +6,8 @@ import axios from 'axios';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
 import { useRouter } from 'next/navigation';
-import AOS from "aos";
+import AOS from 'aos';
+
 
 function Login() {
    AOS.init();

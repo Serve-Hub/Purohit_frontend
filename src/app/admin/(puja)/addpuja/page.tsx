@@ -119,7 +119,8 @@ function page() {
     }
   };
   return (
-    <DefaultLayout>
+  <>
+    {/* // <DefaultLayout> */}
       <div className="">
         <Breadcrumb pageName=" Puja / Add Puja" />
       </div>
@@ -389,7 +390,9 @@ function page() {
           </div>
         </div>
       </div>
-    </DefaultLayout>
+    {/* // </DefaultLayout> */}
+  </>
+
   );
 }
 

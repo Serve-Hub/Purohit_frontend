@@ -131,7 +131,7 @@ function page() {
 
   return (
     <>
-      <DefaultLayout>
+      {/* <DefaultLayout> */}
         <Breadcrumb pageName="Pandit" />
    {/* {fetchloader } */}
 
@@ -539,7 +539,7 @@ function page() {
       </button>
     </div>
         </div>
-      </DefaultLayout>
+      {/* </DefaultLayout> */}
     </>
   );
 }

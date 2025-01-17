@@ -130,13 +130,15 @@ function page() {
               </Button>
             </div>
           </div>
+<div className="relative w-2/3  ">
 
-          <img src="/img/userhome.png" alt="" className=" w-2/3 z-9999" />
+          <img src="/img/userhome.png" alt="" className="   " />
+</div>
         </div>
 
         <div className="flex gap-4 mt-10">
-          {feature.map((ft) => (
-            <div className="border border-pandit text-pandit p-5 rounded-lg">
+          {feature.map((ft,index) => (
+            <div className="border border-pandit text-pandit p-5 rounded-lg" key={index}>
               <img src={ft.img} alt="" />
               <h1 className="text-xl font-bold">{ft.name}</h1>
               <p>{ft.text}</p>

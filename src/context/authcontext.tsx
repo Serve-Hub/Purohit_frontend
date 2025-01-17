@@ -16,7 +16,7 @@ type AuthContextType = {
 //   children: ReactNode;
 // };
 
-function authcontext({children}: { children: React.ReactNode }) {
+function AuthProvider({children}: { children: React.ReactNode }) {
 
   //   const [auth, setAuth]= useState<boolean>(false);
   // const [loginfo,setLoginfo]=useState<{ name: string; usertype: string; email: string }>({
@@ -26,9 +26,16 @@ function authcontext({children}: { children: React.ReactNode }) {
   //                               //   uid:"",    
   //                               //   imagepath:"" ,                       
   // })
+  const [token, setToken] = useState<string | null>(null);
+const [userInfo,setUserInfo]=useState({});
 
-
-
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token_id');
+    if (storedToken) {
+      setToken(storedToken);
+    }
+    loginfo();
+  }, []);
 
   const loginfo = async () => {
     console.log("after context loginfo function is hit");
@@ -45,7 +52,10 @@ function authcontext({children}: { children: React.ReactNode }) {
         }
       );
       console.log("data returned from the context", res.data.data);
+       setUserInfo(res.data.data)
+      console.log("useringo is",userInfo)
       return res.data.data; // Ensure this data is returned
+
     } catch (error) {
       console.error("Error occurred in the getUser Context", error);
       return null; // Return null or an appropriate fallback value
@@ -79,8 +89,8 @@ function authcontext({children}: { children: React.ReactNode }) {
 // }
 
 
-const token=localStorage.getItem("token_id");
-const context={token,loginfo}//login,setLoginfo,loginfo,
+// const token=localStorage.getItem("token_id");
+const context={token,loginfo,userInfo}//login,setLoginfo,loginfo,
 
   return (
      
@@ -90,4 +100,4 @@ const context={token,loginfo}//login,setLoginfo,loginfo,
   )
 }
 
-export default authcontext
+export default AuthProvider

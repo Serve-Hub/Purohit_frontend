@@ -14,10 +14,10 @@ import PoojaProvider from "@/src/context/poojacontext";
 export default function Home() {
   return (
     <>
-      <DefaultLayout>
+      {/* <DefaultLayout> */}
         {/* <ECommerce /> */}
         THis is the admin page
-      </DefaultLayout>
+      {/* </DefaultLayout> */}
 
     </>
   );

@@ -66,6 +66,23 @@ body {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%}
 }
+
+.react-calendar {
+  @apply bg-gray-50 p-4 rounded-lg shadow-md;
+}
+
+.react-calendar__tile {
+  @apply p-2 rounded-lg hover:bg-gray-200 transition-colors;
+}
+
+.react-calendar__tile--active {
+  @apply bg-blue-500 text-white font-bold;
+}
+
+.react-calendar__tile--now {
+  @apply bg-green-100 text-green-800 font-bold;
+}
+
 /* @layer base {
   * {
     @apply border-border;

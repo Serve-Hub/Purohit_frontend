@@ -75,7 +75,9 @@ const Pujatable = () => {
   
 
   return (
-    <DefaultLayout>
+          <div>
+
+    {/* // <DefaultLayout> */}
       <Breadcrumb pageName="Puja" />
       {/* {visible && (
         <div
@@ -378,7 +380,9 @@ const Pujatable = () => {
     
         </div>
       </div>
-    </DefaultLayout>
+    {/* // </DefaultLayout> */}
+    </div>    
+
   );
 };
 

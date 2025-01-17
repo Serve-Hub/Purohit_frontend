@@ -5,6 +5,8 @@ import "@/src/css/satoshi.css";
 import "@/src/css/style.css";
 import React, { useEffect, useState } from "react";
 import Loader from "@/src/components/common/Loader";
+import DefaultLayout from "@/src/components/Dashboard/DefaultLayout";
+import PoojaProvider from "@/src/context/poojacontext";
 
 export default function RootLayout({
   children,
@@ -24,7 +26,12 @@ export default function RootLayout({
     <html lang="en">
       <body suppressHydrationWarning={true}>
         <div className="dark:bg-boxdark-2 dark:text-bodydark">
+          <DefaultLayout>
+            <PoojaProvider>
+
           {loading ? <Loader /> : children}
+            </PoojaProvider>
+          </DefaultLayout>
         </div>
       </body>
     </html>
