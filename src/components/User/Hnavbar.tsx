@@ -5,25 +5,35 @@ import { Description, Field, Label, Select } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState,useEffect, useRef, useContext} from 'react'
 import Notification from './Notification';
 import  { useRouter } from 'next/navigation';
 import axios from 'axios';
+import { AuthContext } from '@/src/context/authcontext';
+import { connect } from 'http2';
 
 const navigation = [
-  // { name: 'Dashboard', href: '#', current: true },
-  {name:'Home',href:"#", current:true},
+  { name: 'Dashboard', href: '#', current: true },
+  {name:'Home',href:"/user", current:true},
   { name: 'Categories', href: '#', current: false },
   { name: 'About us', href: '#', current: false },
-  // { name: 'Projects', href: '#', current: false },
-  // { name: 'Calendar', href: '#', current: false },
+,
 ]
+
+
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function Hnavbar() {
+
+  const { userInfo, token } = useContext(AuthContext);
+console.log("hnavbar ma",userInfo)
+  const [notifications, setNotifications] = useState([]);
+  const [socketConnected, setSocketConnected] = useState(false);
+  const webSocket = useRef(null);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -43,11 +53,6 @@ export default function Hnavbar() {
 
       console.log("response is ",response)
 
-      // if (!response.ok) {
-      //   throw new Error('Logout failed');
-      // }
-
-      // Clear token or session data
       localStorage.removeItem('token_id'); // Or any storage key you use
       setLoading(false);
 
@@ -56,6 +61,51 @@ export default function Hnavbar() {
       console.error('Error during logout:', error);
     }
   };
+    // Initiali
+    // ze WebSocket connection
+    // useEffect(()=>{
+      const connectWebSocket = async() => {
+        webSocket.current =  await new WebSocket(`wss://purohit-backend.onrender.com?userID=${userInfo._id}`); 
+        
+        webSocket.current.onopen = () => {
+          
+          console.log('WebSocket connected');
+          setSocketConnected(true);
+        };
+        
+              webSocket.current.onmessage = (event) => {
+                try {
+                  const data = JSON.parse(event.data);
+                  console.log("Notification data is ",data );
+                  alert("notification aayo hai",data);
+                  if (data.notification) {
+                    setNotifications((prev) => [data.notification, ...prev]); // Add new notification to the top
+                  }
+                } catch (err) {
+                  console.error('Error parsing WebSocket message', err);
+                }
+              };
+            }
+            connectWebSocket();
+            // },[userInfo])
+            // webSocket.current.onclose = () => {
+            //   console.log('WebSocket disconnected. Reconnecting...');
+            //   setSocketConnected(false);
+            //   setTimeout(connectWebSocket, 5000); // Attempt to reconnect after 5 seconds
+            // };
+
+
+    //   webSocket.current.onerror = (err) => {
+    //     console.error('WebSocket error:', err);
+    //   };
+    // };
+
+
+    // return () => {
+    //   if (webSocket.current) {
+    //     webSocket.current.close();
+    //   }
+    // };
 
   return (
     <Disclosure as="nav" className="bg-white border ">
@@ -201,10 +251,10 @@ export default function Hnavbar() {
                 </MenuItem>
                 <MenuItem>
                   <Link
-                    href="#"
+                    href="/user/Dashboard"
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                   >
-                    Settings
+                   Dashboard
                   </Link>
                 </MenuItem>
                 <MenuItem>

@@ -53,7 +53,7 @@ const [userInfo,setUserInfo]=useState({});
       );
       console.log("data returned from the context", res.data.data);
        setUserInfo(res.data.data)
-      console.log("useringo is",userInfo)
+      console.log("userinfo is",userInfo)
       return res.data.data; // Ensure this data is returned
 
     } catch (error) {
@@ -61,32 +61,6 @@ const [userInfo,setUserInfo]=useState({});
       return null; // Return null or an appropriate fallback value
     }
   };
-
-
-//   const getpooja=async ()=>{
-
-//     console.log("after context getpooja function is hit");
-//     const token=localStorage.getItem("token_id");
-//     console.log(token);
-//     try {
-//       const res = await axios.get(
-//         "https://purohit-backend.onrender.com/api/v1/users/getPujas",
-//         {
-//           headers: {
-//             'Authorization': `Bearer ${token}`,
-//           },
-//         }
-//       )
-//       .then((res)=>{
-//         console.log("data returned from the context",res.data.data);
-//         return res.data.data
-  
-//       })    
-//     } catch (error) {
-//       console.log("error occured in the getPooja Context",error)
-//       return 0;
-//     }
-// }
 
 
 // const token=localStorage.getItem("token_id");

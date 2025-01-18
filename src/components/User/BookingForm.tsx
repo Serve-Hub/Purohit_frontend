@@ -4,6 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
+import axios from "axios";
 import { cn } from "@/lib/utils";
 import { Button } from "@/src/components/ui/button";
 import { Calendar } from "@/src/components/ui/calendar";
@@ -31,7 +32,8 @@ const bookingSchema = z.object({
   tollAddress: z.string().nonempty("Toll address is required"),
 });
 
-const BookingForm = () => {
+const BookingForm = ({id}) => {
+  console.log("id in booking form is ",id);
   const provinces = {
     Province1: ["District1", "District2", "District3"],
     Province2: ["District4", "District5", "District6"],
@@ -50,18 +52,7 @@ const BookingForm = () => {
     District9: ["Municipality17", "Municipality18"],
   };
 
-  const [socket, setSocket] = useState(null);
-
-  // Establish WebSocket connection
-  useEffect(() => {
-    const ws = new WebSocket("ws://your-websocket-url");
-    setSocket(ws);
-
-    return () => {
-      ws.close();
-    };
-  }, []);
-
+  
   const form = useForm({
     resolver: zodResolver(bookingSchema),
     defaultValues: {
@@ -80,14 +71,53 @@ const BookingForm = () => {
     formState: { errors },
   } = form;
 
-  const onSubmit = (data) => {
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(JSON.stringify(data));
-      alert("Booking request sent!");
+  const token = localStorage.getItem("token_id");
+
+const onSubmit = async (data) => {
+  console.log("data is ",data)
+  try {
+    const response = await axios.post(
+      `https://purohit-backend.onrender.com/api/v1/booking/bookings/${id}`,
+      {
+        date: data.date ? data.date.toISOString() : null, // Convert date to ISO string
+        time: data.time,
+        province: data.province,
+        district: data.district,
+        municipality: data.municipality,
+        tollAddress: data.tollAddress,
+        amount: 1000, 
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+
+        },
+      }
+    );
+
+    if (response.status === 200 || response.status === 201) {
+      alert("Booking successful!");
     } else {
-      alert("WebSocket connection is not open.");
+      alert(`Unexpected response: ${response.statusText}`);
     }
-  };
+  } catch (error) {
+    if (error.response) {
+      // The request was made, and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.error("Error response data:", error.response.data);
+      alert(`Error: ${error.response.data.message || "Booking failed"}`);
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.error("No response received:", error.request);
+      alert("No response from server. Please try again later.");
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.error("Error setting up request:", error.message);
+      alert("An error occurred. Please try again.");
+    }
+  }
+};
 
   return (
     <div className="max-w-lg mx-auto p-8 bg-gray-100 shadow-lg rounded-lg">

@@ -48,13 +48,13 @@ const [user,setUser]=useState({})
             alt="profile cover"
             className="h-full w-full rounded-tl-[10px] rounded-tr-[10px] object-cover object-center border-b border-orange-200"
             width={970}
-            height={260}
+            height={170}
             style={{
               width: "auto",
-              height: "auto",
+              height: "auto", 
             }}
           />
-          <div className="absolute bottom-1 right-1 z-10 xsm:bottom-4 xsm:right-4">
+          <div className="absolute bottom-8 right-1 z-10 xsm:bottom-4 xsm:right-4">
             <label
               htmlFor="cover"
               className="flex cursor-pointer items-center justify-center gap-2 rounded-[3px] bg-pandit px-[15px] py-[5px] text-body-sm font-medium text-white hover:bg-opacity-90"
@@ -155,7 +155,6 @@ const [user,setUser]=useState({})
                 <span className="text-body-sm">Reviews</span>
               </div>
             </div>
-
             <div className="mx-auto max-w-[720px]">
       {/* Tab buttons */}
       <div className="flex space-x-4 border-b border-gray-300 dark:border-gray-700">
@@ -192,9 +191,7 @@ const [user,setUser]=useState({})
           </p>
         </div>
       )}
-    </div>
-
-
+             </div>
             <div className="mt-4.5">
               <h4 className="mb-3.5 font-medium text-dark dark:text-white">
                 Follow me on

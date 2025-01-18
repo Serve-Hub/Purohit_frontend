@@ -1,88 +1,90 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState ,useRef,useEffect, useContext} from 'react';
 import { Button } from '../ui/button';
 import Link from 'next/link';
+import { AuthContext } from '@/src/context/authcontext';
 
 function Notification() {
   const [activeTab, setActiveTab] = useState('Inbox');
-  const notifications = [
-    {
-      id: 1,
-      username:"user A",
-      puja:"pujaA",
-      type: 'info',
-      offeredPrice:90,
-      timestamp: new Date().toISOString(),
-      userimg:'/img/card_1.jpg',
-      Address:' aksdhsa Imadol,Lalitpur'
-    },
-    {
-      id: 2,
-      username:"user A",
-      puja:"pujaA",
-      offeredPrice:90,
+  // const notifications = [
+  //   {
+  //     id: 1,
+  //     username:"user A",
+  //     puja:"pujaA",
+  //     type: 'info',
+  //     offeredPrice:90,
+  //     timestamp: new Date().toISOString(),
+  //     userimg:'/img/card_1.jpg',
+  //     Address:' aksdhsa Imadol,Lalitpur'
+  //   },
+  //   {
+  //     id: 2,
+  //     username:"user A",
+  //     puja:"pujaA",
+  //     offeredPrice:90,
 
-            type: 'success',
-      timestamp: new Date().toISOString(),
-      userimg:'/img/card_1.jpg',
-      Address:' aksdhsa Imadol,Lalitpur'
+  //           type: 'success',
+  //     timestamp: new Date().toISOString(),
+  //     userimg:'/img/card_1.jpg',
+  //     Address:' aksdhsa Imadol,Lalitpur'
 
-    },
-    {
-      id: 3,
-      username:"user A",
-      puja:"pujaA",
-      offeredPrice:90,
+  //   },
+  //   {
+  //     id: 3,
+  //     username:"user A",
+  //     puja:"pujaA",
+  //     offeredPrice:90,
 
-            type: 'error',
-      timestamp: new Date().toISOString(),
-      userimg:'/img/card_1.jpg',
-      Address:' aksdhsa Imadol,Lalitpur'
-    },
-    {
-      id: 4,
+  //           type: 'error',
+  //     timestamp: new Date().toISOString(),
+  //     userimg:'/img/card_1.jpg',
+  //     Address:' aksdhsa Imadol,Lalitpur'
+  //   },
+  //   {
+  //     id: 4,
 
-      username:"user A",
-      puja:"pujaA",
-            type: 'warning',
-      offeredPrice:90,
+  //     username:"user A",
+  //     puja:"pujaA",
+  //           type: 'warning',
+  //     offeredPrice:90,
 
-      timestamp: new Date().toISOString(),
-      userimg:'/img/card_1.jpg',
-      Address:' aksdhsa Imadol,Lalitpur'
-    },
-    {
-      id: 5,
-      username:"user A",
-      puja:"pujaA",
-      type: 'info',
-      offeredPrice:90,
+  //     timestamp: new Date().toISOString(),
+  //     userimg:'/img/card_1.jpg',
+  //     Address:' aksdhsa Imadol,Lalitpur'
+  //   },
+  //   {
+  //     id: 5,
+  //     username:"user A",
+  //     puja:"pujaA",
+  //     type: 'info',
+  //     offeredPrice:90,
 
-      timestamp: new Date().toISOString(),
-      userimg:'/img/card_1.jpg',
-      Address:' aksdhsa Imadol,Lalitpur'
-    },
-    {
-      id: 6,
-      username:"user A",
-      puja:"pujaA",
-            type: 'warning',
-      timestamp: new Date().toISOString(),
-      userimg:'/img/card_1.jpg',
-      Address:' aksdhsa Imadol,Lalitpur'
-    },
-    {
-      id: 7,
-      username:"user A",
-      puja:"pujaA",
-      offeredPrice:90,
+  //     timestamp: new Date().toISOString(),
+  //     userimg:'/img/card_1.jpg',
+  //     Address:' aksdhsa Imadol,Lalitpur'
+  //   },
+  //   {
+  //     id: 6,
+  //     username:"user A",
+  //     puja:"pujaA",
+  //           type: 'warning',
+  //     timestamp: new Date().toISOString(),
+  //     userimg:'/img/card_1.jpg',
+  //     Address:' aksdhsa Imadol,Lalitpur'
+  //   },
+  //   {
+  //     id: 7,
+  //     username:"user A",
+  //     puja:"pujaA",
+  //     offeredPrice:90,
 
-            type: 'success',
-      timestamp: new Date().toISOString(),
-      userimg:'/img/card_1.jpg',
-      Address:' aksdhsa Imadol,Lalitpur'
-    },
-  ];
+  //           type: 'success',
+  //     timestamp: new Date().toISOString(),
+  //     userimg:'/img/card_1.jpg',
+  //     Address:' aksdhsa Imadol,Lalitpur'
+  //   },
+  // ];
+ 
   const tabs = [
     { title: 'Inbox', content: 'This is the Inbox content.' },
     { title: 'General', content: 'This is the General content.' },
@@ -98,9 +100,14 @@ function Notification() {
       startIndex + notificationsPerPage
     );
 
+
+  
+
   const handleDeleteNotification = (id) => {
     console.log(`Notification with ID ${id} deleted.`);
   };
+
+
 
   return (
     <>

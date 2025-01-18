@@ -234,7 +234,7 @@ const [pujaData,setPujaData]=useState({})
     </div>
             </div>
             <div className="booking form ">
-              <BookingForm/>
+              <BookingForm id={id} />
              
             </div>
           </div>
