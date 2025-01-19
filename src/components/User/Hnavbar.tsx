@@ -11,9 +11,11 @@ import  { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { AuthContext } from '@/src/context/authcontext';
 import { connect } from 'http2';
+import { useToast } from "@/hooks/use-toast"
+import { Button } from '../ui/button';
 
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
+  // { name: 'Dashboard', href: '#', current: true },
   {name:'Home',href:"/user", current:true},
   { name: 'Categories', href: '#', current: false },
   { name: 'About us', href: '#', current: false },
@@ -23,15 +25,18 @@ const navigation = [
 
 
 
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function Hnavbar() {
+  const { toast } = useToast()
 
+  const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
   const { userInfo, token } = useContext(AuthContext);
 console.log("hnavbar ma",userInfo)
-  const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState({});
   const [socketConnected, setSocketConnected] = useState(false);
   const webSocket = useRef(null);
   const router = useRouter();
@@ -77,35 +82,21 @@ console.log("hnavbar ma",userInfo)
                 try {
                   const data = JSON.parse(event.data);
                   console.log("Notification data is ",data );
-                  alert("notification aayo hai",data);
-                  if (data.notification) {
-                    setNotifications((prev) => [data.notification, ...prev]); // Add new notification to the top
-                  }
+                  // alert("notification aayo hai",data);
+                    setNotifications(data); // Add new notification to the top
+                  console.log("notificaton state in navbar",notifications)
+                  setHasUnreadNotifications(true); // New notification triggers the dot
+
                 } catch (err) {
                   console.error('Error parsing WebSocket message', err);
                 }
               };
             }
             connectWebSocket();
-            // },[userInfo])
-            // webSocket.current.onclose = () => {
-            //   console.log('WebSocket disconnected. Reconnecting...');
-            //   setSocketConnected(false);
-            //   setTimeout(connectWebSocket, 5000); // Attempt to reconnect after 5 seconds
-            // };
 
-
-    //   webSocket.current.onerror = (err) => {
-    //     console.error('WebSocket error:', err);
-    //   };
-    // };
-
-
-    // return () => {
-    //   if (webSocket.current) {
-    //     webSocket.current.close();
-    //   }
-    // };
+            const handleBellClick = () => {
+              setHasUnreadNotifications(false); // Remove the orange dot when clicked
+            };  
 
   return (
     <Disclosure as="nav" className="bg-white border ">
@@ -205,7 +196,13 @@ console.log("hnavbar ma",userInfo)
             
             <Menu as="div" className="relative ml-3">
               <div>
-                <MenuButton className=" p-1 relative flex rounded-full  text-pandit text-sm focus:outline-none ">
+                <MenuButton
+                 className=" p-1 relative flex rounded-full  text-pandit text-sm focus:outline-none "
+                 onClick={handleBellClick}
+>
+{hasUnreadNotifications && (
+                    <span className="absolute top-0 right-1 h-3 w-3 rounded-full bg-orange-500"></span>
+                  )}
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">Open user menu</span>
               
@@ -214,12 +211,22 @@ console.log("hnavbar ma",userInfo)
               <BellIcon aria-hidden="true" className="size-6" />
                 </MenuButton>
               </div>
+              <Button
+      onClick={() => {
+        toast({
+          title: "Scheduled: Catch up",
+          description: "Friday, February 10, 2023 at 5:57 PM",
+        })
+      }}
+    >
+      Show Toast
+    </Button>
               <MenuItems
                 transition
                 className="absolute right-0 z-10 mt-2 w-95 p-5 pt-7 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
               >
                 <MenuItem >
-              <Notification />
+              <Notification data={notifications}/>
                 </MenuItem>
                 
               </MenuItems>
@@ -289,6 +296,8 @@ console.log("hnavbar ma",userInfo)
           ))}
         </div>
       </DisclosurePanel>
+      
     </Disclosure>
+
   )
 }

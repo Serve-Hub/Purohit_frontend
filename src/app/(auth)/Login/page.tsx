@@ -22,7 +22,7 @@ function Login() {
   const[error,setError]=useState(false);
   const[wait,setWait]=useState(false)
 const[errordata,setErrordata]=useState("");
-
+const[isLoading,setIsLoading]=useState(false);
 
   const [formData, setFormData] = useState(
     {
@@ -69,6 +69,22 @@ const[errordata,setErrordata]=useState("");
       // alert("There was an error during the login process. Please try again.");
     }
   }
+  const handlegoogle = async ()=>{
+    setIsLoading(true); 
+  
+    try {
+      // const backendUrl = process.env.REACT_APP_API_URL;
+    window.location.href = "https://purohit-backend.onrender.com/api/v1/users/auth/google"
+  
+  
+  } 
+  catch (error: any) {
+    alert("There was some error while redirecting");
+    setIsLoading(false); 
+  console.log(error.message)
+  }
+  }
+  
 
   return (
     <>
@@ -182,10 +198,23 @@ const[errordata,setErrordata]=useState("");
   )}
 </button>
 
-            <div className="mt-4 text-center">
-              <a href="/" className="text-blue-600">Forgot password?</a>
+            <div className="my-2  ">
+                <Link href="/" className="text-blue-600">Forgot password?</Link>
 
             </div>
+            <div className="flex items-center justify-center gap-4  w-80  ">
+
+<hr className='w-15 text-white'/><h1 className="text-white">OR</h1> <hr className='w-15'/>
+</div>
+            <div className="relative">
+    <button
+     className="border bg-white text-black py-2 mx-auto rounded-md w-80 mt-4 hover:bg-red hover:border-white" 
+    onClick={handlegoogle}>
+      {isLoading ? 'Processing...' : 'Continue with Google'}
+      </button>
+<img src="img/google.png" alt="" className='w-10 absolute top-4 start-2'/>
+
+</div>
             <div className="mt-4 text-center text-white">
               <p>Don't have an account? <Link href="/Signup" className="text-blue-600">Sign up</Link></p>
 

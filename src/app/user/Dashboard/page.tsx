@@ -7,7 +7,7 @@ import NotificationFull from "@/src/components/User/NotificationFull";
 import EditProfile from "@/src/components/User/EditProfile";
 
 const Sidebar = () => {
-  const [activeTab, setActiveTab] = useState("Editprofile");
+  const [activeTab, setActiveTab] = useState("notification");
   const primaryColor = "border-pandit"; // Adjust this to your primary color
   const isPandit = true; // Example: Replace with dynamic role fetching
 
@@ -16,6 +16,16 @@ const Sidebar = () => {
       {/* Sidebar */}
       <aside className="w-1/5 bg-white shadow-lg">
         <nav className="flex flex-col items-start ps-4 space-y-4 mt-20">
+        <button
+            onClick={() => setActiveTab("notification")}
+            className={`w-full text-left ps-4 py-2 border-r-4 transition-all duration-300 ${
+              activeTab === "notification"
+                ? `${primaryColor} bg-orange-100 text-pandit`
+                : "text-slate-400 border-transparent hover:border-pandit hover:bg-orange-100"
+            }`}
+          >
+            All Notifications
+          </button>
           <button
             onClick={() => setActiveTab("Editprofile")}
             className={`w-full text-left ps-4 py-2 border-r-4 transition-all duration-300 ${
@@ -24,7 +34,7 @@ const Sidebar = () => {
                 : "text-slate-400 border-transparent hover:border-pandit hover:bg-orange-100"
             }`}
           >
-            Profile Page
+           Edit  Profile 
           </button>
           <button
             onClick={() => setActiveTab("bookings")}
@@ -36,16 +46,7 @@ const Sidebar = () => {
           >
           Your Analytics
           </button>
-          <button
-            onClick={() => setActiveTab("notifications")}
-            className={`w-full text-left ps-4 py-2 border-r-4 transition-all duration-300 ${
-              activeTab === "notifications"
-                ? `${primaryColor} bg-orange-100 text-pandit`
-                : "text-slate-400 border-transparent hover:border-pandit hover:bg-orange-100"
-            }`}
-          >
-            Your Notifications
-          </button>
+       
           {isPandit && (
             <button
               onClick={() => setActiveTab("panditBookings")}
@@ -55,7 +56,7 @@ const Sidebar = () => {
                   : "text-slate-400 border-transparent hover:border-pandit hover:bg-orange-100"
               }`}
             >
-              Manage Pandit Bookings
+            See your Bookings
             </button>
           )}
         </nav>
@@ -65,7 +66,7 @@ const Sidebar = () => {
       <main className="flex-1 p-4">
         {activeTab === "Editprofile" && <EditProfile />}
         {/* {activeTab === "bookings" &&<Bookings />} */}
-        {activeTab === "notifications" && <NotificationFull/>}
+        {activeTab === "notification" && <NotificationFull/>}
         {activeTab === "panditBookings" && isPandit && (
           <div>
             <h1 className="text-xl font-bold">Manage Pandit Bookings</h1>

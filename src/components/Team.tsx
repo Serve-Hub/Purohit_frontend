@@ -43,7 +43,7 @@ function Team() {
     pulvinar et feugiat blandit at. In mi viverra elit nunc.
   </p>
 
-  <div className="flex flex-col lg:flex-row sm:flex-wrap lg:flex-nowrap items-center justify-center mt-10 gap-6 border ">
+  <div className="flex flex-col lg:flex-row sm:flex-wrap lg:flex-nowrap items-center justify-center mt-10 gap-6  ">
     {Team.map((card, index) => (
       <div
         key={index}

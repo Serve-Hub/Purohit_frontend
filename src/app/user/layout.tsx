@@ -5,6 +5,7 @@ import Navbar from '@/src/components/Navbar';
 import Footer from "@/src/components/Footer";
 import Hnavbar from "@/src/components/User/Hnavbar";
 import AuthProvider from "@/src/context/authcontext";
+import { Toaster } from "@/src/components/ui/toaster"
 
 
 
@@ -36,6 +37,8 @@ export default function RootLayout({
         <Hnavbar />
         {children}
         <Footer />
+        <Toaster />
+
       </AuthProvider>
     </body>
   </html>

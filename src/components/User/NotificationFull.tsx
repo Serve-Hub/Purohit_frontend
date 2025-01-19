@@ -24,8 +24,9 @@ function NotificationFull() {
         params: { page, limit: notificationsPerPage }
       });
 console.log("response from view notification",response)
-      const { notifications: data, pagination } = response.data.data;
-      setNotifications(data);
+      const { notifications, pagination } = response.data.data;
+      setNotifications(notifications);
+      console.log("notifications is")
       setTotalPages(pagination.totalPages);
     } catch (err) {
       setError("Failed to fetch notifications. Please try again later.");
@@ -54,7 +55,7 @@ console.log("response from view notification",response)
   }, [currentPage]);
 
   return (
-    <div className="max-w-5xl mx-auto p-4">
+    <div className="max-w-5xl mx-auto p-4 h-[100vh] mb-50">
       <h1 className="text-3xl font-semibold text-center mb-6 text-pandit">
         All Notifications
       </h1>
@@ -82,25 +83,30 @@ console.log("response from view notification",response)
             >
               <div className="flex gap-5 justify-between">
                 <img
-                  src={notification.userImg || "/img/default_user.jpg"}
-                  alt=""
+                  // src={notification.userImg || "/img/default_user.jpg"}
+                  alt="user image "
                   style={{ height: "50px", width: "50px" }}
                   className="rounded-full"
                 />
                 <div className="flex flex-col">
-                  <span className="font-semibold">
-                    {notification.username} requested for {notification.pujaName}
-                  </span>
-                  <div className="flex gap-2">
-                    <p>{notification.address}</p>
-                    <p>
-                      <span className="font-bold">Rs</span>
-                      {notification.offeredPrice}
-                    </p>
-                  </div>
-                  <span className="text-sm text-gray-500">
-                    {new Date(notification.timestamp).toLocaleString()}
-                  </span>
+                  {notification.message}
+                {/* New booking request for Roary Klein  on 2024-12-30T18:15:00.000Z at 11… */}
+
+                <span className="text-sm text-gray-500">
+                        From: Suyog Lamsal
+                      </span>
+                      <div className="flex gap-2">
+                        
+                        <p>
+                          <span className="font-bold text-sm">Location:</span>{' '}
+                          {/* {data.bookingInfo?.location || 'N/A'} */}
+                          imadol,Lalitpur,asdasdasd
+                        </p>
+                        <p>
+                          <span className="font-bold text-sm">Rs</span>{' '}
+                        1000
+                        </p>
+                      </div>
                   <Link href="#" className="font-medium">
                     View Profile
                   </Link>

@@ -89,6 +89,18 @@ async function handleSubmit(event) {
           <a href="/" className="text-blue-600">Forgot password?</a>
 
           </div>
+          <hr className='w-15 text-white'/><h1 className="text-white">OR</h1> <hr className='w-15'/>
+    </div>
+<div className="relative">
+    <button
+     className="border border-red text-slate-200 py-2 mx-auto rounded-md w-80 mt-4 hover:bg-red hover:border-white" 
+    // onClick={handlegoogle}
+    >
+      {isLoading ? 'Processing...' : 'Continue with Google'}
+      </button>
+<img src="img/google.png" alt="" className='w-10 absolute top-4 start-2'/>
+
+</div>
           <div className="mt-4 text-center text-gray-500">
           <p>Don't have an account? </p><Link href="/Signup" className="text-blue-600">Sign up</Link>
 
