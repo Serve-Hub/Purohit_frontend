@@ -4,22 +4,24 @@ import React from 'react';
 import Link from 'next/link';
 import UserFilter from '@/src/components/User/UserFilter';
 import AllPujas from '@/src/components/User/Allpujas';
+import Breadcrumb from '@/src/components/User/Breadcrumbs/Breadcrumb';
 
 // Breadcrumb Component Imports
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/src/components/ui/breadcrumb';
+// import {
+//   Breadcrumb,
+//   BreadcrumbItem,
+//   BreadcrumbLink,
+//   BreadcrumbList,
+//   BreadcrumbPage,
+//   BreadcrumbSeparator,
+// } from '@/src/components/ui/breadcrumb';
 
 function ViewPuja() {
   return (
-    <div className="container mt-10 ">
+    <div className="mt-10 ">
       {/* Breadcrumb Navigation */}
-      <Breadcrumb>
+      <Breadcrumb pageName='AllPujas'/>
+      {/* <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/">
@@ -33,7 +35,7 @@ function ViewPuja() {
      
           
         </BreadcrumbList>
-      </Breadcrumb>
+      </Breadcrumb> */}
 
       {/* Main Content: Filter and Puja Listings */}
       <div className=" mt-10">

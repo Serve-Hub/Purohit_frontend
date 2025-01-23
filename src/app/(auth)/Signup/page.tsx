@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import SignupForm from "@/src/components/Signupform";
 import Navbar from "@/src/components/Navbar";
 import Footer from "@/src/components/Footer";
@@ -7,6 +7,7 @@ import AOS from "aos";
 import { useEffect } from "react";
 
 function SignupPage() {
+  const[show,setShow]=useState(false);
    AOS.init();
       useEffect(() => {
         AOS.init({

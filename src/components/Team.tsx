@@ -25,11 +25,16 @@ function Team() {
             Description:"Backend developer",
             img:"img/profile_2.jpg"   
            },
-
+           {
+            Name:"Akhil Joshi",
+            Description:"App Developer",
+            img:"img/profile_3.jpg"
+           }
+,
         {Name:"Rishi k Marseni",
-            Description:"Web developer",
+            Description:"project Supervisor",
             img:" https://neoyaan.io/team/rishikmarseni.png"   
-           },
+           }
     ]
   return (
     <>

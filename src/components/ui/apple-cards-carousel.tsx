@@ -15,6 +15,8 @@ import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import Image, { ImageProps } from "next/image";
 import { useOutsideClick } from "@/src/hooks/use-outside-click";
+import { Button } from "@/src/components/ui/button";
+import { useRouter } from "next/navigation";
 
 interface CarouselProps {
   items: JSX.Element[];
@@ -86,6 +88,11 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
     return window && window.innerWidth < 768;
   };
 
+  const[isLoading,setIsLoading]=useState(false);
+  const router = useRouter();
+  // setIsLoading(true);
+
+
   return (
     <CarouselContext.Provider
       value={{ onCardClose: handleCardClose, currentIndex }}
@@ -132,7 +139,9 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
             ))}
           </div>
         </div>
+        
         <div className="flex justify-end gap-2 mr-10">
+          
           <button
             className="relative z-40 h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center disabled:opacity-50"
             onClick={scrollLeft}
@@ -147,6 +156,42 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
           >
             <IconArrowNarrowRight className="h-6 w-6 text-gray-500" />
           </button>
+          <Button
+                          className=" bg-pandit  text-white mt-10 ms-30 w-40 px-10"
+                          variant="default"
+                          size="default"
+                          onClick={() => {
+                            setIsLoading(true)  
+                            router.push("/user/viewPuja")
+
+                          }}  
+                          >
+                            {isLoading ? (
+    <div className="flex justify-center items-center space-x-3">
+      {/* Loading Animation */}
+       <span className="text-white font-medium">Processing</span>
+      <div className="w-6 h-6 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
+    </div>
+  ) : (
+    <>
+       View all the pujas 
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            className="size-6"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.19l-6.22-6.22a.75.75 0 0 1 0-1.06Z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+    </>
+  )}
+                 
+                        
+                         </Button> 
         </div>
       </div>
     </CarouselContext.Provider>

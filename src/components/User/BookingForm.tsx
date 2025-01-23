@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { boolean, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
@@ -33,6 +33,9 @@ const bookingSchema = z.object({
 });
 
 const BookingForm = ({id}) => {
+  const [isBookLoading, setIsBookLoading] = useState(false);
+  const[hasbooked,setHasbooked]=useState(boolean)
+  const [isBooked, setIsBooked] = useState(false); 
   console.log("id in booking form is ",id);
   const provinces = {
     Province1: ["District1", "District2", "District3"],
@@ -74,6 +77,7 @@ const BookingForm = ({id}) => {
   const token = localStorage.getItem("token_id");
 
 const onSubmit = async (data) => {
+  setIsBookLoading(true);
   console.log("data is ",data)
   try {
     const response = await axios.post(
@@ -97,9 +101,14 @@ const onSubmit = async (data) => {
     );
 
     if (response.status === 200 || response.status === 201) {
-      alert("Booking successful!");
+      // alert("Booking successful!");
+      setIsBooked(true); // Update the booking status
+      setIsBookLoading(false);
+
     } else {
       alert(`Unexpected response: ${response.statusText}`);
+      setIsBookLoading(false);
+
     }
   } catch (error) {
     if (error.response) {
@@ -107,11 +116,17 @@ const onSubmit = async (data) => {
       // that falls out of the range of 2xx
       console.error("Error response data:", error.response.data);
       alert(`Error: ${error.response.data.message || "Booking failed"}`);
+      setIsBookLoading(false);
+
     } else if (error.request) {
+      setIsBookLoading(false);
+
       // The request was made but no response was received
       console.error("No response received:", error.request);
       alert("No response from server. Please try again later.");
     } else {
+      setIsBookLoading(false);
+
       // Something happened in setting up the request that triggered an Error
       console.error("Error setting up request:", error.message);
       alert("An error occurred. Please try again.");
@@ -119,11 +134,31 @@ const onSubmit = async (data) => {
   }
 };
 
+useEffect(()=>{
+  const bookingCheck=async()=>{
+    const response =await axios.get(`https://purohit-backend.onrender.com/api/v1/booking/bookings/checkPoojaBookingStatus/${id}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+
+      },
+    })
+    console.log("booking check is",response)
+    setHasbooked(response.data.hasBooked);
+  }
+  bookingCheck();
+
+})
+
   return (
     <div className="max-w-lg mx-auto p-8 bg-gray-100 shadow-lg rounded-lg">
       <h2 className="text-2xl font-semibold mb-4 text-pandit">Booking Form</h2>
       <Form {...form}>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form
+         onSubmit={handleSubmit(onSubmit)} 
+         className="space-y-4"
+         >
           <div className="shadow border p-5 mb-5 bg-white rounded-lg">
             {/* Date Picker */}
             <FormField
@@ -165,6 +200,7 @@ const onSubmit = async (data) => {
                 </FormItem>
               )}
             />
+            <br />
             {/* Time Picker */}
             <FormField
               control={control}
@@ -172,11 +208,12 @@ const onSubmit = async (data) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Time</FormLabel>
+                  <br />
                   <FormControl>
                     <input
                       type="time"
                       {...field}
-                      className="border border-gray-300 rounded px-3 py-2"
+                      className="border border-gray-300 rounded px-3 py-2 w-[240px]"
                     />
                   </FormControl>
                   <FormMessage>{errors.time?.message}</FormMessage>
@@ -294,13 +331,65 @@ const onSubmit = async (data) => {
 
           {/* Submit Button */}
           <div className="p-4">
-            <Button type="submit" className="w-full bg-[#F25B2C] text-white">
-              Book Now
-            </Button>
+          <Button
+  type="submit"
+  className={`w-full bg-[#F25B2C] text-white ${hasbooked|| isBooked || isBookLoading ? "bg-gray-400" : "bg-[#F25B2C]"}`}
+  disabled={isBooked || isBookLoading ||hasbooked}
+>
+  {/* {isBookLoading ? (
+    <div className="flex justify-center items-center space-x-2">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={1.5}
+        stroke="currentColor"
+        className="w-5 h-5 animate-spin text-white"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+        />
+      </svg>
+      <span className="text-white">Processing...</span>
+    </div>
+  ) : isBooked ? (
+    "Already Booked"
+  ) : (
+    "Book Now"
+  )} */}
+  {hasbooked ? (
+  "Already Booked"
+) : isBookLoading ? (
+  <div className="flex justify-center items-center space-x-2">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className="w-5 h-5 animate-spin text-white"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+      />
+    </svg>
+    <span className="text-white">Processing...</span>
+  </div>
+) : (
+  "Book Now"
+)}
+</Button>
+
           </div>
         </form>
       </Form>
+      
     </div>
+
   );
 };
 

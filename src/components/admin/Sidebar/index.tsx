@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import SidebarItem from "@/src/components/Sidebar/SidebarItem";
+import SidebarItem from "@/src/components/admin/Sidebar/SidebarItem";
 import ClickOutside from "@/src/components/ClickOutside";
 import useLocalStorage from "@/src/hooks/useLocalStorage";
 

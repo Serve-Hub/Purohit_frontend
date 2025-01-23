@@ -8,22 +8,16 @@ import Link from 'next/link'
 import { useState,useEffect, useRef, useContext} from 'react'
 import Notification from './Notification';
 import  { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+
 import axios from 'axios';
 import { AuthContext } from '@/src/context/authcontext';
-import { connect } from 'http2';
 import { useToast } from "@/hooks/use-toast"
+
+// import { ToastContainer, toast } from "react-toastify";
+
 import { Button } from '../ui/button';
-
-const navigation = [
-  // { name: 'Dashboard', href: '#', current: true },
-  {name:'Home',href:"/user", current:true},
-  { name: 'Categories', href: '#', current: false },
-  { name: 'About us', href: '#', current: false },
-,
-]
-
-
-
+import LetterAvatar from '../LetterAvatar';
 
 
 function classNames(...classes) {
@@ -31,8 +25,24 @@ function classNames(...classes) {
 }
 
 export default function Hnavbar() {
-  const { toast } = useToast()
+  const pathname = usePathname();
 
+  const { toast } = useToast()
+  const navItems = [
+    { name: 'Home', href: '/user' },
+    { name: 'Categories', href: '#' },
+    { name: 'About us', href: '#' },
+    { name: 'Dashboard', href: '/UserDashboard' },
+  ];
+  
+  
+// const handleNavClick = (name: string) => {
+//   setNavItems((prevNavItems) =>
+//     prevNavItems.map((item) =>
+//       item.name === name ? { ...item, current: true } : { ...item, current: false }
+//     )
+//   );
+// };
   const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
   const { userInfo, token } = useContext(AuthContext);
 console.log("hnavbar ma",userInfo)
@@ -69,6 +79,9 @@ console.log("hnavbar ma",userInfo)
     // Initiali
     // ze WebSocket connection
     // useEffect(()=>{
+    useEffect(()=>{
+
+    
       const connectWebSocket = async() => {
         webSocket.current =  await new WebSocket(`wss://purohit-backend.onrender.com?userID=${userInfo._id}`); 
         
@@ -78,28 +91,45 @@ console.log("hnavbar ma",userInfo)
           setSocketConnected(true);
         };
         
-              webSocket.current.onmessage = (event) => {
-                try {
-                  const data = JSON.parse(event.data);
-                  console.log("Notification data is ",data );
-                  // alert("notification aayo hai",data);
-                    setNotifications(data); // Add new notification to the top
-                  console.log("notificaton state in navbar",notifications)
-                  setHasUnreadNotifications(true); // New notification triggers the dot
-
-                } catch (err) {
-                  console.error('Error parsing WebSocket message', err);
-                }
-              };
+        webSocket.current.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            console.log("Notification data is ", data);
+        
+            toast({
+              title: data[4].type,
+              description: data[3].message, 
+              className: "bg-white border border-orange-500 bg-orange-100 text-orange-700",  // Optional styling
+            });
+        
+            console.log("Toast bar should be implemented");
+        
+            setNotifications(data); 
+            console.log("Notification state in navbar", notifications);
+        
+            setHasUnreadNotifications(true);  // New notification triggers the dot
+          } catch (err) {
+            console.error('Error parsing WebSocket message', err);
+          }
+        };
             }
             connectWebSocket();
+          })
 
             const handleBellClick = () => {
               setHasUnreadNotifications(false); // Remove the orange dot when clicked
             };  
+            // const handle=()=>{
+            //    toast({
+            //     title: "Scheduled: Catch up",
+            //     description: "Friday, February 10, 2023 at 5:57 PM",
+            //     className:"bg-white border border-orange-500 bg-orange-100 text-orange-700  "
+            //   })
+            // }
 
   return (
     <Disclosure as="nav" className="bg-white border ">
+      {/* <button onClick={handle}>tab</button> */}
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -113,35 +143,40 @@ console.log("hnavbar ma",userInfo)
           </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
+              <Link href="/user">
+              
               <img
                 alt="Your Company"
                 src="/img/purohit-logo-04.png"
-                className="h-8 w-auto"  
+                className="w-12"  
               />
+              </Link>
             </div>
             <div className="hidden sm:ml-6 sm:block">
-              <div className="flex space-x-4">
-                {navigation.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    aria-current={item.current ? 'page' : undefined}
-                    className={classNames(
-                      item.current ? 'bg-pandit text-white' : 'text-slate-500 hover:bg-pandit/70 hover:text-white',
-                      'rounded-md px-3 py-2 text-sm font-medium',
-                    )}
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-              </div>
+            <div className="flex space-x-4">
+            {navItems.map((item) => (
+        <Link
+          key={item.name}
+          href={item.href}
+          // className={pathname === item.href ? 'bg-pandit text-white' : 'text-slate-500 hover:bg-pandit/70 hover:text-white'}
+
+          className={classNames(
+            
+            pathname === item.href ? 'bg-pandit text-white' : 'text-slate-500 hover:bg-pandit/70 hover:text-white',
+            'rounded-md px-3 py-2 text-sm font-medium',
+          )}
+        >
+          {item.name}
+        </Link>
+            ))}
+</div>
             </div>
           </div>
           <div className="  absolute inset-y-0 right-0 flex items-center lg:gap-3 gap-2 pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             {/* select language */}
         
         {/* search */}
-          <form action="https://formbold.com/s/unique_form_id" method="POST">
+          {/* <form action="https://formbold.com/s/unique_form_id" method="POST">
             <div className="relative">
               <button className="absolute left-2 top-1/2 -translate-y-1/2">
                 <svg
@@ -173,7 +208,7 @@ console.log("hnavbar ma",userInfo)
                 className="shadow bg-transparent pl-9 pr-4 font-medium focus:outline-none xl:w-90 border rounded-full p-3 hidden lg:block "
               />
             </div>
-          </form>
+          </form> */}
           <div className="relative w-25 border rounded-full hidden lg:block">
           <Select
             className={clsx(
@@ -211,19 +246,10 @@ console.log("hnavbar ma",userInfo)
               <BellIcon aria-hidden="true" className="size-6" />
                 </MenuButton>
               </div>
-              <Button
-      onClick={() => {
-        toast({
-          title: "Scheduled: Catch up",
-          description: "Friday, February 10, 2023 at 5:57 PM",
-        })
-      }}
-    >
-      Show Toast
-    </Button>
+           
               <MenuItems
                 transition
-                className="absolute right-0 z-10 mt-2 w-95 p-5 pt-7 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                className="z-9999 absolute right-0  mt-2 w-150 p-5 pt-7 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
               >
                 <MenuItem >
               <Notification data={notifications}/>
@@ -237,11 +263,16 @@ console.log("hnavbar ma",userInfo)
                 <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">Open user menu</span>
-                  <img
-                    alt=""
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    className="size-8 rounded-full"
-                  />
+                  {userInfo.avatar?(
+                    
+                    <img
+                      alt=""
+                      src={userInfo.avatar}
+                      className="size-8 rounded-full object-cover"
+                    />
+                  ):(
+                    <LetterAvatar name={userInfo.firstName} size={32}/> 
+                                     )}
                 </MenuButton>
               </div>
               <MenuItems
@@ -256,15 +287,20 @@ console.log("hnavbar ma",userInfo)
                     Your Profile
                   </Link>
                 </MenuItem>
-                <MenuItem>
-                  <Link
-                    href="/user/Dashboard"
-                    className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
-                  >
-                   Dashboard
-                  </Link>
-                </MenuItem>
-                <MenuItem>
+            
+                {userInfo.isPandit && (
+  <MenuItem>
+                   
+  <Link
+    href="/pandit"
+    className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
+  >
+  Switch to pandit
+  </Link>
+</MenuItem>
+                )}
+              
+            <MenuItem>
                   <p
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                   onClick={handleLogout}
@@ -280,7 +316,7 @@ console.log("hnavbar ma",userInfo)
 
       <DisclosurePanel className="sm:hidden">
         <div className="space-y-1 px-2 pb-3 pt-2">
-          {navigation.map((item) => (
+          {/* {navigation.map((item) => (
             <DisclosureButton
               key={item.name}
               as="a"
@@ -293,7 +329,7 @@ console.log("hnavbar ma",userInfo)
             >
               {item.name}
             </DisclosureButton>
-          ))}
+          ))} */}
         </div>
       </DisclosurePanel>
       

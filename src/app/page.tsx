@@ -2,7 +2,7 @@
 import AnimatedCounter from "../components/Animatedcounter";
 import Features from "../components/Features";
 import Footer from "../components/Footer";
-import Header from "../components/Header";
+import Header from "../components/admin/Header";
 import Howitworks from "../components/Howitworks";
 // import Login from '@/src/Mycomps/Login';
 import Landinghero from "../components/Landinghero";

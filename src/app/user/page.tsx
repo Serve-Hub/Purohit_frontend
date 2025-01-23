@@ -1,14 +1,35 @@
 'use client';
 import React from 'react'
-import { Button } from "@/src/components/ui/button";
 import Bcpandit from '@/src/components/User/Bcpandit';
 import { Popularpuja } from '@/src/components/Popularpuja';
-import { useRouter } from "next/navigation";
-
-
+import { Button } from '@/src/components/ui/button';
+import { useContext,useEffect } from 'react';
+import { AuthContext } from '@/src/context/authcontext';
+import { usePathname,useRouter } from 'next/navigation';
 
 function page() {
-  const router = useRouter();
+  const currentPath=usePathname();
+  useEffect(() => {
+    // Check for path changes globally
+    console.log("currentpath",currentPath);
+    if (!currentPath || !currentPath.startsWith("/pandit")) {
+      console.log("Clearing localStorage"); // Debugging: Log when clearing localStorage
+      localStorage.removeItem("selectedPanditMenu");
+    }
+    if (!currentPath || !currentPath.startsWith("/UserDashboard")) {
+      console.log("Clearing localStorage"); // Debugging: Log when clearing localStorage
+      localStorage.removeItem("selectedMenu");
+    }
+
+  
+    // Cleanup the event listener when component unmounts
+   
+  }, [currentPath]); // Only re-run this effect if router.events chang
+  const authcontext=useContext(AuthContext);
+
+const{userInfo}=authcontext;
+console.log("userinfo in the landing page",userInfo);
+
 
   const feature=[
     {
@@ -37,7 +58,7 @@ function page() {
     <>
     <div className="relative ">
       <div className="bg-ypandit/10 h-2/3 w-2/3  top-0 rounded-lg absolute"></div>
-      <div className="bg-ypandit/10 h-1/2 w-2/3 bottom-0 end-0 rounded-lg absolute  "></div>
+      {/* <div className="bg-ypandit/10 h-1/2 w-2/3 bottom-0 end-0 rounded-lg absolute  "></div> */}
       {/* <div className="bg-ypandit/10 h-1/2 w-1/3 -top-75 -end-49 rounded-full absolute border overflow-hidden "></div> */}
 
       <img src="/img/diyo.png" alt="" className="absolute end-80 top-12" />
@@ -130,16 +151,18 @@ function page() {
               </Button>
             </div>
           </div>
-<div className="relative w-2/3  ">
+{/* <div className="relative w-2/3  "> */}
 
-          <img src="/img/userhome.png" alt="" className="   " />
-</div>
+          <img src="/img/userhome.png"
+          // style={width:"12px",height:"110px"}
+           alt="" className="object-contain w-2/3 " />
+{/* </div> */}
         </div>
 
         <div className="flex gap-4 mt-10">
           {feature.map((ft,index) => (
             <div className="border border-pandit text-pandit p-5 rounded-lg" key={index}>
-              <img src={ft.img} alt="" />
+              <img src={ft.img} alt="" className='object-cover' />
               <h1 className="text-xl font-bold">{ft.name}</h1>
               <p>{ft.text}</p>
             </div>
@@ -148,31 +171,11 @@ function page() {
       </div>
     </div>
 {/* end of landing hero */}
-<Bcpandit/>
+{userInfo.isPandit ? null : <Bcpandit />}
 
 <Popularpuja/>
 
-<Button
-                className=" bg-pandit  text-white mt-10 ms-30 w-30"
-                variant="default"
-                size="default"
-                onClick={() => router.push("/user/viewPuja")}
-                >
-          View all the pujas 
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="size-6"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.19l-6.22-6.22a.75.75 0 0 1 0-1.06Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              
-              </Button>
+
 </>
   );
 }

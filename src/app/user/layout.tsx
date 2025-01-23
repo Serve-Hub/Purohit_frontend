@@ -7,8 +7,6 @@ import Hnavbar from "@/src/components/User/Hnavbar";
 import AuthProvider from "@/src/context/authcontext";
 import { Toaster } from "@/src/components/ui/toaster"
 
-
-
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
 //   variable: "--font-geist-sans",
@@ -36,7 +34,7 @@ export default function RootLayout({
       <AuthProvider>
         <Hnavbar />
         {children}
-        <Footer />
+        {/* <Footer /> */}
         <Toaster />
 
       </AuthProvider>

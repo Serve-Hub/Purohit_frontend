@@ -1,8 +1,8 @@
 "use client";
-import Breadcrumb from "@/src/components/Breadcrumbs/Breadcrumb";
-import DefaultLayout from "@/src/components/Dashboard/DefaultLayout";
+import Breadcrumb from "@/src/components/admin/Breadcrumbs/Breadcrumb";
+import DefaultLayout from "@/src/components/admin/Dashboard/DefaultLayout";
 import Link from "next/link";
-import { useContext, useEffect,useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import PoojaProvider, { PoojaContext } from "@/src/context/poojacontext";
 
@@ -12,7 +12,7 @@ const Pujatable = () => {
   const [currentPage, setCurrentPage] = useState(1); // Initialize with page 1
   const [totalPages, setTotalPages] = useState(0); // Total pages from the response
   const [pujas, setPujas] = useState([]);
-  const [fetchloader,setFetchloader]=useState(true);
+  const [fetchloader, setFetchloader] = useState(true);
   const [filters, setFilters] = useState({
     category: "",
     minPrice: "",
@@ -34,7 +34,7 @@ const Pujatable = () => {
         minPrice: filters.minPrice,
         maxPrice: filters.maxPrice,
         minDuration: filters.minDuration,
-        maxDuration: filters.maxDuration
+        maxDuration: filters.maxDuration,
       });
 
       console.log("response is ", response);
@@ -50,7 +50,7 @@ const Pujatable = () => {
     };
 
     fetchData();
-  }, [ currentPage,filters, poojaContext]);
+  }, [currentPage, filters, poojaContext]);
 
   // Filter toggle and change handlers
   const toggle = () => {
@@ -62,7 +62,7 @@ const Pujatable = () => {
       ...filters,
       [e.target.name]: e.target.value,
     });
-    console.log("after filter",filters)
+    console.log("after filter", filters);
   };
 
   const onPageChange = (page) => {
@@ -71,13 +71,9 @@ const Pujatable = () => {
     }
   };
 
-
-  
-
   return (
-          <div>
-
-    {/* // <DefaultLayout> */}
+    <div>
+      {/* // <DefaultLayout> */}
       <Breadcrumb pageName="Puja" />
       {/* {visible && (
         <div
@@ -91,7 +87,10 @@ const Pujatable = () => {
             Puja Information
           </h4>
           <div className="flex gap-5 items-center font-semibold">
-            <h1 className="text-pg flex gap-3  items-center cursor-pointer" onClick={toggle}>
+            <h1
+              className="text-pg flex gap-3  items-center cursor-pointer"
+              onClick={toggle}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
@@ -113,107 +112,105 @@ const Pujatable = () => {
 
         {/* modal for the filter */}
         {visible && (
-        <div className="fixed top-10 inset-0 flex justify-center items-center z-9999 ">
-          <div className="bg-white p-8 rounded-md shadow-lg w-1/3">
+          <div className="fixed top-10 inset-0 flex justify-center items-center z-9999 ">
+            <div className="bg-white p-8 rounded-md shadow-lg w-1/3">
               <h2 className="text-xl font-semibold mb-2">Filters</h2>
 
               <div className="flex gap-16">
-            <div className="mb-4">
-              <label htmlFor="minPrice" className="block mb-2">
-                Min Price
-              </label>
-              <input
-                type="number"
-                id="minPrice"
-                name="minPrice"
-                className="w-full border p-2 rounded"
-                value={filters.minPrice}
-                onChange={handleFilterChange}
-                placeholder="Min Price"
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="maxPrice" className="block mb-2">
-                Max Price
-              </label>
-              <input
-                type="number"
-                id="maxPrice"
-                name="maxPrice"
-                className="w-full border p-2 rounded"
-                value={filters.maxPrice}
-                onChange={handleFilterChange}
-                placeholder="Max Price"
-              />
-            </div>
-
+                <div className="mb-4">
+                  <label htmlFor="minPrice" className="block mb-2">
+                    Min Price
+                  </label>
+                  <input
+                    type="number"
+                    id="minPrice"
+                    name="minPrice"
+                    className="w-full border p-2 rounded"
+                    value={filters.minPrice}
+                    onChange={handleFilterChange}
+                    placeholder="Min Price"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="maxPrice" className="block mb-2">
+                    Max Price
+                  </label>
+                  <input
+                    type="number"
+                    id="maxPrice"
+                    name="maxPrice"
+                    className="w-full border p-2 rounded"
+                    value={filters.maxPrice}
+                    onChange={handleFilterChange}
+                    placeholder="Max Price"
+                  />
+                </div>
               </div>
-           
-            <div className="flex gap-16 w-full ">
-            <div className="mb-4">
-              <label htmlFor="minDuration" className="block mb-2">
-                Min Duration (Minutes)
-              </label>
-              <input
-                type="number"
-                id="minDuration"
-                name="minDuration"
-                className="w-full border p-2 rounded"
-                value={filters.minDuration}
-                onChange={handleFilterChange}
-                placeholder="Min Duration"
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="maxDuration" className="block mb-2">
-                Max Duration (Minutes)
-              </label>
-              <input
-                type="number"
-                id="maxDuration"
-                name="maxDuration"
-                className="w-full border p-2 rounded"
-                value={filters.maxDuration}
-                onChange={handleFilterChange}
-                placeholder="Max Duration"
-              />
-            </div>
 
-            </div>
-            <div className="mb-4">
-              <label htmlFor="category" className="block mb-2">
-                Category
-              </label>
-              <select
-                id="category"
-                name="category"
-                className="w-full border p-2 rounded"
-                value={filters.category}
-                onChange={handleFilterChange}
-              >
-                <option value="">Select Category</option>
-                <option value="category1">Category 1</option>
-                <option value="category2">Category 2</option>
-                <option value="category3">Category 3</option>
-              </select>
-            </div>
-            <div className="flex justify-center gap-6 mt-10">
-              <button
-                className="bg-blue-500 text-white p-2 rounded"
-                onClick={toggle}
-              >
-                Apply Filters
-              </button>
-              <button
-                className="bg-gray-500 text-white p-2 rounded"
-                onClick={() => setVisible(false)}
-              >
-                Close
-              </button>
+              <div className="flex gap-16 w-full ">
+                <div className="mb-4">
+                  <label htmlFor="minDuration" className="block mb-2">
+                    Min Duration (Minutes)
+                  </label>
+                  <input
+                    type="number"
+                    id="minDuration"
+                    name="minDuration"
+                    className="w-full border p-2 rounded"
+                    value={filters.minDuration}
+                    onChange={handleFilterChange}
+                    placeholder="Min Duration"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="maxDuration" className="block mb-2">
+                    Max Duration (Minutes)
+                  </label>
+                  <input
+                    type="number"
+                    id="maxDuration"
+                    name="maxDuration"
+                    className="w-full border p-2 rounded"
+                    value={filters.maxDuration}
+                    onChange={handleFilterChange}
+                    placeholder="Max Duration"
+                  />
+                </div>
+              </div>
+              <div className="mb-4">
+                <label htmlFor="category" className="block mb-2">
+                  Category
+                </label>
+                <select
+                  id="category"
+                  name="category"
+                  className="w-full border p-2 rounded"
+                  value={filters.category}
+                  onChange={handleFilterChange}
+                >
+                  <option value="">Select Category</option>
+                  <option value="category1">Category 1</option>
+                  <option value="category2">Category 2</option>
+                  <option value="category3">Category 3</option>
+                </select>
+              </div>
+              <div className="flex justify-center gap-6 mt-10">
+                <button
+                  className="bg-blue-500 text-white p-2 rounded"
+                  onClick={toggle}
+                >
+                  Apply Filters
+                </button>
+                <button
+                  className="bg-gray-500 text-white p-2 rounded"
+                  onClick={() => setVisible(false)}
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
         <div className="max-w-full overflow-x-auto">
           <table className="w-full table-auto">
             <thead>
@@ -235,14 +232,12 @@ const Pujatable = () => {
                 </th>
               </tr>
             </thead>
-             {fetchloader &&( 
-<div className="flex justify-center items-center w-full  ms-70">
-
-  <div className="w-[15px] aspect-square rounded-full animate-l5  my-10 ms-1/2 "></div>
-</div>
-
-)}        
-     <tbody className="w-full border">
+            {fetchloader && (
+              <div className="flex justify-center items-center w-full  ms-70">
+                <div className="w-[15px] aspect-square rounded-full animate-l5  my-10 ms-1/2 "></div>
+              </div>
+            )}
+            <tbody className="w-full border">
               {pujas.map((puja, key) => (
                 <tr key={key}>
                   <td className="border-b flex  gap-2 items-center border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
@@ -352,37 +347,35 @@ const Pujatable = () => {
               ))}
             </tbody>
           </table>
-          
+
           <div className="flex justify-center items-center space-x-4 m-8">
-      {/* Previous Button */}
-      <button
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        className="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:bg-gray-400"
-      >
-        Previous
-      </button>
+            {/* Previous Button */}
+            <button
+              onClick={() => onPageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:bg-gray-400"
+            >
+              Previous
+            </button>
 
-      {/* Page Info */}
-      <span className="text-lg">
-        Page {currentPage} of {totalPages}
-      </span>
+            {/* Page Info */}
+            <span className="text-lg">
+              Page {currentPage} of {totalPages}
+            </span>
 
-      {/* Next Button */}
-      <button
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:bg-gray-400"
-      >
-        Next
-      </button>
-    </div>
-    
+            {/* Next Button */}
+            <button
+              onClick={() => onPageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:bg-gray-400"
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
-    {/* // </DefaultLayout> */}
-    </div>    
-
+      {/* // </DefaultLayout> */}
+    </div>
   );
 };
 

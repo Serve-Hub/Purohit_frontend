@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import SidebarDropdown from "@/src/components/Sidebar/SidebarDropdown";
+import SidebarDropdown from "@/src/components/admin/Sidebar/SidebarDropdown";
 import { usePathname } from "next/navigation";
 
 // User clicks a menu item

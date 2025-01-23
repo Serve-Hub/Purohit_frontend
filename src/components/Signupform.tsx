@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'; // Import useRouter
 import Link from 'next/link';
 
 const SignupForm = () => {
+  const[show,setShow]=useState(false);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -205,7 +206,10 @@ return (
         id="password"
         name="password"
         value={formData.password}
-        onChange={handleInput}
+        onChange={(e)=>{
+          handleInput(e)
+          setShow(true)
+        }}
         className="mt-1 block border border-white bg-white rounded-md p-3 ps-10  w-96 text-black  sm:text-sm/6 "
         placeholder="Create Password"
         style={{color: 'black'}}
@@ -217,7 +221,12 @@ return (
 
       </div>
     </div>
-      <PasswordValidation validation={passwordValidation}  />
+    {show?(
+    <PasswordValidation validation={passwordValidation}  />
+    ):(
+      <></>
+    )
+  }
 
       {/* confirm password */}
       {/* <div className="mb-4 ">

@@ -3,6 +3,9 @@ import React, { useContext, useEffect,useState } from "react";
 import  { AuthContext } from "@/src/context/authcontext";
 import Image from "next/image";
 import Link from "next/link";
+// import { userInfo } from "os";
+import LetterAvatar from "../LetterAvatar";
+// import { userInfo } from "os";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState('about'); // Default tab is 'about'
@@ -35,7 +38,7 @@ const [user,setUser]=useState({})
     fetchData();
   }, [authContext]);
 
- 
+ console.log("userimage is ",user.avatar)
 
 
   return (
@@ -54,7 +57,7 @@ const [user,setUser]=useState({})
               height: "auto", 
             }}
           />
-          <div className="absolute bottom-8 right-1 z-10 xsm:bottom-4 xsm:right-4">
+          {/* <div className="absolute bottom-8 right-1 z-10 xsm:bottom-4 xsm:right-4">
             <label
               htmlFor="cover"
               className="flex cursor-pointer items-center justify-center gap-2 rounded-[3px] bg-pandit px-[15px] py-[5px] text-body-sm font-medium text-white hover:bg-opacity-90"
@@ -85,21 +88,28 @@ const [user,setUser]=useState({})
               </span>
               <span>Edit</span>
             </label>
-          </div>
+          </div> */}
         </div>
         <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
           <div className="relative z-30 mx-auto -mt-22 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-[176px] sm:p-3">
-            <div className="relative drop-shadow-2">
-            <img
-  src={user?.avatar}
-  style={{ height: "160px", width: "160px" }}
-  className="overflow-hidden rounded-full border object-cover"
-  alt="profile"
-/>
+          <div className="relative drop-shadow-2">
+  {user?.avatar ? (
+    <img
+      src={user.avatar}
+      // onError={(e) => (e.currentTarget.src = '/default-avatar.png')}
+      style={{ height: "160px", width: "160px" }}
+      className="overflow-hidden rounded-full border object-cover"
+      alt="profile"
+    />
+    // <LetterAvatar name={user?.firstName } />
 
-            </div>
+  ) : (
+    <LetterAvatar name={user?.firstName } />
+  )}
+</div>
 
-            <label
+
+            {/* <label
               htmlFor="profilePhoto"
               className="absolute bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-pandit text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2"
             >
@@ -126,7 +136,7 @@ const [user,setUser]=useState({})
                 className="sr-only"
                 accept="image/png, image/jpg, image/jpeg"
               />
-            </label>
+            </label> */}
           </div>
           <div className="mt-4">
             <h3 className="mb-1 text-heading-6 font-bold text-dark dark:text-white">

@@ -1,21 +1,19 @@
 "use client";
-import DefaultLayout from "@/src/components/Dashboard/DefaultLayout";
+import DefaultLayout from "@/src/components/admin/Dashboard/DefaultLayout";
 import React, { FormEvent, useState } from "react";
 import SelectGroupTwo from "@/src/components/SelectGroupTwo";
-import Breadcrumb from "@/src/components/Breadcrumbs/Breadcrumb";
+import Breadcrumb from "@/src/components/admin/Breadcrumbs/Breadcrumb";
 import axios from "axios";
 
-
 function page() {
-
-    // AOS.init();
-    //   useEffect(() => {
-    //     AOS.init({
-    //       duration: 1000,
-    //       easing: 'ease-in-out',
-    //       once: true,
-    //     });
-    //   }, []);
+  // AOS.init();
+  //   useEffect(() => {
+  //     AOS.init({
+  //       duration: 1000,
+  //       easing: 'ease-in-out',
+  //       once: true,
+  //     });
+  //   }, []);
 
   type FormDataType = {
     pujaName: string;
@@ -39,7 +37,6 @@ function page() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
-
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -106,11 +103,11 @@ function page() {
       );
       console.log("resopne", response);
       setLoading(false);
-      if(response.data.success){
-        setSuccess(true)
+      if (response.data.success) {
+        setSuccess(true);
         setSuccessMessage("Puja added successfully!");
       }
-      alert("puja ")
+      alert("puja ");
     } catch (error: any) {
       setLoading(false);
       console.log("error is ", error);
@@ -119,8 +116,8 @@ function page() {
     }
   };
   return (
-  <>
-    {/* // <DefaultLayout> */}
+    <>
+      {/* // <DefaultLayout> */}
       <div className="">
         <Breadcrumb pageName=" Puja / Add Puja" />
       </div>
@@ -131,11 +128,20 @@ function page() {
         <div className="grid grid-cols-5 gap-8">
           <div className="col-span-5 xl:col-span-5">
             <form onSubmit={handleSubmit}>
-            {success && (
-        <div style={{ backgroundColor: "#28a745", color: "white", padding: "10px", marginTop: "20px", borderRadius: "5px" }} className=" z-9999 fixed top-11 right-3 animate-fade-in-right w-60 mb-10 p-2">
-          {successMessage}
-        </div>
-      )}
+              {success && (
+                <div
+                  style={{
+                    backgroundColor: "#28a745",
+                    color: "white",
+                    padding: "10px",
+                    marginTop: "20px",
+                    borderRadius: "5px",
+                  }}
+                  className=" z-9999 fixed top-11 right-3 animate-fade-in-right w-60 mb-10 p-2"
+                >
+                  {successMessage}
+                </div>
+              )}
               <div className="grid grid-cols-5 border">
                 <div className=" xl:col-span-3 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                   <div className="border-b border-stroke px-7 py-4 dark:border-strokedark">
@@ -390,9 +396,8 @@ function page() {
           </div>
         </div>
       </div>
-    {/* // </DefaultLayout> */}
-  </>
-
+      {/* // </DefaultLayout> */}
+    </>
   );
 }
 

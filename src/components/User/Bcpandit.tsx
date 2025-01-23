@@ -13,9 +13,9 @@ function Bcpandit() {
             Follow through the detailed stepwise guidelines to become a verified pandit .What are you waiting for ?
           </p>
         </div>
-<div className="flex gap-8 border ps-20">
+<div className="flex gap-8  ps-20">
 
-      <img src="/img/cutepandit.png" alt="" className='w-1/2  object-contain border' />
+      <img src="/img/cutepandit.png" alt="" className='w-1/2  object-contain ' />
 
 <Bctab/>
 </div>

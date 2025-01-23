@@ -56,6 +56,9 @@ const[isLoading,setIsLoading]=useState(false);
         if(res.data.data.user.isAdmin){
          return router.push(`/admin`);
         }
+        if(res.data.data.user.isPandit){
+          return router.push("/pandit")
+        }
         router.push(`/user`)
       } 
       else {
@@ -171,27 +174,9 @@ const[isLoading,setIsLoading]=useState(false);
           <button type="submit" className="w-80 bg-pandit flex gap-2 justify-center text-white font-bold py-2 rounded-md">
   {wait ? (
     <>
-      Please wait
-      <svg
-        className="ml-2 animate-spin h-5 w-5 text-white"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <circle
-          className="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          strokeWidth="4"
-        ></circle>
-        <path
-          className="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z"
-        ></path>
-      </svg>
+    Please Wait
+          <div className="w-6 h-6 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
+
     </>
   ) : (
     'Sign In'

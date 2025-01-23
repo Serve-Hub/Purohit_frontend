@@ -1,18 +1,17 @@
-import DefaultLayout from '@/src/components/Dashboard/DefaultLayout'
-import React from 'react'
+import DefaultLayout from "@/src/components/admin/Dashboard/DefaultLayout";
+import React from "react";
 import SelectGroupTwo from "@/src/components/SelectGroupTwo";
-import Breadcrumb from '@/src/components/Breadcrumbs/Breadcrumb';
+import Breadcrumb from "@/src/components/admin/Breadcrumbs/Breadcrumb";
 
 function page() {
   return (
     <>
-   {/* < DefaultLayout> */}
-   <div className="">
+      {/* < DefaultLayout> */}
+      <div className="">
+        <Breadcrumb pageName=" Puja / Edit Puja" />
+      </div>
 
-   <Breadcrumb pageName=" Puja / Edit Puja" />
-   </div>
-
-   <div className="mx-auto max-w-270">
+      <div className="mx-auto max-w-270">
         {/* <Breadcrumb pageName="Settings" /> */}
 
         <div className="grid grid-cols-5 gap-8">
@@ -65,9 +64,8 @@ function page() {
                       />
                     </div>
                   </div>
-                
-                  <SelectGroupTwo/>
 
+                  <SelectGroupTwo />
 
                   <div className="mb-5.5">
                     <label
@@ -158,7 +156,7 @@ function page() {
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke px-7 py-4 dark:border-strokedark">
                 <h3 className="font-semibold text-pg  dark:text-white">
-                  Edit  your puja photo
+                  Edit your puja photo
                 </h3>
               </div>
               <div className="p-7">
@@ -227,8 +225,8 @@ function page() {
                         </svg>
                       </span>
                       <p>
-                        <span className="text-pg">Click to upload</span> or
-                        drag and drop
+                        <span className="text-pg">Click to upload</span> or drag
+                        and drop
                       </p>
                       <p className="mt-1.5">SVG, PNG, JPG or GIF</p>
                       <p>(max, 800 X 800px)</p>
@@ -255,10 +253,9 @@ function page() {
           </div>
         </div>
       </div>
-         {/* </DefaultLayout> */}
+      {/* </DefaultLayout> */}
     </>
-
-  )
+  );
 }
 
-export default page
+export default page;

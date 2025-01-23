@@ -14,42 +14,48 @@ import {
   FormMessage,
 } from "@/src/components/ui/form"; // Adjust the import path
 import { Button } from "@/src/components/ui/button";
+import Breadcrumb from "./Breadcrumbs/Breadcrumb";
+import { useToast } from "@/hooks/use-toast"
+
 
 // Define the Zod schema
 const profileSchema = z.object({
   firstName: z.string().min(1, "First Name is required"),
   lastName: z.string().min(1, "Last Name is required"),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().regex(/^\d{10}$/, "Phone number must be 10 digits"),
-  address: z.string().optional(),
-  province: z.string().min(1, "Please select a province"),
-  district: z.string().min(1, "Please select a district"),
-  municipality: z.string().min(1, "Please select a municipality"),
-  tollAddress: z.string().optional(),
+  // email: z.string().email("Invalid email address"),
+  // phone: z.string().regex(/^\d{10}$/, "Phone number must be 10 digits"),
   bio: z.string().optional(),
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
 function EditProfile() {
+
+  const { toast } = useToast()
+
   const { userInfo, token } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [coverpreview, setCoverpreview] = useState<string | null>(null);
+  
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
-      email: "",
-      phone: "",
-      province: "",
-      district: "",
-      municipality: "",
-      tollAddress: "",
       bio: "",
+      // email: "",
+      // phone: "",
     },
   });
+  
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = form;
 
   const provinces = {
     Province1: ["District1", "District2", "District3"],
@@ -68,6 +74,70 @@ function EditProfile() {
     District8: ["Municipality15", "Municipality16"],
     District9: ["Municipality17", "Municipality18"],
   };
+ 
+
+  const onSubmit = async (data: ProfileFormValues) => {
+    console.log("eta handle submit ma",data)
+    try {
+      setLoading(true);
+      const response = await axios.patch(
+        "https://purohit-backend.onrender.com/api/v1/users/updateAccountDetails",
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Profile updated successfully:", response.data);
+      if(response.data.statusCode===200){
+        console.log("update");
+        toast({
+          title:"update message",
+          description:`${response.data.message}`,
+          className:"bg-green-100 text-success border border-green-700"
+        })
+
+  }
+    } catch (error) {
+      console.error("Error updating profile:", error.response?.data || error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const [profileData, setProfileData] = useState<{ avatar: File | null }>({
+    avatar: null,
+  });
+  
+  const [coverData, setCoverData] = useState<{ coverPhoto: File | null }>({
+    coverPhoto: null,
+  });
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setProfileData({ avatar: file });
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCoverImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+   
+    const file = event.target.files?.[0];
+    if (file) {
+      setCoverData({ coverPhoto: file });
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCoverpreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   useEffect(() => {
     if (userInfo) {
@@ -77,37 +147,20 @@ function EditProfile() {
     }
   }, [userInfo, form]);
 
-  ///for profile image update 
-  const handleimgSubmit = async (data: FormData) => {
-    try {
-      setLoading(true);
-  
-      // Assuming you're posting to a route that handles image upload
-      const response = await axios.post('https://purohit-backend.onrender.com/api/v1/users/updateProfileImage', data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-  
-      // Assuming the response returns the updated image URL
-      if (response.status === 200) {
-        // Update the user's profile with the new image URL
-        // For example:
-        setProfileImage(response.data.imageUrl);
-      }
-    } catch (error) {
-      console.error('Error uploading image:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  const handleSubmit = async (data: ProfileFormValues) => {
+
+  const handleProfileSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("eta ");
+    console.log("data is ",profileData)
+    const fd = new FormData();
+    fd.append("avatar", profileData.avatar);
+console.log("avatar is",fd)
     try {
       setLoading(true);
-      const response = await axios.post(
-        "https://purohit-backend.onrender.com/api/v1/Users/editProfile",
-        data,
+      const response = await axios.patch(
+        "https://purohit-backend.onrender.com/api/v1/Users/profileImage",
+        fd,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -115,6 +168,15 @@ function EditProfile() {
         }
       );
       console.log("Profile updated successfully:", response.data);
+      if(response.data.statusCode===200){
+        console.log("update");
+        toast({
+          title:"update message",
+          description:`${response.data.message}`,
+          className:"bg-green-100 text-success border border-green-700"
+        })
+
+  }
     } catch (error) {
       console.error("Error updating profile:", error.response?.data || error.message);
     } finally {
@@ -122,29 +184,79 @@ function EditProfile() {
     }
   };
 
+  const handleCoverSubmit = async (e:React.FormEvent) => {
+    const cd = new FormData();
+    cd.append("coverPhoto", coverData.coverPhoto);
+console.log("cover photo is",cd)
+    e.preventDefault();
+    try {
+      setLoading(true);
+      const response = await axios.patch(
+        "https://purohit-backend.onrender.com/api/v1/users/coverImage",
+        cd,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("cover Image updated successfully:", response.data);
+      if(response.data.statusCode===200){
+            console.log("update");
+            toast({
+              title:"update message",
+              description:`${response.data.message}`,
+              className:"bg-green-100 text-success border border-green-700"
+            })
+
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error.response?.data || error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+ 
   return (
     <div>
-      <h1 className="text-2xl">Edit Profile</h1>
+      <Breadcrumb pageName="Edit Profile"></Breadcrumb>
          
 
 
-      <form className="s" onSubmit={handleSubmit}>
-      <div className="relative z-20 h-35 md:h-65">
+      <form className="s" onSubmit={(e)=>{handleCoverSubmit(e)}}>
+      <div className="relative  h-30 md:h-65">
                 {/* {console.log("data is ")} */}
-                <img
-                  src="/images/cover/cover-01.png"
-                  alt="profile cover"
+                {coverpreview?(
+                   <img
+                   src={coverpreview}
+                   alt="No  cover Image  is uploaded"
+                   className="h-full w-full rounded-tl-[10px] rounded-tr-[10px] object-cover object-center border-b border-orange-200"
+                  //  width={970}
+                  //  height={230}
+                   style={{
+                    //  width: "900px",
+                     height: "290px", 
+                   }}
+                   />
+                ):(
+                  <img
+
+                  src={userInfo.coverPhoto}
+                  alt="No  cover Image  is uploaded"
                   className="h-full w-full rounded-tl-[10px] rounded-tr-[10px] object-cover object-center border-b border-orange-200"
-                  width={970}
-                  height={230}
+             
                   style={{
-                    width: "auto",
-                    height: "auto", 
-                  }}
+                    //  width: "900px",
+                     height: "290px", 
+                   }}
                 />
-                <div className="absolute bottom-8 right-1 z-10 xsm:bottom-4 xsm:right-4">
+                )}
+              
+                <div className="absolute bottom-8 right-1 xsm:bottom-4 xsm:right-4">
                   <label
-                    htmlFor="cover"
+                    htmlFor="coverPhoto"
                     className="flex cursor-pointer items-center justify-center gap-2 rounded-[3px] bg-pandit px-[15px] py-[5px] text-body-sm font-medium text-white hover:bg-opacity-90"
                   >
                     <input
@@ -152,6 +264,7 @@ function EditProfile() {
                       name="coverPhoto"
                       id="coverPhoto"
                       className="sr-only"
+                      onChange={handleCoverImageChange}
                       accept="image/png, image/jpg, image/jpeg"
                     />
                     <span>
@@ -173,20 +286,38 @@ function EditProfile() {
                     </span>
                     <span>Edit</span>
                   </label>
+                  <button
+    type="submit" 
+    className="mt-3 px-5 py-2 bg-pandit text-white rounded-lg"
+  >
+   Save Changes 
+  </button>
                 </div>
               </div>
+              </form>
+
+              <form onSubmit={(e) => handleProfileSubmit(e)}>
               <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
-          <div className="relative z-30 mx-auto -mt-22 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-[176px] sm:p-3">
+          <div className="relative  mx-auto -mt-22 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-[176px] sm:p-3">
             <div className="relative drop-shadow-2">
+            {preview?(
+        <img
+          src={preview}
+          style={{ height: "160px", width: "160px" }}
+          alt="Profile Preview"
+          className="overflow-hidden rounded-full object-cover"
+        />
+      ):(
+            
             <img
   src={userInfo?.avatar}
   style={{ height: "160px", width: "160px" }}
   className="overflow-hidden rounded-full border object-cover"
   alt="profile"
 />
-
+)}
             </div>
-
+         
             <label
               htmlFor="profilePhoto"
               className="absolute bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-pandit text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2"
@@ -209,9 +340,10 @@ function EditProfile() {
 
               <input
                 type="file"
-                name="profilePhoto"
+                name="avatar"
                 id="profilePhoto"
                 className="sr-only"
+                onChange={handleImageChange}
                 accept="image/png, image/jpg, image/jpeg"
               />
             </label>
@@ -239,7 +371,8 @@ function EditProfile() {
 
                   <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(handleSubmit)}
+    onSubmit={handleSubmit(onSubmit)} 
+         // onSubmit={form.handleSubmit(handleSubmit)}
           className="space-y-4"
         >
           {/* First Name and Last Name */}
@@ -261,7 +394,7 @@ function EditProfile() {
                 </FormItem>
               )}
             />
-               <FormField
+               {/* <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
@@ -273,7 +406,7 @@ function EditProfile() {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
           
             </div>
             <div className="flex flex-col gap-5">
@@ -292,7 +425,7 @@ function EditProfile() {
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="phone"
               render={({ field }) => (
@@ -304,7 +437,7 @@ function EditProfile() {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
               </div>
 </div>
            
@@ -327,102 +460,7 @@ function EditProfile() {
 
           </div>    
           {/* Toll Address and Bio */}
-          <div className="shadow  p-5 mb-5 bg-white rounded-lg flex flex-col gap-3">
-          <FormField
-              control={form.control}
-              name="province"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel  className="text-slate-400">Province</FormLabel>
-                  <FormControl>
-                    <select
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e.target.value);
-                        form.setValue("district", "");
-                        form.setValue("municipality", "");
-                      }}
-                      className="w-full  border rounded px-3 py-2"
-                    >
-                      <option value="">Select Province</option>
-                      {Object.keys(provinces).map((prov) => (
-                        <option key={prov} value={prov}>
-                          {prov}
-                        </option>
-                      ))}
-                    </select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="district"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel  className="text-slate-400">District</FormLabel>
-                  <FormControl>
-                    <select
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e.target.value);
-                        form.setValue("municipality", "");
-                      }}
-                      className="w-full  border rounded px-3 py-2"
-                      disabled={!form.getValues("province")}
-                    >
-                      <option value="">Select District</option>
-                      {provinces[form.getValues("province")]?.map((dist) => (
-                        <option key={dist} value={dist}>
-                          {dist}
-                        </option>
-                      ))}
-                    </select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="municipality"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel  className="text-slate-400">Municipality</FormLabel>
-                  <FormControl>
-                    <select
-                      {...field}
-                      className="w-full border rounded px-3 py-2"
-                      disabled={!form.getValues("district")}
-                    >
-                      <option value="">Select Municipality</option>
-                      {municipalities[form.getValues("district")]?.map((mun) => (
-                        <option key={mun} value={mun}>
-                          {mun}
-                        </option>
-                      ))}
-                    </select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="tollAddress"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Toll Address</FormLabel>
-                  <FormControl>
-                    <input type="text" {...field} className=" p-2 w-full rounded border" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-          </div>
+        
 
           <Button type="submit" className="bg-blue-500 text-white p-2 rounded" disabled={loading}>
             {loading ? "Saving..." : "Save Changes"}

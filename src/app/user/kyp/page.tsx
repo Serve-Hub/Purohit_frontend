@@ -515,10 +515,11 @@ height={50}
                     </label>
                     <div className="relative">
                       <input
+                      disabled
                         type="text"
                         id="last-name"
                         name="lastName"
-                        value={ln}
+                        defaultValue={ln}
                         className="mt-1 block   text-black rounded-md p-3 ps-10 w-45  sm:text-sm/6  border "
                         placeholder="Last name"
                         style={{ color: "black" }}
@@ -587,7 +588,7 @@ height={50}
                       className="border border-white bg-white rounded-md p-3 text-black sm:text-sm w-1/3"
                       required
                     >
-                      <option value="" disabled selected>
+                      <option value="" disabled >
                         Day
                       </option>
                       {Array.from({ length: 31 }, (_, i) => (
@@ -606,7 +607,7 @@ height={50}
                       className="border border-white bg-white rounded-md p-3 text-black sm:text-sm w-1/3"
                       required
                     >
-                      <option value="" disabled selected>
+                      <option value="" disabled >
                         Month
                       </option>
                       {[
@@ -638,7 +639,7 @@ height={50}
                       className="border border-white bg-white rounded-md p-3 text-black sm:text-sm w-1/3"
                       required
                     >
-                      <option value="" disabled selected>
+                      <option value="" disabled >
                         Year
                       </option>
                       {Array.from(

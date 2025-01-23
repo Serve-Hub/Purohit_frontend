@@ -120,16 +120,16 @@
 // };
 
 // export default ECommerce;
-import DefaultLayout from '@/src/components/Dashboard/DefaultLayout'
-import React from 'react'
+import DefaultLayout from "@/src/components/admin/Dashboard/DefaultLayout";
+import React from "react";
 
 function page() {
   return (
     // <DefaultLayout>
 
-        <div>nice dashboard</div>
+    <div>nice dashboard</div>
     // </DefaultLayout>
-  )
+  );
 }
 
-export default page
+export default page;

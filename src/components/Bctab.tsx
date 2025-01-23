@@ -19,12 +19,12 @@ const ckyp=async()=>{
   router.push('/user/kyp')
 }
   return (
-    <div className="w-full border border-gray-300 p-5 relative ">
+    <div className="w-full  -gray-300 p-5 relative ">
       {/* Tab Buttons */}
       <img src="/img/diyo.png" className='absolute start-59 top-40' alt="" />
-      <div className="flex gap-4 mb-5 border justify-center">
+      <div className="flex gap-4 mb-5  justify-center">
         <button
-          className={`px-8 py-1 border rounded-lg focus:outline-none ${
+          className={`px-8 py-1 h-full  rounded-lg focus:outline-none ${
             activeTab === 1
               ? 'bg-pg text-white'
               : 'bg-gray-200 text-gray-700'
@@ -33,7 +33,7 @@ const ckyp=async()=>{
         >
         </button>
         <button
-          className={`px-8 py-2 border rounded-lg focus:outline-none ${
+          className={`px-8 py-1  h-full rounded-lg focus:outline-none ${
             activeTab === 2
               ? 'bg-pg text-white'
               : 'bg-gray-200 text-gray-700'

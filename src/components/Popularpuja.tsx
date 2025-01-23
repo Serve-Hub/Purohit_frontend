@@ -192,9 +192,11 @@
 "use client";
 import Image from "next/image";
 import React from "react";
+
 import { Carousel, Card } from "@/src/components/ui/apple-cards-carousel";
 
 export function Popularpuja() {
+
   const cards = data.map((card, index) => (
     <Card key={card.src} card={card} index={index} layout={true} />
   ));
@@ -210,8 +212,9 @@ export function Popularpuja() {
           pulvinar et feugiat blandit at. In mi viverra elit nunc.
         </p>
       </div>
-    
+     
       <Carousel items={cards} />
+      
     </div>
   );
 }
@@ -253,7 +256,7 @@ const DummyContent = () => {
             </p>
            
           </div>
-      
+   
       
     </>
   );
