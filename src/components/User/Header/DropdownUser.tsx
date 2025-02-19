@@ -6,7 +6,8 @@ import LetterAvatar from "../../LetterAvatar";
 import { AuthContext } from "@/src/context/authcontext";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-
+import $axios from "@/src/lib/axios.instance";
+import Cookies from "js-cookie";
 
 const DropdownUser = () => {
   const authcontext=useContext(AuthContext);
@@ -24,22 +25,25 @@ const DropdownUser = () => {
       setLoading(true);
 
 
-      const response = await axios('https://purohit-backend.onrender.com/api/v1/users/logout', {
-        method: 'POST',
+      const response = await $axios.post("/api/v1/users/logout", {}, {
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token_id')}`,  
+          "Content-Type": "application/json",
         },
       });
 
       console.log("response is ",response)
 
       localStorage.removeItem('token_id'); // Or any storage key you use
+      Cookies.remove("loggedin");
+      Cookies.remove("isPandit");
+      Cookies.remove("isAdmin");
+      Cookies.remove("accessToken");
+      Cookies.remove("refreshToken");
       setLoading(false);
 
       router.push('/');
     } catch (error) {
-      console.error('Error during logout:', error);
+      console.log('Error during logout:', error);
     }
   };
 
@@ -51,11 +55,11 @@ const DropdownUser = () => {
         href="#"
       >
         <span className="h-12 w-12 rounded-full">
-          {userInfo.avatar?(
+          {userInfo?.avatar?(
    <img
             // width={100}
             // height={100}
-            src={userInfo.avatar}
+            src={userInfo?.avatar}
             style={{
               width: "50px",
               height: "50px",
@@ -65,7 +69,7 @@ const DropdownUser = () => {
           /> 
           ):(
             <LetterAvatar
-            name={userInfo.firstName}
+            name={userInfo?.firstName}
             size={40}
             className="border"
             />
@@ -75,7 +79,7 @@ const DropdownUser = () => {
         </span>
 
         <span className="flex items-center gap-2 font-medium text-dark dark:text-dark-6">
-          <span className="hidden lg:block">{userInfo.firstName}</span>
+          <span className="hidden lg:block">{userInfo?.firstName}</span>
 
           <svg
             className={`fill-current duration-200 ease-in ${dropdownOpen && "rotate-180"}`}
@@ -102,7 +106,7 @@ const DropdownUser = () => {
         >
           <div className="flex items-center gap-2.5 px-5 pb-5.5 pt-3.5">
             <span className="relative block h-12 w-12 rounded-full">
-            {userInfo.avatar?(
+            {userInfo?.avatar?(
    <img
             // width={100}
             // height={100}
@@ -116,7 +120,7 @@ const DropdownUser = () => {
           /> 
           ):(
             <LetterAvatar
-            name={userInfo.firstName}
+            name={userInfo?.firstName}
             size={40}
             className="border"
             />
@@ -128,10 +132,10 @@ const DropdownUser = () => {
 
             <span className="block">
               <span className="block font-medium text-dark dark:text-white">
-              {userInfo.firstName}
+              {userInfo?.firstName}
               </span>
               <span className="block font-medium text-dark-5 dark:text-dark-6">
-              {userInfo.email}
+              {userInfo?.email}
               </span>
             </span>
           </div>

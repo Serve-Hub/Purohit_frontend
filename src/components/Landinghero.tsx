@@ -3,9 +3,12 @@ import { TypewriterEffect } from "@/src/components/ui/typewriter-effect";
 import { Button } from "@/src/components/ui/button";
 import Link from "next/link";
 import AOS from "aos";
-import { useEffect } from "react";
+import { useEffect ,useState} from "react";
+import { useRouter } from "next/navigation";
+
 
 export default function Landinghero() {
+ 
    AOS.init();
       useEffect(() => {
         AOS.init({
@@ -15,6 +18,8 @@ export default function Landinghero() {
         });
       }, []);
 
+      const[isLoading,setIsLoading]=useState(false);
+      const router = useRouter();
   const words = [
     {
       text: "Bringing",
@@ -54,15 +59,26 @@ export default function Landinghero() {
             {" "}
           </div>
 <div className="  mt-5 flex justify-center">
-      <Link 
-  
-            href="/Signup">
+     
           <Button
             className=" bg-[#A2D7A4]  text-white"
             variant="default"
             size="default"
-          >
+            onClick={() => {
+              setIsLoading(true)  
+              router.push("/Login")
 
+            }}  
+          >
+ {isLoading ? (
+    <div className="flex justify-center items-center space-x-3">
+  
+       <span className="text-white font-medium">Processing</span>
+      <div className="w-6 h-6 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
+    </div>
+  ):(
+    <>
+    
             Get started
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -76,8 +92,11 @@ export default function Landinghero() {
                 clipRule="evenodd"
                 />
             </svg>
+    </>
+
+  )}
           </Button>
-                </Link>
+               
 
 </div>
         </div>

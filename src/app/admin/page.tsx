@@ -10,8 +10,16 @@ import PoojaProvider from "@/src/context/poojacontext";
 //     "Next.js E-commerce Dashboard | TailAdmin - Next.js Dashboard Template",
 //   description: "This is Next.js Home for TailAdmin Dashboard Template",
 // };
+import Cookies from "js-cookie";
+import { useEffect } from "react";
+import { updateSessionToken } from "@/utils/sessionHandler";
+
 
 export default function Home() {
+  useEffect(()=>{
+    console.log("access token is",Cookies.get());
+    updateSessionToken();
+  })
   return (
     <>
       {/* <DefaultLayout> */}

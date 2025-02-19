@@ -9,6 +9,10 @@ import {
   ModalTrigger,
 } from "@/src/components/ui/animated-modal";
 import { BookA } from "lucide-react";
+import $axios from "@/src/lib/axios.instance";
+import AddReview from "./AddReview";
+
+
 
 function BookingPage() {
   const [bookingData, setBookingData] = useState([]);
@@ -20,25 +24,20 @@ function BookingPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [fetchloader, setFetchloader] = useState(true);
-  const token = localStorage.getItem("token_id");
+  const [completed, setCompleted] = useState(false);
+  const [stloading, setStloading] = useState(false); 
+   const token = localStorage.getItem("token_id");
 
   useEffect(() => {
     const fetchData = async () => {
       const page = currentPage;
       const limit = 4;
+      
+      
       try {
-        const res = await axios.get(
-          "https://purohit-backend.onrender.com/api/v1/booking/bookings/viewBooking",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            }
-            // params: {
-            //   page,
-            //   limit,
-            // },
-          }
-        );
+
+        const res = await $axios.get("/api/v1/booking/bookings/viewBooking");
+
         console.log("response is",res.data.data.
           bookingsWithPanditDetails)
         setBookingData(res.data.data.
@@ -47,7 +46,7 @@ function BookingPage() {
         setFetchloader(false);
         setTotalPages(res.data.data.totalPages);
       } catch (error) {
-        console.error("Error occurred: ", error);
+        console.log("Error occurred: ", error);
         setError(true);
         setErrorMessage("Failed to fetch booking data");
       }
@@ -60,6 +59,32 @@ function BookingPage() {
       setCurrentPage(page);
     }
   };
+
+
+  const handleStatusUpdate = async (bookingId: string) => {
+    setStloading(true);  // Show loading state
+    try {
+      // Send the API request to update the status
+      const response = await $axios.put(`/api/v1/booking/bookings/pujaStatusUpdate/${bookingId}`);
+  
+      console.log("response for statusupdate is",response);
+      // If the request is successful, update the completed state
+      if (response.status === 200) {
+        setBookingData((prevData) =>
+          prevData.map((booking) =>
+            booking._id === bookingId ? { ...booking, status: "Completed" } : booking
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+      alert("An error occurred while updating the status. Please try again.");
+    } finally {
+      setStloading(false);  // Hide loading state after the request completes
+    }
+  };
+  
+
 
   return (
     <>
@@ -125,7 +150,13 @@ function BookingPage() {
                     </h5>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark flex  flex-col gap-2">
-                    {booking.selectedPanditWithKYP.map((a)=>{
+                    {booking.selectedPanditWithKYP.length===0?
+                    (
+                      <p>No Pandits finalized</p>
+                    ):
+                    (
+                   
+                    booking.selectedPanditWithKYP.map((a)=>{
                       return (
                     <div className="text-black dark:text-white gap-1" key={a._id}>
                       <p>
@@ -135,7 +166,9 @@ function BookingPage() {
 
                     </div>
                       )
-                    })}
+                    })
+                    )
+                  }
 
 
                      {/* {booking.panditDetails[0].firstName} */}
@@ -153,7 +186,7 @@ function BookingPage() {
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <p
                       className={`inline-flex rounded-full bg-opacity-10 px-3 py-1 text-sm font-medium ${
-                        booking.status === "completed"
+                        booking.status === "Completed"
                           ? "bg-success text-success"
                           : booking.status === "pending"
                           ? "bg-warning text-warning"
@@ -201,9 +234,41 @@ function BookingPage() {
                                                       onClick={(e) => e.stopPropagation()} // Prevent closing modal when clicking inside
                                                     >
                                                       <h2 className="text-xl font-bold mb-4">
-                                                        Booking Information
+                                                        Booking Information 
                                                       </h2>
-                      
+                                                      <div className="flex gap-4 items-center">
+                                                        { booking.status=== "Completed"?(
+                                                          <button
+                                                          className="px-4 py-2 bg-green-500 text-white rounded-md w-60 flex justify-center gap-3"
+                                                          disabled
+                                                        >
+                                          
+                                                         Already Completed
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+<path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+</svg>
+
+                                                    </button>
+                                                        ):(
+                                                          <>
+  <h2>Is it completed?</h2>
+  <button
+    className="px-4 py-2 bg-green-500 text-white rounded-md w-40 flex justify-center gap-3"
+    onClick={() => handleStatusUpdate(booking._id)} // Correctly passing the booking._id
+    disabled={stloading} // Assuming stloading is a loading state
+  >
+    Done
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+    </svg>
+  </button>
+</>
+
+
+                                                        )}
+
+                                                      </div>
+
                                                       <div
                                                         // key={pandit.panditID}
                                                         className="space-y-8  p-4 rounded-md"
@@ -213,7 +278,13 @@ function BookingPage() {
                                                           <h2 className="text-lg font-bold border-b pb-2">
                                                             Pandit Information
                                                           </h2>
-                                                          {booking.selectedPanditWithKYP.map((a)=>{
+                                                      
+                                                            {booking.selectedPanditWithKYP.length===0?
+                    (
+                      <p>No Pandits finalized</p>
+                    ):
+                    (
+                                                          booking.selectedPanditWithKYP.map((a)=>{
                                                               return(
                                                                 <div className="border p-4 flex flex-col gap-4 ">
                                                           <div className="flex justify-end">
@@ -280,8 +351,17 @@ function BookingPage() {
                                                                 `${pandit.dateOfBirth.day}-${pandit.dateOfBirth.month}-${pandit.dateOfBirth.year}`} */}
                                                             </span>
                                                           </div>
+
+                                                         { booking.status === "Completed" &&
+                                                          <AddReview 
+                                                            panditId={a.panditID} 
+                                                            pujaId={booking.pujaID._id} 
+                                                            bookingId={booking._id}
+                                                          />                                                     
+                                                         }
                                                                 </div>
-                                                              )})}
+                                                              )})
+                                                            )}  
                                                               </div>
                       
                                                         {/* Professional and Education Section */}
@@ -301,150 +381,16 @@ function BookingPage() {
                                                             <strong>Puja Date:</strong>{" "}
                                                             <span>{booking.date}</span>
                                                           </div>
-                                                          {/* <div className="flex justify-between">
-                                                            <strong>Qualification:</strong>{" "}
-                                                            <span>{pandit.qualification}</span>
-                                                          </div> */}
+                                                      
+
+
                                                         </div>
                       
-                                                        {/* Certificates Section */}
-                                                        {/* <div className="flex flex-col space-y-8 mt-8">
-                                                          <h2 className="text-lg font-bold border-b p-5">
-                                                            Certificates
-                                                          </h2>
-                                                          <ul className="list-disc list-inside ">
-                                                            <li className="mt-5">
-                                                              <strong>
-                                                                Qualification Certificate:
-                                                              </strong>
-                                                              <div className="mt-5">
-                                                                <img
-                                                                  src={
-                                                                    pandit.documents
-                                                                      .qualificationCertificate
-                                                                  }
-                                                                  alt="Qualification Certificate"
-                                                                  className="w-full h-auto border rounded-md mt-5"
-                                                                />
-                                                              </div>
-                                                            </li>
-                                                            <li className="mt-5">
-                                                              <strong>
-                                                                Citizenship Front Photo:
-                                                              </strong>
-                                                              <div className="mt-5">
-                                                                <img
-                                                                  src={
-                                                                    pandit.documents
-                                                                      .citizenshipFrontPhoto
-                                                                  }
-                                                                  alt="Citizenship Front Photo"
-                                                                  className="w-full h-auto border rounded-md mt-5"
-                                                                />
-                                                              </div>
-                                                            </li>
-                                                            <li className="mt-5">
-                                                              <strong>Citizenship Back Photo:</strong>
-                                                              <div className="mt-5">
-                                                                <img
-                                                                  src={
-                                                                    pandit.documents
-                                                                      .citizenshipBackPhoto
-                                                                  }
-                                                                  alt="Citizenship Back Photo"
-                                                                  className="w-full h-auto border rounded-md mt-5"
-                                                                />
-                                                              </div>
-                                                            </li>
-                                                          </ul>
-                                                        </div> */}
+                                                        
                       
                                                         {/* Accept and Reject Buttons */}
                                                       </div>
-                                                      {/* <div className="flex justify-between space-x-4 mt-4">
-                                                        {pandit.status === "accepted" ? (
-                                                          <button
-                                                            className="px-4 py-2 bg-green-500 text-white rounded-md w-40 flex justify-center"
-                                                            disabled
-                                                          >
-                                                            Accepted
-                                                          </button>
-                                                        ) : (
-                                                          <>
-                                                            <button
-                                                              onClick={() => handleAccept(pandit._id)}
-                                                              className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 w-40 flex gap-1 justify-center"
-                                                            >
-                                                              {loading ? (
-                                                                <>
-                                                                  Please wait
-                                                                  <svg
-                                                                    className="ml-2 animate-spin h-5 w-5 text-white"
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    fill="none"
-                                                                    viewBox="0 0 24 24"
-                                                                  >
-                                                                    <circle
-                                                                      className="opacity-25"
-                                                                      cx="12"
-                                                                      cy="12"
-                                                                      r="10"
-                                                                      stroke="currentColor"
-                                                                      strokeWidth="4"
-                                                                    ></circle>
-                                                                    <path
-                                                                      className="opacity-75"
-                                                                      fill="currentColor"
-                                                                      d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z"
-                                                                    ></path>
-                                                                  </svg>
-                                                                </>
-                                                              ) : (
-                                                                <>Accept</>
-                                                              )}
-                                                            </button>
-                                                            <button
-                                                              onClick={() => handleReject(pandit._id)}
-                                                              className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 w-40 flex gap-2 justify-center"
-                                                            >
-                                                              {rejectloading ? (
-                                                                <>
-                                                                  Please wait
-                                                                  <svg
-                                                                    className="ml-2 animate-spin h-5 w-5 text-white"
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    fill="none"
-                                                                    viewBox="0 0 24 24"
-                                                                  >
-                                                                    <circle
-                                                                      className="opacity-25"
-                                                                      cx="12"
-                                                                      cy="12"
-                                                                      r="10"
-                                                                      stroke="currentColor"
-                                                                      strokeWidth="4"
-                                                                    ></circle>
-                                                                    <path
-                                                                      className="opacity-75"
-                                                                      fill="currentColor"
-                                                                      d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z"
-                                                                    ></path>
-                                                                  </svg>
-                                                                </>
-                                                              ) : (
-                                                                <>Reject</>
-                                                              )}
-                                                            </button>
-                                                          </>
-                                                        )}
-                                                      </div> */}
-                      
-                                                      {/* <button
-                                // onClick={onClose}
-                                className="mt-6 bg-red-500 text-white px-4 py-2 rounded"
-                              >
-                                Close
-                              </button> */}
+                                                      
                                                     </div>
                                                   </ModalContent>
                                                 </ModalBody>

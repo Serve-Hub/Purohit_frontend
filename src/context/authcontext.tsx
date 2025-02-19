@@ -1,14 +1,24 @@
 'use client';
 import React, { createContext, useEffect, useState,} from 'react'
 import axios from 'axios';
+import $axios from '../lib/axios.instance';
+import { updateSessionToken } from '@/utils/sessionHandler';
 
+
+interface UserInfo {
+  isPandit: boolean;
+  name: string;
+  email: string;
+  avatar:string;
+  firstName:string;
+  lastName:string;
+  _id:string;
+}
 type AuthContextType = {
-  // auth: boolean;
-  // setAuth: React.Dispatch<React.SetStateAction<boolean>>;
-  // login: () => Promise<void>;
-  // setLoginfo: React.Dispatch<React.SetStateAction<{ name: string; usertype: string; email: string }>>;
-  // loginfo: { name: string; usertype: string; email: string };
+
   token: string | null;
+  userInfo?: UserInfo | null;  
+  loginfo: () => Promise<UserInfo | null>;  // Added loginfo function in context
   
 };
  export const AuthContext=createContext<AuthContextType | null>(null);
@@ -27,9 +37,10 @@ function AuthProvider({children}: { children: React.ReactNode }) {
   //                               //   imagepath:"" ,                       
   // })
   const [token, setToken] = useState<string | null>(null);
-const [userInfo,setUserInfo]=useState({});
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null); // Fix typing
 
   useEffect(() => {
+    updateSessionToken();
     const storedToken = localStorage.getItem('token_id');
     if (storedToken) {
       setToken(storedToken);
@@ -43,21 +54,15 @@ const [userInfo,setUserInfo]=useState({});
     console.log("Token is:", token);
   
     try {
-      const res = await axios.get(
-        "https://purohit-backend.onrender.com/api/v1/users/getCurrentUser",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await $axios.get("/api/v1/users/getCurrentUser");
+
       console.log("data returned from the context", res.data.data);
        setUserInfo(res.data.data)
       console.log("userinfo is",userInfo)
       return res.data.data; // Ensure this data is returned
 
     } catch (error) {
-      console.error("Error occurred in the getUser Context", error);
+      console.log("Error occurred in the getUser Context", error);
       return null; // Return null or an appropriate fallback value
     }
   };

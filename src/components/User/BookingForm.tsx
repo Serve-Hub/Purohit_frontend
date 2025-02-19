@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { boolean, z } from "zod";
@@ -21,7 +22,7 @@ import {
   FormControl,
   FormMessage,
 } from "@/src/components/ui/form";
-
+import $axios from "@/src/lib/axios.instance";
 // Define the schema using Zod
 const bookingSchema = z.object({
   date: z.date().nullable().refine((val) => val !== null, "Date is required"),
@@ -32,7 +33,7 @@ const bookingSchema = z.object({
   tollAddress: z.string().nonempty("Toll address is required"),
 });
 
-const BookingForm = ({id}) => {
+const BookingForm = ({id}:{id:string}) => {
   const [isBookLoading, setIsBookLoading] = useState(false);
   const[hasbooked,setHasbooked]=useState(boolean)
   const [isBooked, setIsBooked] = useState(false); 
@@ -80,22 +81,20 @@ const onSubmit = async (data) => {
   setIsBookLoading(true);
   console.log("data is ",data)
   try {
-    const response = await axios.post(
-      `https://purohit-backend.onrender.com/api/v1/booking/bookings/${id}`,
+    const response = await $axios.post(
+      `/api/v1/booking/bookings/${id}`,
       {
-        date: data.date ? data.date.toISOString() : null, // Convert date to ISO string
+        date: data.date ? data.date.toISOString() : null, 
         time: data.time,
         province: data.province,
         district: data.district,
         municipality: data.municipality,
         tollAddress: data.tollAddress,
-        amount: 1000, 
+        amount: 1000,
       },
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-
         },
       }
     );
@@ -110,11 +109,11 @@ const onSubmit = async (data) => {
       setIsBookLoading(false);
 
     }
-  } catch (error) {
+  } catch (error:Error) {
     if (error.response) {
       // The request was made, and the server responded with a status code
       // that falls out of the range of 2xx
-      console.error("Error response data:", error.response.data);
+      console.log("Error response data:", error.response.data);
       alert(`Error: ${error.response.data.message || "Booking failed"}`);
       setIsBookLoading(false);
 
@@ -122,13 +121,13 @@ const onSubmit = async (data) => {
       setIsBookLoading(false);
 
       // The request was made but no response was received
-      console.error("No response received:", error.request);
+      console.log("No response received:", error.request);
       alert("No response from server. Please try again later.");
     } else {
       setIsBookLoading(false);
 
       // Something happened in setting up the request that triggered an Error
-      console.error("Error setting up request:", error.message);
+      console.log("Error setting up request:", error.message);
       alert("An error occurred. Please try again.");
     }
   }

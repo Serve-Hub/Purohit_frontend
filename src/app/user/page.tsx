@@ -6,10 +6,27 @@ import { Button } from '@/src/components/ui/button';
 import { useContext,useEffect } from 'react';
 import { AuthContext } from '@/src/context/authcontext';
 import { usePathname,useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
+import { updateSessionToken } from '@/utils/sessionHandler';
+import AOS from "aos";
+import "aos/dist/aos.css";
+
+
 
 function page() {
   const currentPath=usePathname();
   useEffect(() => {
+    AOS.init({
+      duration: 1000, // Animation duration in ms
+      easing: "ease-in-out", // Animation easing
+      once: true, // Whether animation should happen only once
+    });
+updateSessionToken();
+
+    // console.log("accesstoken  is",Cookies.get(""))
+
+
+    console.log("admin and pandit is",Cookies.get("isPandit"),Cookies.get("isAdmin"))
     // Check for path changes globally
     console.log("currentpath",currentPath);
     if (!currentPath || !currentPath.startsWith("/pandit")) {
@@ -27,7 +44,8 @@ function page() {
   }, [currentPath]); // Only re-run this effect if router.events chang
   const authcontext=useContext(AuthContext);
 
-const{userInfo}=authcontext;
+const userInfo = authcontext?.userInfo; // Safe access using optional chaining
+
 console.log("userinfo in the landing page",userInfo);
 
 
@@ -63,7 +81,7 @@ console.log("userinfo in the landing page",userInfo);
 
       <img src="/img/diyo.png" alt="" className="absolute end-80 top-12" />
       <div className=" mt-5 container w-full">
-        <h1 className="text-pandit text-5xl w-6/7  font-semibold p-4">
+        <h1 className="text-pandit text-5xl w-6/7  font-semibold p-4" data-aos="fade-right">
           Welcome to Purohit – Your
           <span className="text-ypandit p-4">Spiritual</span>
           <br />
@@ -72,13 +90,13 @@ console.log("userinfo in the landing page",userInfo);
 
         <div className="flex w-full gap-5 justify-between items-start">
           <div className="flex flex-col gap-18 pt-10">
-            <p className="text-slate-400 font-medium">
+            <p className="text-slate-400 font-medium" data-aos="fade-right">
               Connecting you with trusted Pandits for every ritual and
               celebration. From pujas to weddings, experience seamless booking
               and personalized spiritual services.
             </p>
             <form action="https://formbold.com/s/unique_form_id" method="POST">
-              <div className="relative">
+              <div className="relative"  data-aos="fade-left">
                 <button className="absolute left-2 top-1/2 -translate-y-1/2">
                   <svg
                     className="fill-pandit hover:fill-primary dark:fill-bodydark dark:hover:fill-primary"
@@ -107,6 +125,7 @@ console.log("userinfo in the landing page",userInfo);
                   type="text"
                   placeholder="Search for available pujas"
                   className="shadow bg-transparent pl-9 pr-4 font-medium focus:outline-none xl:w-90 border border-pandit text-pandit placeholder:text-pandit rounded-full p-3 hidden lg:block "
+               
                 />
               </div>
             </form>
@@ -155,13 +174,15 @@ console.log("userinfo in the landing page",userInfo);
 
           <img src="/img/userhome.png"
           // style={width:"12px",height:"110px"}
-           alt="" className="object-contain w-2/3 " />
+           alt="" className="object-contain w-2/3 "
+            data-aos="zoom-out"
+           />
 {/* </div> */}
         </div>
 
         <div className="flex gap-4 mt-10">
           {feature.map((ft,index) => (
-            <div className="border border-pandit text-pandit p-5 rounded-lg" key={index}>
+            <div className="border border-pandit text-pandit p-5 rounded-lg" key={index} data-aos="flip-left">
               <img src={ft.img} alt="" className='object-cover' />
               <h1 className="text-xl font-bold">{ft.name}</h1>
               <p>{ft.text}</p>
@@ -171,7 +192,7 @@ console.log("userinfo in the landing page",userInfo);
       </div>
     </div>
 {/* end of landing hero */}
-{userInfo.isPandit ? null : <Bcpandit />}
+{userInfo && userInfo.isPandit ? null : <Bcpandit />}
 
 <Popularpuja/>
 

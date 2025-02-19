@@ -1,10 +1,12 @@
 'use client';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
+// import $axios from "@src/lib/axios.instance.ts";
+import $axios from '@/src/lib/axios.instance';
 
 
 
@@ -25,10 +27,10 @@ console.log(token,email);
   const sendOtp=async ()=>{
     setOtpSent(true);
 
-    const response = await axios.post('https://purohit-backend.onrender.com/api/v1/users/register/sendEmailOTP',{email,token},{
-        headers: {
-            'Content-Type': 'application/json',
-        },
+    const response = await $axios.post("/api/v1/users/register/sendEmailOTP", { email, token }, {
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
     if (response.data.success) {
         alert('OTP sent successfully!');
@@ -48,7 +50,7 @@ console.log(token,email);
       console.log("emailtoken in verify",otp,restoken)
       const token=restoken
       console.log("verify vanda maathi ")
-      const response = await axios.post('https://purohit-backend.onrender.com/api/v1/users/register/verifyOtp', {token,otp });
+      const response = await $axios.post("/api/v1/users/register/verifyOtp", { token, otp });
       console.log("verify vayesi",response)
       console.log(response.status)
       if (response.status==200) {

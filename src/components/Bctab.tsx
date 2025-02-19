@@ -2,7 +2,17 @@
 import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { useRouter } from 'next/navigation';
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useEffect } from "react";
+
 const Bctab = () => {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // Animation duration in ms
+      easing: "ease-in-out", // Animation easing
+    });
+  })
   const [activeTab, setActiveTab] = useState(1);
   const [animateTab, setAnimateTab] = useState(false);
 
@@ -52,55 +62,56 @@ const ckyp=async()=>{
         {activeTab === 1 && (
           <div>
  <div className="mx-auto max-w-2xl lg:text-center">
-          <p className="mt-2 text-pretty lg:text-3xl font-semibold tracking-tight text-pg sm:text-5xl ">
+          <p className="mt-2 text-pretty lg:text-3xl font-semibold tracking-tight text-pg sm:text-5xl " data-aos="fade-left">
           What You'll Do on Purohit         
            </p>
     
         </div>      
-        <ul className="space-y-4 mt-5 text-slate-400" >
-        <li className="flex items-start gap-3">
-          <span className="text-pg text-xl">🔹</span>
-          <p className="text-lg">Perform Rituals: Offer pujas, weddings, and spiritual services seamlessly.</p>
-        </li>
-        <li className="flex items-start gap-3">
-          <span className="text-pg text-xl">🔹</span>
-          <p className="text-lg">Manage Bookings: Accept and schedule ceremonies using our simple booking system.</p>
-        </li>
-        <li className="flex items-start gap-3">
-          <span className="text-pg text-xl">🔹</span>
-          <p className="text-lg">Showcase Your Skills: Create a profile to highlight your experience and services.</p>
-        </li>
-        <li className="flex items-start gap-3">
-          <span className="text-pg text-xl">🔹</span>
-          <p className="text-lg">Connect with Clients: Chat directly with customers to meet their needs.</p>
-        </li>
-        <li className="flex items-start gap-3">
-          <span className="text-pg text-xl">🔹</span>
-          <p className="text-lg">Track Your Earnings: Securely monitor payments and earnings through our system.</p>
-        </li>
-      </ul>
 
 
-      <Button
-      onClick={handleNext}
-                className=" bg-pandit  text-white mt-10 ms-30 w-30"
-                variant="default"
-                size="default"
-              >
-                Next
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="size-6"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.19l-6.22-6.22a.75.75 0 0 1 0-1.06Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </Button>
+      <ul className="space-y-4 mt-5 text-slate-400">
+  {[
+    "Perform Rituals: Offer pujas, weddings, and spiritual services seamlessly.",
+    "Manage Bookings: Accept and schedule ceremonies using our simple booking system.",
+    "Showcase Your Skills: Create a profile to highlight your experience and services.",
+    "Connect with Clients: Chat directly with customers to meet their needs.",
+    "Track Your Earnings: Securely monitor payments and earnings through our system.",
+  ].map((point, index, arr) => (
+    <li
+      key={index}
+      className="flex items-start gap-3"
+      data-aos="fade-up"
+      data-aos-delay={index * 300} // Each point appears 300ms after the previous one
+    >
+      <span className="text-pg text-xl">🔹</span>
+      <p className="text-lg">{point}</p>
+    </li>
+  ))}
+</ul>
+
+<Button
+  onClick={handleNext}
+  className="bg-pandit text-white mt-10 ms-30 w-30"
+  variant="default"
+  size="default"
+  data-aos="fade-up"
+  data-aos-delay={4 * 300} // Button appears after the last item
+>
+  Next
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className="size-6"
+  >
+    <path
+      fillRule="evenodd"
+      d="M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.19l-6.22-6.22a.75.75 0 0 1 0-1.06Z"
+      clipRule="evenodd"
+    />
+  </svg>
+</Button>
+
                 
           </div>
         )}

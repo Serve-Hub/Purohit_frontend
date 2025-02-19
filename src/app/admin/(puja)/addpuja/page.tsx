@@ -4,7 +4,8 @@ import React, { FormEvent, useState } from "react";
 import SelectGroupTwo from "@/src/components/SelectGroupTwo";
 import Breadcrumb from "@/src/components/admin/Breadcrumbs/Breadcrumb";
 import axios from "axios";
-
+import $axios from "@/src/lib/axios.instance";
+import { useRouter } from "next/navigation";
 function page() {
   // AOS.init();
   //   useEffect(() => {
@@ -14,6 +15,7 @@ function page() {
   //       once: true,
   //     });
   //   }, []);
+  const router=useRouter();
 
   type FormDataType = {
     pujaName: string;
@@ -21,7 +23,7 @@ function page() {
     category: string;
     duration: string;
     description: string;
-    pujaImage: File | null; // Allow file to be either `null` or `File`.
+    pujaImage: File | null; 
   };
 
   const [formData, setFormData] = useState<FormDataType>({
@@ -37,7 +39,11 @@ function page() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
-
+ const [imageData, setImageData] = useState<{ pujaImage: File | null }>({
+  pujaImage: null,
+  });
+const [imagepreview, setImagepreview] = useState<string | null>(null);
+  
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -48,6 +54,14 @@ function page() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Ensure that 'files' is not null and has at least one file
     const file = e.target.files ? e.target.files[0] : null;
+    // if (file) {
+    //   setCoverData({ coverPhoto: file });
+    //   const reader = new FileReader();
+    //   reader.onloadend = () => {
+    //     setCoverpreview(reader.result as string);
+    //   };
+    //   reader.readAsDataURL(file);
+    // }
 
     if (file) {
       // If there's a file, update the formData with the selected file
@@ -55,6 +69,12 @@ function page() {
         ...prev,
         pujaImage: file,
       }));
+      setImageData({ pujaImage: file });
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagepreview(reader.result as string);
+        };
+        reader.readAsDataURL(file);
     }
   };
 
@@ -91,23 +111,19 @@ function page() {
       Authorization: `Bearer ${token}`,
     });
     try {
-      const response = await axios.post(
-        "https://purohit-backend.onrender.com/api/v1/admin/addPuja",
-        fd,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await $axios.post("/api/v1/admin/addPuja", fd, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       console.log("resopne", response);
       setLoading(false);
       if (response.data.success) {
         setSuccess(true);
         setSuccessMessage("Puja added successfully!");
+        router.push("/admin/viewpuja");
       }
-      alert("puja ");
+      // alert("puja ");
     } catch (error: any) {
       setLoading(false);
       console.log("error is ", error);
@@ -327,6 +343,15 @@ function page() {
                           id="FileUpload"
                           className="relative mb-5.5 block w-full cursor-pointer appearance-none rounded border border-dashed border-pg bg-gray px-4 py-4 dark:bg-meta-4 sm:py-7.5"
                         >
+                          {imagepreview?(
+                            <img src={imagepreview}
+                             alt="eta image xa" 
+                             style={{height:"320px",width:"320px"}}
+                            //  height={200}
+                            //  width={200}
+                             />
+                          ):(
+<>
                           <input
                             type="file"
                             name="pujaImage"
@@ -371,6 +396,9 @@ function page() {
                             <p className="mt-1.5">SVG, PNG, JPG or GIF</p>
                             <p>(max, 800 X 800px)</p>
                           </div>
+</>
+
+                          )}
                         </div>
 
                         {/* <div className="flex justify-end gap-4.5">

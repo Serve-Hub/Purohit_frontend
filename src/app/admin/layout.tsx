@@ -7,6 +7,8 @@ import React, { useEffect, useState } from "react";
 import Loader from "@/src/components/common/Loader";
 import DefaultLayout from "@/src/components/admin/Dashboard/DefaultLayout";
 import PoojaProvider from "@/src/context/poojacontext";
+import AuthProvider from "@/src/context/authcontext";
+
 
 export default function RootLayout({
   children,
@@ -26,9 +28,11 @@ export default function RootLayout({
     <html lang="en">
       <body suppressHydrationWarning={true}>
         <div className="dark:bg-boxdark-2 dark:text-bodydark">
+          <AuthProvider>
           <DefaultLayout>
             <PoojaProvider>{loading ? <Loader /> : children}</PoojaProvider>
           </DefaultLayout>
+          </AuthProvider>
         </div>
       </body>
     </html>

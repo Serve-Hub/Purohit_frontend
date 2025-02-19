@@ -12,25 +12,38 @@ const SidebarItem = ({ item, pageName, setPageName }: any) => {
   const currentPath = usePathname();
   
   useEffect(() => {
-    // Set the active item based on the current URL path
-    
-    // const currentPath = router.pathname;
+    console.log("current path is".replace,currentPath);
     const storedItem = localStorage.getItem("selectedPanditMenu") || "dashboard";
-    console.log("Current Path:", currentPath);
+    // Define a mapping between page routes and sidebar labels
+    const routeToLabelMap: { [key: string]: string } = {
+      "/pandit/bookingrequest": "user request",
+      "/pandit/allbookings": "your bookings",
+      "/pandit/notification": "all notifications",
+      "/pandit/Profile": "Profile",
 
-    if (storedItem && currentPath.includes(storedItem)) {
+    };
+    // Find the corresponding label for the current path
+    const matchedLabel = routeToLabelMap[currentPath] || "dashboard";
+    console.log("stored item and route is",storedItem,matchedLabel)
+  
+    // If stored item matches current path's label, set it as active
+    if (storedItem.toLowerCase() === matchedLabel) {
       setActiveItem(storedItem);
     } else {
-      setActiveItem("dashboard"); // default active item
-      
+      setActiveItem(matchedLabel); // Set default to matched path label
     }
- 
-  }, [currentPath]);
+  
+    setPageName(matchedLabel); 
+    
+    console.log("pagename is",pageName,item.label)
+  }, [currentPath, setPageName]);
   
   const handleClick = () => {
     const updatedPageName =
     pageName !== item.label.toLowerCase() ? item.label.toLowerCase() : "";
     localStorage.setItem("selectedPanditMenu", updatedPageName); // Store selected item in localStorage
+    // setActiveItem(updatedPageName);  // Update the state immediately for UI change
+
     return setPageName(updatedPageName);
   };
 

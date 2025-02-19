@@ -1,5 +1,6 @@
 import React, { createContext, useState } from "react";
 import axios from "axios";
+import $axios from "../lib/axios.instance";
 
 // Define the type for the context
 type PoojaContextType = {
@@ -40,27 +41,24 @@ function PoojaProvider({ children }: { children: React.ReactNode }) {
 
       console.log("filter in getPooja",maxPrice)
     try {
-      const res = await axios.get(
-        "https://purohit-backend.onrender.com/api/v1/admin/getPujas",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            page,
-            limit,
-            category,
-            minPrice,
-            maxPrice,
-            minDuration,
-            maxDuration,
-          },
-        }
-      );
+      const res = await $axios.get("/api/v1/admin/getPujas", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          page,
+          limit,
+          category,
+          minPrice,
+          maxPrice,
+          minDuration,
+          maxDuration,
+        },
+      });
       console.log("Puja data retrieved:", res.data.data);
       return res.data.data;
     } catch (error) {
-      console.error("Error fetching puja data:", error);
+      console.log("Error fetching puja data:", error);
       return null; // Return null or an empty value if there's an error
     }
   };

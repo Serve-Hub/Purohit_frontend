@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 // import { userInfo } from "os";
 import LetterAvatar from "../LetterAvatar";
+import ReviewSection from "../ReviewSection";
 // import { userInfo } from "os";
 
 const Profile = () => {
@@ -31,14 +32,14 @@ const [user,setUser]=useState({})
         setUser(userInfo);
 // console.log("üserinfo is",userInfo)
       } catch (error) {
-        console.error("Error fetching data:", error.message);
+        console.log("Error fetching data:", error.message);
       }
     };
 
     fetchData();
   }, [authContext]);
 
- console.log("userimage is ",user.avatar)
+ console.log("userimage is ",user?.avatar)
 
 
   return (
@@ -145,25 +146,25 @@ const [user,setUser]=useState({})
             <p className="font-medium text-slate-400 text-sm">{user?.email}</p>
             <p className="font-medium text-slate-400 text-sm">{user?.contact}</p>
 
-            <div className="text-pandit mx-auto mb-5.5 mt-5 grid max-w-[600px] grid-cols-3 rounded-[5px] border border-orange-200 py-[9px] shadow-1 dark:border-dark-3 dark:bg-dark-2 dark:shadow-card">
-              <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-dark-3 xsm:flex-row">
+            <div className="text-pandit mx-auto mb-5.5 mt-5 grid max-w-[600px] grid-cols-1 rounded-[5px] border border-orange-200 py-[9px] shadow-1 dark:border-dark-3 dark:bg-dark-2 dark:shadow-card">
+              {/* <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-dark-3 xsm:flex-row">
                 <span className="font-medium text-dark dark:text-white">
                   259
                 </span>
                 <span className="text-body-sm ">Blogs</span>
-              </div>
+              </div> */}
               <div className="flex flex-col items-center justify-center gap-2 border-r border-stroke px-4 dark:border-dark-3 xsm:flex-row">
                 <span className="font-medium text-dark dark:text-white">
                   129
                 </span>
-                <span className="text-body-sm-sm">Puja performed</span>
+                <span className="text-body-sm-sm">Puja Completed</span>
               </div>
-              <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row">
+              {/* <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row">
                 <span className="font-medium text-dark dark:text-white">
                   2
                 </span>
                 <span className="text-body-sm">Reviews</span>
-              </div>
+              </div> */}
             </div>
             <div className="mx-auto max-w-[720px]">
       {/* Tab buttons */}
@@ -174,12 +175,12 @@ const [user,setUser]=useState({})
         >
           About Me
         </button>
-        <button
+        {/* <button
           className={`py-2 px-4 text-sm font-medium ${activeTab === 'reviews' ? 'text-pandit dark:text-orange-400' : 'text-gray-500 dark:text-gray-400'}`}
           onClick={() => setActiveTab('reviews')}
         >
           Reviews
-        </button>
+        </button> */}
       </div>
 
       {/* Tab content */}
@@ -191,15 +192,11 @@ const [user,setUser]=useState({})
           </p>
         </div>
       ) : (
-        <div className="mt-4">
-          <h4 className="font-medium text-dark dark:text-white">Reviews</h4>
-          <p className="mt-4">
-            "This was a great experience! Highly recommended."
-          </p>
-          <p className="mt-2">
-            "Amazing service, will definitely use again."
-          </p>
-        </div>
+        <></>
+        // <div className="mt-4">
+        //   <h4 className="font-medium text-dark dark:text-white">Reviews</h4>
+        //  <ReviewSection/>
+        // </div>
       )}
              </div>
             <div className="mt-4.5">

@@ -1,16 +1,15 @@
-import ECommerce from "@/src/components/pandit/Dashboard/E-commerce";
-import { Metadata } from "next";
+'use client';
 import DefaultLayout from "@/src/components/pandit/Layouts/DefaultLaout";
-import React from "react";
+import React, { useEffect } from "react";
 import Stats from "@/src/components/pandit/Dashboard/Stats";
+import { updateSessionToken } from "@/utils/sessionHandler";
 
-export const metadata: Metadata = {
-  title:
-    "Next.js E-commerce Dashboard Page | NextAdmin - Next.js Dashboard Kit",
-  description: "This is Next.js Home page for NextAdmin Dashboard Kit",
-};
+
 
 export default function Home() {
+  useEffect(()=>{
+    updateSessionToken();
+  })
   return (
     <>
       <DefaultLayout>

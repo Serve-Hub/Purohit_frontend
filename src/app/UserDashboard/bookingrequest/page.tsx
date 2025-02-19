@@ -4,29 +4,31 @@ import axios from 'axios';
 import DefaultLayout from '@/src/components/User/Layouts/DefaultLaout';
 import Breadcrumb from '@/src/components/User/Breadcrumbs/Breadcrumb';
 import AvailablePandit from '@/src/components/User/AvailablePandit';
+import $axios from '@/src/lib/axios.instance';
 
 function Page() {
-  const [bookingData, setBookingData] = useState([]);
+  interface Booking {
+    pujaID: {
+      pujaName: string;
+    };
+    _id:string
+  }
+  
+  const [bookingData, setBookingData] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [selectedPuja, setSelectedPuja] = useState(null);
+  const [selectedPuja, setSelectedPuja] = useState<string | null>(null);
   const token = localStorage.getItem('token_id');
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(
-          'https://purohit-backend.onrender.com/api/v1/booking/bookings/viewBooking',
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await $axios.get("/api/v1/booking/bookings/viewBooking");
+
         console.log("data is",res.data.data)
         setBookingData(res.data.data.bookingsWithPanditDetails);
         setTotalPages(res.data.data.totalPages);
@@ -42,7 +44,7 @@ function Page() {
     fetchData();
   }, [currentPage, token]);
 
-  const onPageChange = (page) => {
+  const onPageChange = (page:number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }

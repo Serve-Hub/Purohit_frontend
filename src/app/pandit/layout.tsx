@@ -34,7 +34,6 @@ export default function RootLayout({
       {/* <DefaultLayout> */}
 <AuthProvider>
         <Toaster />
-
         {loading ? <Loader /> : children}
 </AuthProvider>
       {/* </DefaultLayout> */}

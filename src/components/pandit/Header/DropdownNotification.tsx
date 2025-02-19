@@ -1,39 +1,69 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState,useContext } from "react";
 import Link from "next/link";
 import ClickOutside from "@/src/components/ClickOutside";
 import Image from "next/image";
+import Notification from "../../User/Notification";
+import { useToast } from "@/hooks/use-toast";
+import { usePathname, useRouter } from "next/navigation";
+import { AuthContext } from "@/src/context/authcontext";
 
-const notificationList = [
-  {
-    image: "/images/user/user-15.png",
-    title: "Piter Joined the Team!",
-    subTitle: "Congratulate him",
-  },
-  {
-    image: "/images/user/user-02.png",
-    title: "New message received",
-    subTitle: "Devid sent you new message",
-  },
-  {
-    image: "/images/user/user-26.png",
-    title: "New Payment received",
-    subTitle: "Check your earnings",
-  },
-  {
-    image: "/images/user/user-28.png",
-    title: "Jolly completed tasks",
-    subTitle: "Assign her newtasks",
-  },
-  {
-    image: "/images/user/user-27.png",
-    title: "Roman Joined the Team!",
-    subTitle: "Congratulate him",
-  },
-];
+
 
 const DropdownNotification = () => {
+
+  const  userInfo  = useContext(AuthContext)?.userInfo;
+  const token=useContext(AuthContext)?.token;
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [notifying, setNotifying] = useState(true);
+  const [notifying, setNotifying] = useState(false);
+  const [notifications, setNotifications] = useState({});
+  const [socketConnected, setSocketConnected] = useState(false);
+  const [loading, setLoading] = useState(false);
+const pathname = usePathname();
+
+  const { toast } = useToast()
+  const webSocket = useRef<WebSocket |null>(null);
+  useEffect(()=>{
+    // console.log("cookie is",Cookies.get("loggedin"))
+
+  const connectWebSocket = async() => {
+    // webSocket.current =  await new WebSocket(`ws://localhost:3000/?userID=${userInfo?._id}`); 
+    webSocket.current =  await new WebSocket(`wss://purohit-backend.onrender.com?userID=${userInfo?._id}`); 
+
+    webSocket.current.onopen = () => {
+      
+      console.log('WebSocket connected');
+      setSocketConnected(true);
+    };
+    
+    webSocket.current.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        console.log("Notification data is ", data);
+    
+        toast({
+          title: data[4].type,
+          description: data[3].message, 
+          className: "bg-white border border-orange-500 bg-orange-100 text-orange-700",  // Optional styling
+        });
+    
+        console.log("Toast bar should be implemented");
+    
+        // setNotifications(data); 
+        // console.log("Notification state in navbar", notifications);
+    
+        setNotifying(true);  // New notification triggers the dot
+      } catch (err) {
+        console.error('Error parsing WebSocket message', err);
+      }
+    };
+        }
+        connectWebSocket();
+      })
+
+        // const handleBellClick = () => {
+        //   setHasUnreadNotifications(false); // Remove the orange dot when clicked
+        // };  
 
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative hidden sm:block">
@@ -64,38 +94,38 @@ const DropdownNotification = () => {
             </svg>
 
             <span
-              className={`absolute -top-0.5 right-0 z-1 h-2.5 w-2.5 rounded-full border-2 border-gray-2 bg-red-light dark:border-dark-3 ${
+              className={`absolute -top-0.5 right-0 z-1 h-2.5 w-2.5 rounded-full border-2 border-gray-2 bg-pandit dark:border-dark-3 ${
                 !notifying ? "hidden" : "inline"
               }`}
             >
-              <span className="absolute -z-1 inline-flex h-full w-full animate-ping rounded-full bg-red-light opacity-75"></span>
+              <span className="absolute -z-1 inline-flex h-full w-full animate-ping rounded-full bg-pandit opacity-75"></span>
             </span>
           </span>
         </Link>
 
         {dropdownOpen && (
           <div
-            className={`absolute -right-27 mt-7.5 flex h-[550px] w-75 flex-col rounded-xl border-[0.5px] border-stroke bg-white px-5.5 pb-5.5 pt-5 shadow-default dark:border-dark-3 dark:bg-gray-dark sm:right-0 sm:w-[364px]`}
+            className="z-9999 absolute right-0  mt-2 w-150 p-5 pt-7 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
           >
-            <div className="mb-5 flex items-center justify-between">
-              <h5 className="text-lg font-medium text-dark dark:text-white">
-                Notifications
-              </h5>
-              <span className="rounded-md bg-primary px-2 py-0.5 text-body-xs font-medium text-white">
+            {/* <div className=" flex items-center justify-between"> */}
+            
+              {/* <span className="rounded-md bg-primary px-2 py-0.5 text-body-xs font-medium text-white">
                 5 new
-              </span>
-            </div>
+              </span> */}
+            {/* </div> */}
+            
+            <Notification />
 
+{/* 
             <ul className="no-scrollbar mb-5 flex h-auto flex-col gap-1 overflow-y-auto">
-          <Notification/>
-            </ul>
+            </ul> */}
 
-            <Link
+            {/* <Link
               className="flex items-center justify-center rounded-[7px] border border-primary p-2.5 font-medium text-primary hover:bg-blue-light-5 dark:border-dark-4 dark:text-dark-6 dark:hover:border-primary dark:hover:bg-blue-light-3 dark:hover:text-primary"
               href="#"
             >
               See all notifications
-            </Link>
+            </Link> */}
           </div>
         )}
       </li>

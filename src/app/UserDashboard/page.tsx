@@ -86,7 +86,6 @@
 // };
 
 // export default Sidebar;
-import ECommerce from "@/src/components/pandit/Dashboard/E-commerce";
 import { Metadata } from "next";
 import DefaultLayout from "@/src/components/User/Layouts/DefaultLaout";
 import React from "react";
@@ -97,7 +96,6 @@ export const metadata: Metadata = {
     "Next.js E-commerce Dashboard Page | NextAdmin - Next.js Dashboard Kit",
   description: "This is Next.js Home page for NextAdmin Dashboard Kit",
 };
-; // Only re-run this effect if router.events change
 
 export default function Home() {
   return (

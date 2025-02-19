@@ -6,6 +6,7 @@ import PasswordValidation from './PasswordValidation';
 import TermsAndConditions from '@/src/components/TermsAndConditions';
 import { useRouter } from 'next/navigation'; // Import useRouter
 import Link from 'next/link';
+import $axios from "../lib/axios.instance";
 
 const SignupForm = () => {
   const[show,setShow]=useState(false);
@@ -52,7 +53,7 @@ const SignupForm = () => {
     event.preventDefault();
     console.log(formData);
     try {
-      const response = await axios.post('https://purohit-backend.onrender.com/api/v1/users/register', formData);
+      const response = await $axios.post("/api/v1/users/register", formData);
       console.log('User registered:', response.data);
             const token = response.data.data.token;
             const email = formData.email;      
@@ -67,7 +68,7 @@ const SignupForm = () => {
       if (error.response?.status === 409) {
           alert("Email already exists. Please use a different email.");
       } else {
-          console.error(error);
+          console.log(error);
       }
   }
 

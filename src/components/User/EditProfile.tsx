@@ -16,7 +16,7 @@ import {
 import { Button } from "@/src/components/ui/button";
 import Breadcrumb from "./Breadcrumbs/Breadcrumb";
 import { useToast } from "@/hooks/use-toast"
-
+import $axios from "@/src/lib/axios.instance";
 
 // Define the Zod schema
 const profileSchema = z.object({
@@ -80,15 +80,8 @@ function EditProfile() {
     console.log("eta handle submit ma",data)
     try {
       setLoading(true);
-      const response = await axios.patch(
-        "https://purohit-backend.onrender.com/api/v1/users/updateAccountDetails",
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await $axios.patch("/api/v1/users/updateAccountDetails", data);
+
       console.log("Profile updated successfully:", response.data);
       if(response.data.statusCode===200){
         console.log("update");
@@ -100,7 +93,7 @@ function EditProfile() {
 
   }
     } catch (error) {
-      console.error("Error updating profile:", error.response?.data || error.message);
+      console.log("Error updating profile:", error.response?.data || error.message);
     } finally {
       setLoading(false);
     }
@@ -158,15 +151,11 @@ function EditProfile() {
 console.log("avatar is",fd)
     try {
       setLoading(true);
-      const response = await axios.patch(
-        "https://purohit-backend.onrender.com/api/v1/Users/profileImage",
-        fd,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await $axios.patch("/api/v1/Users/profileImage", fd, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Ensure the Content-Type is set correctly for form data
+        },
+      });
       console.log("Profile updated successfully:", response.data);
       if(response.data.statusCode===200){
         console.log("update");
@@ -178,7 +167,7 @@ console.log("avatar is",fd)
 
   }
     } catch (error) {
-      console.error("Error updating profile:", error.response?.data || error.message);
+      console.log("Error updating profile:", error.response?.data || error.message);
     } finally {
       setLoading(false);
     }
@@ -191,15 +180,11 @@ console.log("cover photo is",cd)
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await axios.patch(
-        "https://purohit-backend.onrender.com/api/v1/users/coverImage",
-        cd,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await $axios.patch("/api/v1/users/coverImage", cd, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Ensure the Content-Type is set for form data
+        },
+      });
       console.log("cover Image updated successfully:", response.data);
       if(response.data.statusCode===200){
             console.log("update");
@@ -211,7 +196,7 @@ console.log("cover photo is",cd)
 
       }
     } catch (error) {
-      console.error("Error updating profile:", error.response?.data || error.message);
+      console.log("Error updating profile:", error.response?.data || error.message);
     } finally {
       setLoading(false);
     }

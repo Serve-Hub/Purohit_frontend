@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
+import $axios from '@/src/lib/axios.instance';
 
 function AvailablePandits({ notificationId }) {
   const [pandits, setPandits] = useState([]);
@@ -15,20 +16,14 @@ function AvailablePandits({ notificationId }) {
     setError(null);
 
     try {
-      const response = await axios.get(
-        `https://purohit-backend.onrender.com/api/v1/booking/bookings/${notificationId}/accepted-pandits`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await $axios.get(`/api/v1/booking/bookings/${notificationId}/accepted-pandits`);
+
 
       console.log("Available Pandits Response:", response.data);
       setPandits(response.data.data);
     } catch (err) {
       setError("Failed to fetch available pandits.");
-      console.error("Error fetching available pandits:", err);
+      console.log("Error fetching available pandits:", err);
     } finally {
       setLoading(false);
     }
@@ -43,20 +38,13 @@ function AvailablePandits({ notificationId }) {
   // Accept booking
   const handleAccept = async () => {
     try {
-      const res = await axios.put(
-        `https://purohit-backend.onrender.com/api/v1/booking/notifications/accept/${notificationId}`,
-        {}, // Empty body
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await $axios.put(`/api/v1/booking/notifications/accept/${notificationId}`, {});
+
 
       console.log("Booking Accepted:", res.data);
       alert("Booking accepted successfully!");
     } catch (error) {
-      console.error("Error accepting booking:", error);
+      console.log("Error accepting booking:", error);
       alert("Failed to accept booking. Please try again.");
     }
   };
@@ -64,20 +52,11 @@ function AvailablePandits({ notificationId }) {
   // Reject booking
   const handleReject = async () => {
     try {
-      await axios.put(
-        `https://purohit-backend.onrender.com/api/v1/booking/notifications/reject/${notificationId}`,
-        {}, // Empty body
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+      await $axios.put(`/api/v1/booking/notifications/reject/${notificationId}`, {});
       console.log("Booking Rejected");
       alert("Booking rejected successfully!");
     } catch (error) {
-      console.error("Error rejecting booking:", error);
+      console.log("Error rejecting booking:", error);
       alert("Failed to reject booking. Please try again.");
     }
   };

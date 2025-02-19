@@ -1,11 +1,47 @@
-import React from "react";
+'use client';
+import React, { useState,useEffect} from "react";
 import Link from "next/link";
-import SidebarDropdown from "@/src/components/pandit/Sidebar/SidebarDropdown";
+import SidebarDropdown from "@/src/components/User/Sidebar/SidebarDropdown";
+import {usePathname, useRouter } from "next/navigation";
+
 
 const SidebarItem = ({ item, pageName, setPageName }: any) => {
+  const router = useRouter();
+  const [activeItem, setActiveItem] = useState<string>("");
+
+  const currentPath = usePathname();
+  
+  useEffect(() => {
+    const storedItem = localStorage.getItem("selectedMenu") || "dashboard";
+    // Define a mapping between page routes and sidebar labels
+    const routeToLabelMap: { [key: string]: string } = {
+      "/UserDashboard/bookingrequest": "your bookings",
+      "/UserDashboard/editProfile": "edit profile",
+      "/UserDashboard/allbookings": "bookings",
+      "/UserDashboard/notification": "all notifications",
+    };
+    // Find the corresponding label for the current path
+    const matchedLabel = routeToLabelMap[currentPath] || "dashboard";
+    console.log("stored item and route is",storedItem,matchedLabel)
+  
+    // If stored item matches current path's label, set it as active
+    if (storedItem.toLowerCase() === matchedLabel) {
+      setActiveItem(storedItem);
+    } else {
+      setActiveItem(matchedLabel); // Set default to matched path label
+    }
+  
+    setPageName(matchedLabel); 
+
+    console.log("pagename is",pageName,item.label)
+  }, [currentPath, setPageName]);
+  
   const handleClick = () => {
     const updatedPageName =
-      pageName !== item.label.toLowerCase() ? item.label.toLowerCase() : "";
+    pageName !== item.label.toLowerCase() ? item.label.toLowerCase() : "";
+    localStorage.setItem("selectedPanditMenu", updatedPageName); // Store selected item in localStorage
+    // setActiveItem(updatedPageName);  // Update the state immediately for UI change
+
     return setPageName(updatedPageName);
   };
 

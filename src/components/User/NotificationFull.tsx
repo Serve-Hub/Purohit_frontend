@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
 import Breadcrumb from "./Breadcrumbs/Breadcrumb";
+import $axios from "@/src/lib/axios.instance";
 
 function NotificationFull() {
   const [notifications, setNotifications] = useState([]); // State to store notifications
@@ -20,10 +21,7 @@ function NotificationFull() {
     const token = localStorage.getItem("token_id");
 
     try {
-      const response = await axios.get(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const response = await $axios.get("/api/v1/booking/notifications", {
         params: { page, limit: notificationsPerPage },
       });
 
@@ -34,7 +32,7 @@ function NotificationFull() {
       setTotalPages(pagination.totalPages);
     } catch (err) {
       setError("Failed to fetch notifications. Please try again later.");
-      console.error("Error fetching notifications:", err);
+      console.log("Error fetching notifications:", err);
     } finally {
       setLoading(false);
     }

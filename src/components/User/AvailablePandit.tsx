@@ -9,27 +9,39 @@ import {
 } from "@/src/components/ui/animated-modal";
 import { useToast } from "@/hooks/use-toast";
 import PanditProfile from "./PanditProfile";
+import $axios from "@/src/lib/axios.instance";
 
 
-function AvailablePandit({ bookingId }) {
-  const [pandits, setPandits] = useState([]);
+interface AvailablePanditProps {
+  bookingId: string;
+}
+
+interface Pandit {
+  _id: string;
+  avatar: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  kypDetails: {
+    temporaryAddress: {
+      tolAddress: string;
+      municipality: string;
+    };
+  };
+}
+function AvailablePandit({ bookingId}: { bookingId: string }) {
+  const [pandits, setPandits] = useState<Pandit[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [actionError, setActionError] = useState(null);
+  const [error, setError] = useState("");
+  const [actionError, setActionError] = useState("");
   const { toast } = useToast()
 
   useEffect(() => {
     const fetchPandits = async () => {
       const token = localStorage.getItem("token_id");
       try {
-        const response = await axios.get(
-          `https://purohit-backend.onrender.com/api/v1/booking/bookings/${bookingId}/accepted-pandits`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await $axios.get(`/api/v1/booking/bookings/${bookingId}/accepted-pandits`);
+
         console.log("response is",response)
         setPandits(response.data.data);
         setLoading(false);
@@ -44,7 +56,7 @@ function AvailablePandit({ bookingId }) {
     }
   }, [bookingId]);
 
-  const handleAccept = async (panditId) => {
+  const handleAccept = async (panditId:string,bookingId:string) => {
     console.log("Pandit ID and Booking ID:", panditId, bookingId);
   
     if (!bookingId || !panditId) {
@@ -55,18 +67,16 @@ function AvailablePandit({ bookingId }) {
     bookingId: bookingId,  
     panditId: panditId
   }
-    setActionError(null);
+    setActionError("");
     const token = localStorage.getItem("token_id");
   
     try {
-      const response = await axios.post(
-        "https://purohit-backend.onrender.com/api/v1/booking/bookings/accepted-pandits/choosePandit",
-        
-       formData
-        ,
+      const response = await $axios.post(
+        "/api/v1/booking/bookings/accepted-pandits/choosePandit",
+        formData,  // Ensure formData is a valid object
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json", // If formData is a JSON object
           },
         }
       );
@@ -76,9 +86,13 @@ function AvailablePandit({ bookingId }) {
     className:"bg-green-100 text-success"
   });
     } catch (err) {
-      console.error("Error occurred:", err);
+      console.log("Error occurred:", err);
+
+        const errorMessage =
+    (err as any)?.response?.data?.message || "Something went wrong";
       toast({
-        title:`${err.response.data.message}`,
+        // title:`${err.response.data.message}`,
+        title: errorMessage,
         className:"bg-red-100 text-danger"
       })
     }

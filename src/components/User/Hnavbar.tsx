@@ -9,18 +9,17 @@ import { useState,useEffect, useRef, useContext} from 'react'
 import Notification from './Notification';
 import  { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
-
 import axios from 'axios';
 import { AuthContext } from '@/src/context/authcontext';
 import { useToast } from "@/hooks/use-toast"
-
 // import { ToastContainer, toast } from "react-toastify";
-
 import { Button } from '../ui/button';
 import LetterAvatar from '../LetterAvatar';
+import Cookies from "js-cookie";
+import $axios from '@/src/lib/axios.instance';
 
 
-function classNames(...classes) {
+function classNames(...classes: (string | undefined | null | false)[]) {
   return classes.filter(Boolean).join(' ')
 }
 
@@ -44,11 +43,17 @@ export default function Hnavbar() {
 //   );
 // };
   const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
-  const { userInfo, token } = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
+
+  // if (!authContext || !authContext.userInfo) {
+  //   return <p>Loading...</p>;
+  // }
+
+  const  userInfo = authContext?.userInfo;
 console.log("hnavbar ma",userInfo)
   const [notifications, setNotifications] = useState({});
   const [socketConnected, setSocketConnected] = useState(false);
-  const webSocket = useRef(null);
+  const webSocket = useRef<WebSocket | null>(null);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -57,34 +62,39 @@ console.log("hnavbar ma",userInfo)
     try {
       setLoading(true);
 
-
-      const response = await axios('https://purohit-backend.onrender.com/api/v1/users/logout', {
-        method: 'POST',
+      const response = await $axios.post("/api/v1/users/logout", {}, {
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token_id')}`,  
+          "Content-Type": "application/json",
         },
       });
 
       console.log("response is ",response)
 
       localStorage.removeItem('token_id'); // Or any storage key you use
+      Cookies.remove("loggedin");
+      Cookies.remove("isPandit");
+      Cookies.remove("isAdmin");
+      Cookies.remove("accessToken");
+      Cookies.remove("refreshToken");
+
       setLoading(false);
 
       router.push('/');
     } catch (error) {
-      console.error('Error during logout:', error);
+      console.log('Error during logout:', error);
     }
   };
     // Initiali
     // ze WebSocket connection
     // useEffect(()=>{
     useEffect(()=>{
-
+        console.log("cookie is",Cookies.get("loggedin"))
     
       const connectWebSocket = async() => {
-        webSocket.current =  await new WebSocket(`wss://purohit-backend.onrender.com?userID=${userInfo._id}`); 
-        
+        // webSocket.current =  await new WebSocket(`ws://localhost:3000/?userID=${userInfo?._id}`); 
+        // webSocket.current =  await new WebSocket(`ws://https://purohit-backend.onrender.com/?userID=${userInfo?._id}`); 
+        webSocket.current =  await new WebSocket(`wss://purohit-backend.onrender.com?userID=${userInfo?._id}`); 
+
         webSocket.current.onopen = () => {
           
           console.log('WebSocket connected');
@@ -109,7 +119,7 @@ console.log("hnavbar ma",userInfo)
         
             setHasUnreadNotifications(true);  // New notification triggers the dot
           } catch (err) {
-            console.error('Error parsing WebSocket message', err);
+            console.log('Error parsing WebSocket message', err);
           }
         };
             }
@@ -162,7 +172,7 @@ console.log("hnavbar ma",userInfo)
 
           className={classNames(
             
-            pathname === item.href ? 'bg-pandit text-white' : 'text-slate-500 hover:bg-pandit/70 hover:text-white',
+            pathname.startsWith(item.href)  ? 'bg-pandit text-white' : 'text-slate-500 hover:bg-pandit/70 hover:text-white',
             'rounded-md px-3 py-2 text-sm font-medium',
           )}
         >
@@ -252,7 +262,9 @@ console.log("hnavbar ma",userInfo)
                 className="z-9999 absolute right-0  mt-2 w-150 p-5 pt-7 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
               >
                 <MenuItem >
-              <Notification data={notifications}/>
+              {/* <Notification data={notifications}/> */}
+              <Notification />
+
                 </MenuItem>
                 
               </MenuItems>
@@ -263,15 +275,15 @@ console.log("hnavbar ma",userInfo)
                 <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">Open user menu</span>
-                  {userInfo.avatar?(
+                  {userInfo?.avatar?(
                     
                     <img
                       alt=""
-                      src={userInfo.avatar}
+                      src={userInfo?.avatar}
                       className="size-8 rounded-full object-cover"
                     />
                   ):(
-                    <LetterAvatar name={userInfo.firstName} size={32}/> 
+                    <LetterAvatar name={userInfo?.firstName} size={32}/> 
                                      )}
                 </MenuButton>
               </div>
@@ -288,7 +300,7 @@ console.log("hnavbar ma",userInfo)
                   </Link>
                 </MenuItem>
             
-                {userInfo.isPandit && (
+                {userInfo?.isPandit && (
   <MenuItem>
                    
   <Link

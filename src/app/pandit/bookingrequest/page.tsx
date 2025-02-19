@@ -1,7 +1,5 @@
 'use client'
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import Link from "next/link";
 import DefaultLayout from "@/src/components/pandit/Layouts/DefaultLaout";
 import LetterAvatar from "@/src/components/LetterAvatar";
 import Breadcrumb from "@/src/components/pandit/Breadcrumbs/Breadcrumb";
@@ -10,33 +8,110 @@ import {
   Modal,
   ModalBody,
   ModalContent,
-  ModalFooter,
   ModalTrigger,
 } from "@/src/components/ui/animated-modal";
-import UserProfile from "@/src/components/pandit/userProfile";
+import $axios from "@/src/lib/axios.instance";
+import UserProfile from "@/src/components/pandit/UserProfile";
 
 function page() {
-    const [notifications, setNotifications] = useState([]); // State to store notifications
   const [currentPage, setCurrentPage] = useState(1); // Current page number
   const [totalPages, setTotalPages] = useState(1); // Total number of pages
   const [loading, setLoading] = useState(false); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const [error, setError] = useState<any>(""); // Error state
   const{toast}=useToast();
+
+
+
+  type PujaDetails = {
+    _id: string;
+    adminID: string;
+    pujaName: string;
+    pujaImage: string;
+    baseFare: number;
+    category: string;
+    description: string;
+    duration: number;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+  };
+  
+  type SenderDetails = {
+    _id: string;
+    avatar:string;
+    coverPhoto:string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    contact: string | null;
+    googleId: string | null;
+    isAdmin: boolean;
+    isPandit: boolean;
+    isVerified: boolean;
+    createdAt: string;
+    updatedAt: string;
+    bio:string;
+    __v: number;
+  };
+  
+  type Notification = {
+    _id: string;
+    userID: string;
+    pujaID: string;
+    bookingDetails:BookingDetails;
+    selectedPandit: Array<any>;
+    acceptedPandit: Array<any>;
+    createdAt: string;
+    isRead: boolean;
+    message: string;
+    pujaDetails: PujaDetails;
+    receiverID: string;
+    relatedId: string;
+    relatedModel: string;
+    senderDetails: SenderDetails;
+    senderID: string;
+    status: string;
+    type: string; 
+    updatedAt: string;
+    __v: number;
+  };
+  type Location = {
+    district: string;
+    municipality: string;
+    province: string;
+    tollAddress: string;
+  };
+  
+  type BookingDetails = {
+    _id: string;
+    userID: string;
+    pujaID: string;
+    selectedPandit: Array<any>;
+    acceptedPandit: Array<string>;
+    createdAt: string;
+    date: string;
+    location: Location;
+    panditAcceptedCount: number;
+    paymentStatus: string;
+    status: string;
+    time: string;
+    updatedAt: string;
+    __v: number;
+  };
+
+  const [notifications, setNotifications] = useState<Notification[]>([]); // State to store notifications
 
   const notificationsPerPage = 5; // Number of notifications per page
   const apiUrl = "https://purohit-backend.onrender.com/api/v1/booking/notifications";
 
   // Fetch notifications from the backend
-  const fetchNotifications = async (page) => {
+  const fetchNotifications = async (page:number) => {
     setLoading(true);
     setError(null);
     const token = localStorage.getItem("token_id");
 
     try {
-      const response = await axios.get(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const response = await $axios.get("/api/v1/booking/notifications", {
         params: { page, limit: notificationsPerPage },
       });
 
@@ -47,14 +122,14 @@ function page() {
       setTotalPages(pagination.totalPages);
     } catch (err) {
       setError("Failed to fetch notifications. Please try again later.");
-      console.error("Error fetching notifications:", err);
+      console.log("Error fetching notifications:", err);
     } finally {
       setLoading(false);
     }
   };
 
   // Handle page change
-  const handlePageChange = (page) => {
+  const handlePageChange = (page:number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
       fetchNotifications(page);
@@ -62,20 +137,12 @@ function page() {
   };
 
   // Accept booking
-  // Accept booking
   const handleAccept = async (notificationId) => {
     console.log("notification id ",notificationId)
     const token = localStorage.getItem("token_id");
     try {
-      const res = await axios.put(
-        `https://purohit-backend.onrender.com/api/v1/booking/notifications/accept/${notificationId}`,
-        {}, 
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await $axios.put(`/api/v1/booking/notifications/accept/${notificationId}`, {});
+
 
       console.log("Booking Accepted:", res.data);
 toast({
@@ -84,7 +151,7 @@ toast({
 })
      
     } catch (error) {
-      console.error("Error accepting booking:", error);
+      console.log("Error accepting booking:", error);
       toast({
         title:"Booking accepted successfully!",
         className:"bg-red-100 text-danger"
@@ -96,28 +163,20 @@ toast({
   };
 
   // Reject booking
-  const handleReject = async (notificationId) => {
+  const handleReject = async (notificationId:number) => {
     const token = localStorage.getItem("token_id");
 
     try {
-      await axios.put(
-        `https://purohit-backend.onrender.com/api/v1/booking/notifications/reject/${notificationId}`,
-        {}, 
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await $axios.put(`/api/v1/booking/notifications/reject/${notificationId}`, {});
+
 
       console.log("Booking Rejected");
       toast({
         title:"Booking Rejected successfully!",
         className:"bg-red-100 text-danger"
       })
-      alert("Booking rejected successfully!");
     } catch (error) {
-      console.error("Error rejecting booking:", error);
+      console.log("Error rejecting booking:", error);
       alert("Failed to reject booking. Please try again.");
     }
     fetchNotifications(currentPage);
@@ -155,25 +214,38 @@ toast({
               
             >
               <div className="flex gap-5 justify-between">
-                {
-
+                <div className="
+                    flex flex-col items-center
+                ">
+                 
+                    {
                     notification.senderDetails.avatar?(
-                        <div className="
-                            flex flex-col items-center
-                        ">
+
                             <img
                             src={notification.senderDetails.avatar}
                             alt="Puja"
                             style={{ height: "50px", width: "50px" }}
                             className="rounded-full"
                           />
-                            <Modal>
+                          
+ 
+                        
+                    ):(
+                     
+                            <LetterAvatar name={notification.senderDetails.firstName} size={40}/>
+                  
+                    
+                        
+                    )
+                
+                }
+                  <Modal>
                                           <ModalTrigger className=" dark:bg-white dark:text-black text-black flex  gap-3 items-center group/modal-btn">
                                            
                                               <p>
-                                              View Profile
+                                              View Profile 
                                                 </p>
-   <svg
+                                               <svg
                                                 className="fill-current"
                                                 width="18"
                                                 height="18"
@@ -191,31 +263,19 @@ toast({
                                                 />
                                               </svg>
                                           </ModalTrigger>
-                                          <div className="fixed top-10 start-10 border border-black ">
+                                          <div className="fixed top-10 start-10 border border-black z-9999">
                                             <ModalBody>
                                               <ModalContent>
                                                 <>
-                                      <UserProfile user={notification.senderDetails}/>
+                                                <UserProfile user={notification.senderDetails}/>
                                               </>
                                                
                                               </ModalContent>
                                             </ModalBody>
                                           </div>
-                                        </Modal>
- 
-                        </div>
-                    ):(
-                        <div className="
-                        ">
-                            <LetterAvatar name={notification.senderDetails.firstName} size={40}/>
-                            <Link href="#" className="font-medium text-blue-500">
-                View Profile
-              </Link>
-                        </div>
-                        
-                    )
-                
-                }
+                   </Modal>
+          </div>
+
                
                 <div className="flex flex-col">
                   <p>{notification.message}</p>

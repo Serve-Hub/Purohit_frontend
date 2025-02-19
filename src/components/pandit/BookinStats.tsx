@@ -9,6 +9,7 @@ import {
   ModalTrigger,
 } from "@/src/components/ui/animated-modal";
 import { BookA } from "lucide-react";
+import $axios from "@/src/lib/axios.instance";
 
 function BookingPage() {
   const [bookingData, setBookingData] = useState([]);
@@ -27,18 +28,8 @@ function BookingPage() {
       const page = currentPage;
       const limit = 4;
       try {
-        const res = await axios.get(
-          "https://purohit-backend.onrender.com/api/v1/booking/bookings/viewBooking",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            }
-            // params: {
-            //   page,
-            //   limit,
-            // },
-          }
-        );
+        const res = await $axios.get("/api/v1/booking/bookings/viewBooking");
+
         console.log("response is",res)
         setBookingData(res.data.data.bookings);
         setFetchloader(false);

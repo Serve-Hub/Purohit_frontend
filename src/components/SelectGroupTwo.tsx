@@ -2,12 +2,16 @@
 import React, { useState } from "react";
 
 interface SelectGroupTwoProps {
-  name: string; 
+  name: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
-const SelectGroupTwo: React.FC<SelectGroupTwoProps> = ({ value, onChange,name })=> {
+const SelectGroupTwo: React.FC<SelectGroupTwoProps> = ({
+  value,
+  onChange,
+  name,
+}) => {
   const [selectedOption, setSelectedOption] = useState<string>("");
   const [isOptionSelected, setIsOptionSelected] = useState<boolean>(false);
 
@@ -54,11 +58,11 @@ const SelectGroupTwo: React.FC<SelectGroupTwoProps> = ({ value, onChange,name })
         </span>
 
         <select
-         name={name} 
+          name={name}
           value={value}
           onChange={(e) => {
-            onChange(e); 
-            changeTextColor(); 
+            onChange(e);
+            changeTextColor();
           }}
           // onChange={(e) => {
           //   setSelectedOption(e.target.value);
@@ -72,14 +76,13 @@ const SelectGroupTwo: React.FC<SelectGroupTwoProps> = ({ value, onChange,name })
             Select Category
           </option>
           <option value="Astrology" className="text-black dark:text-bodydark">
-          Astrology
+            Astrology
           </option>
           <option value="UK" className="text-black dark:text-bodydark">
-          Category2
-
+            Homam
           </option>
           <option value="Canada" className="text-black dark:text-bodydark">
-          Category3
+            Vastu
           </option>
         </select>
 

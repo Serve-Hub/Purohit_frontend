@@ -11,10 +11,18 @@ import {
 import BookingForm from "@/src/components/User/BookingForm";
 import axios from "axios";
 import { useParams } from "next/navigation";
-
+import $axios from "@/src/lib/axios.instance";
 
 function page() {
-const [pujaData,setPujaData]=useState({})
+
+interface pujaData{
+  pujaName:string;
+  pujaImage:string
+}
+const [pujaData,setPujaData]=useState<pujaData>({
+  pujaName: "",
+  pujaImage: "",
+})
   const {id}=useParams();
 
   useEffect(() => {
@@ -22,16 +30,12 @@ const [pujaData,setPujaData]=useState({})
       console.log("id is", id);
       const token = localStorage.getItem("token_id");
       try {
-        const res = await axios.get(
-          `https://purohit-backend.onrender.com/api/v1/admin/getSpecificPuja/${id}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const res = await $axios.get(`/api/v1/admin/getSpecificPuja/${id}`);
+
         console.log("res", res.data.data);
         setPujaData(res.data.data);
       } catch (error) {
-        console.error("Error fetching puja details:", error);
+        console.log("Error fetching puja details:", error);
       }
     };
     if (id) fetchDetailPuja(); // Run only if id is available
@@ -51,8 +55,8 @@ const [pujaData,setPujaData]=useState({})
   
   // Data for cascading dropdowns
   const provinces = {
-    "Province 1": ["Sunsari", "Morang", "Jhapa"],
-    "Province 2": ["Dhanusha", "Siraha", "Saptari"],
+    Province1: ["Sunsari", "Morang", "Jhapa"],
+    Province2: ["Dhanusha", "Siraha", "Saptari"],
     Bagmati: ["Kathmandu", "Bhaktapur", "Lalitpur"],
     Gandaki: ["Pokhara", "Kaski", "Tanahun"],
     Lumbini: ["Rupandehi", "Kapilvastu", "Nawalparasi"],
@@ -182,7 +186,7 @@ const [pujaData,setPujaData]=useState({})
           <div className="mainbody flex gap-10">
             <div className="w-4/6">
               <img
-              src={pujaData.pujaImage}
+              src={pujaData?.pujaImage}
                 alt=""
                 className="w-full rounded-xl h-94 object-cover object-center"
               />
@@ -234,7 +238,7 @@ const [pujaData,setPujaData]=useState({})
     </div>
             </div>
             <div className="booking form ">
-              <BookingForm id={id} />
+              <BookingForm id={String(id)} />
              
             </div>
           </div>

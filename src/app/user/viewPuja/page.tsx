@@ -20,7 +20,10 @@ function ViewPuja() {
   return (
     <div className="mt-10 ">
       {/* Breadcrumb Navigation */}
+      <div className="container">
+
       <Breadcrumb pageName='AllPujas'/>
+      </div>
       {/* <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>

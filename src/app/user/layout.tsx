@@ -29,8 +29,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-    <body>
+    // <html lang="en">
+    // <body>
       <AuthProvider>
         <Hnavbar />
         {children}
@@ -38,8 +38,8 @@ export default function RootLayout({
         <Toaster />
 
       </AuthProvider>
-    </body>
-  </html>
+  //   </body>
+  // </html>
   
 
 

@@ -12,6 +12,8 @@ import {
 } from "@/src/components/ui/animated-modal";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import $axios from "@/src/lib/axios.instance";
+
 
 function page() {
   const [panditData, setPanditData] = useState([]); // State to store pandit data
@@ -34,20 +36,12 @@ function page() {
       const page = currentPage;
       const limit = 4;
       try {
-        const res = await axios.post(
-          "https://purohit-backend.onrender.com/api/v1/kyp/viewAllKYP",
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            params: {
-              page,
-              limit,
-            },
-          }
-        );
-        console.log("response data is ", res.data.data);
+        const res = await $axios.post("/api/v1/kyp/viewAllKYP", {}, {
+          params: {
+            page,
+            limit,
+          },
+        });
         console.log("pandit data is ", res.data.data.data);
         setPanditData(res.data.data.data);
         setFetchloader(false);
@@ -183,46 +177,46 @@ function page() {
               <div className="w-[15px] aspect-square rounded-full animate-l5  my-10 ms-15 "></div>
             )}
 
-            {panditData.map((pandit, key) => (
+            {panditData.map((pandit) => (
               <>
-                <tr key={key}>
+                <tr key={pandit.userDetails._id}>
                   <td className="border-b flex  gap-2 items-center border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                     <div className="w-19 h-10 border">
                       <img
-                        src={`${pandit.userDetails.avatar}`}
+                        src={`${pandit.userDetails?.avatar}`}
                         alt="eta image"
                         className="rounded w-full h-full object-cover object-center"
                       />
                     </div>
 
                     <h5 className="font-medium text-black dark:text-white">
-                      {pandit.userDetails.firstName}
+                      {pandit.userDetails?.firstName}
                       <span className="ms-3">
-                        {pandit.userDetails.lastName}
+                        {pandit.userDetails?.lastName}
                       </span>
                     </h5>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <p className="text-black dark:text-white">
                       {/* {packageItem.invoiceDate} */}
-                      {pandit.temporaryAddress.tolAddress},
-                      {pandit.temporaryAddress.district}
+                      {pandit?.temporaryAddress?.tolAddress},
+                      {pandit?.temporaryAddress?.district}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                    {pandit.phoneNumber}
+                    {pandit?.phoneNumber}
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <p
                       className={`inline-flex rounded-full bg-opacity-10 px-3 py-1 text-sm font-medium ${
-                        pandit.status === "accepted"
+                        pandit?.status === "accepted"
                           ? "bg-success text-success"
                           : pandit.status === "pending"
                           ? "bg-danger text-danger"
                           : "bg-warning text-warning"
                       }`}
                     >
-                      {pandit.status}
+                      {pandit?.status}
                     </p>
                   </td>
                   <td>
@@ -261,7 +255,7 @@ function page() {
                                 </h2>
 
                                 <div
-                                  key={pandit.panditID}
+                                  key={pandit?.panditID}
                                   className="space-y-8  p-4 rounded-md"
                                 >
                                   {/* Personal Information Section */}
@@ -272,7 +266,7 @@ function page() {
                                     <div className="flex justify-end">
                                       <img
                                         src={
-                                          pandit.userDetails.avatar ||
+                                          pandit?.userDetails?.avatar ||
                                           "/default-photo.jpg"
                                         } // Use a default photo if not available
                                         alt="Pandit Photo"
@@ -286,45 +280,45 @@ function page() {
                                         <div>
                                           <strong>Name:</strong>{" "}
                                           <span className="ms-2">
-                                            {pandit.userDetails.firstName}
+                                            {pandit?.userDetails?.firstName}
                                           </span>
                                           <span className="ms-3">
-                                            {pandit.userDetails.lastName}
+                                            {pandit?.userDetails?.lastName}
                                           </span>
                                         </div>
                                       </div>
                                       <div>
                                         <strong>Pandit ID:</strong>{" "}
-                                        <span>{pandit.panditID}</span>
+                                        <span>{pandit?.panditID}</span>
                                       </div>
                                     </div>
                                     <div className="flex justify-between">
                                       <strong>Phone Number:</strong>{" "}
-                                      <span>{pandit.phoneNumber}</span>
+                                      <span>{pandit?.phoneNumber}</span>
                                     </div>
                                     <div className="flex justify-between">
                                       <strong>Status:</strong>{" "}
-                                      <span>{pandit.status}</span>
+                                      <span>{pandit?.status}</span>
                                     </div>
                                     <div className="flex justify-between">
                                       <strong>Permanent Address:</strong>
                                       <span>
-                                        {pandit.permanentAddress &&
-                                          `${pandit.permanentAddress.province}, ${pandit.permanentAddress.district}, ${pandit.permanentAddress.municipality}, ${pandit.permanentAddress.tolAddress}`}
+                                        {pandit?.permanentAddress &&
+                                          `${pandit.permanentAddress?.province}, ${pandit.permanentAddress?.district}, ${pandit.permanentAddress?.municipality}, ${pandit.permanentAddress?.tolAddress}`}
                                       </span>
                                     </div>
                                     <div className="flex justify-between">
                                       <strong>Temporary Address:</strong>
                                       <span>
-                                        {pandit.temporaryAddress &&
-                                          `${pandit.temporaryAddress.province}, ${pandit.temporaryAddress.district}, ${pandit.temporaryAddress.municipality}, ${pandit.temporaryAddress.tolAddress}`}
+                                        {pandit?.temporaryAddress &&
+                                          `${pandit.temporaryAddress?.province}, ${pandit.temporaryAddress?.district}, ${pandit.temporaryAddress?.municipality}, ${pandit.temporaryAddress?.tolAddress}`}
                                       </span>
                                     </div>
                                     <div className="flex justify-between">
                                       <strong>Date of Birth:</strong>
                                       <span>
                                         {pandit.dateOfBirth &&
-                                          `${pandit.dateOfBirth.day}-${pandit.dateOfBirth.month}-${pandit.dateOfBirth.year}`}
+                                          `${pandit.dateOfBirth?.day}-${pandit.dateOfBirth?.month}-${pandit.dateOfBirth?.year}`}
                                       </span>
                                     </div>
                                   </div>
@@ -336,15 +330,15 @@ function page() {
                                     </h2>
                                     <div className="flex justify-between">
                                       <strong>Institution:</strong>{" "}
-                                      <span>{pandit.institution}</span>
+                                      <span>{pandit?.institution}</span>
                                     </div>
                                     <div className="flex justify-between">
                                       <strong>Experience:</strong>{" "}
-                                      <span>{pandit.experience}</span>
+                                      <span>{pandit?.experience}</span>
                                     </div>
                                     <div className="flex justify-between">
                                       <strong>Qualification:</strong>{" "}
-                                      <span>{pandit.qualification}</span>
+                                      <span>{pandit?.qualification}</span>
                                     </div>
                                   </div>
 
@@ -362,7 +356,7 @@ function page() {
                                           <img
                                             src={
                                               pandit.documents
-                                                .qualificationCertificate
+                                                ?.qualificationCertificate
                                             }
                                             alt="Qualification Certificate"
                                             className="w-full h-auto border rounded-md mt-5"
@@ -377,7 +371,7 @@ function page() {
                                           <img
                                             src={
                                               pandit.documents
-                                                .citizenshipFrontPhoto
+                                                ?.citizenshipFrontPhoto
                                             }
                                             alt="Citizenship Front Photo"
                                             className="w-full h-auto border rounded-md mt-5"
@@ -390,7 +384,7 @@ function page() {
                                           <img
                                             src={
                                               pandit.documents
-                                                .citizenshipBackPhoto
+                                                ?.citizenshipBackPhoto
                                             }
                                             alt="Citizenship Back Photo"
                                             className="w-full h-auto border rounded-md mt-5"

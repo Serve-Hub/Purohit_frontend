@@ -3,6 +3,7 @@ import React from 'react'
 import Link from 'next/link';
 import { useState } from 'react';
 import axios from 'axios';
+import $axios from '../lib/axios.instance';
 function Login() {
 
   const [formData, setFormData] = useState(
@@ -22,9 +23,7 @@ function Login() {
 async function handleSubmit(event) {
   event.preventDefault();
   console.log(formData);
-  const res = await axios.post("http://localhost:5000/api/v1/users/login", formData, {
-  
-  });
+  const res = await $axios.post("/api/v1/users/login", formData);
 
   console.log(res);
 

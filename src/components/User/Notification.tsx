@@ -3,7 +3,7 @@ import React, { useState,useEffect } from 'react';
 import { Button } from '../ui/button';
 import Link from 'next/link';
 import axios from 'axios';
-
+import $axios from '@/src/lib/axios.instance';
 
 function Notification() {
 
@@ -22,11 +22,8 @@ function Notification() {
     setError(null);
     const token = localStorage.getItem("token_id");
     try {
-      const response = await axios.get(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: { page, limit: notificationsPerPage }
+      const response = await $axios.get("/api/v1/booking/notifications", {
+        params: { page, limit: notificationsPerPage },
       });
 console.log("response from view notification",response)
       const { notifications, pagination } = response.data.data;
@@ -51,13 +48,14 @@ console.log("response from view notification",response)
   //   { title: 'General', content: 'This is the General content.' },
   // ];
 
-  console.log("data in the notification is",data)
+  // console.log("data in the notification is",data)
 
 
   return (
     <div className="z-[9999999] relative">
-      <h1 className="text-pandit font-bold">Notifications</h1>
-      <hr />
+  <h5 className="text-lg font-medium text-dark dark:text-white">
+                Notifications
+              </h5>      <hr />
       {/* <div className="flex border-b border-gray-300">
         {tabs.map((tab) => (
           <button
@@ -95,31 +93,31 @@ console.log("response from view notification",response)
             >
               <div className="flex gap-5">
                 <img
-                  src={notification.pujaDetails.pujaImage}
+                  src={notification?.pujaDetails?.pujaImage}
                   alt="User"
                   style={{ height: "50px", width: "50px" }}
                   className="rounded-full"
                 />
                 <div className="flex flex-col">
-                  <p className='text-sm'>{notification.message}</p>
-                  <span className="text-sm text-gray-500">From: {notification.senderDetails.firstName}  {notification.senderDetails.lastName}</span>
+                  <p className='text-sm'>{notification?.message}</p>
+                  <span className="text-sm text-gray-500">From: {notification?.senderDetails.firstName}  {notification?.senderDetails.lastName}</span>
                   <div className="flex flex-col  mt-1 text-sm">
                     <p className='text-sm'>
                       <span className="font-bold text-sm">Location:</span>{" "}
                     </p>
                     <p className='text-gray-500'>
 
-                      {notification.bookingDetails.location.municipality || "N/A"}   {notification.bookingDetails.location.tollAddress|| "N/A"}
+                      {notification.bookingDetails?.location.municipality || "N/A"}   {notification.bookingDetails?.location.tollAddress|| "N/A"}
                     </p>
                   <p className='text-gray-500'>
-                      {notification.bookingDetails.location.province || "N/A"}   {notification.bookingDetails.location.district|| "N/A"}
+                      {notification.bookingDetails?.location.province || "N/A"}   {notification.bookingDetails?.location.district|| "N/A"}
 
                   </p>
                     
                   </div>
                     <p>
                       <span className="font-bold text-sm">Rs:</span>{" "}
-                      {notification.pujaDetails.baseFare || "N/A"}
+                      {notification.pujaDetails?.baseFare || "N/A"}
                     </p>
               
                 </div>
@@ -140,7 +138,7 @@ console.log("response from view notification",response)
   )} */}
 </div>
 <Link
-  href="/user/Dashboard"
+  href="/UserDashboard/notification/"
   className="w-full text-center inline-block font-medium text-orange-500 border border-orange-500 hover:text-orange-700 transition-colors duration-300 px-4 py-3 mb-2 rounded-md shadow-sm hover:shadow-md"
 >
   View All Notifications

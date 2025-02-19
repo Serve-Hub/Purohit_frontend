@@ -9,7 +9,7 @@ import ReviewSection from "../ReviewSection";
 import $axios from "@/src/lib/axios.instance";
 // import { userInfo } from "os";
 
-const PanditProfile = ({pandit}) => {
+const PanditPersonalProfile = () => {
   const [activeTab, setActiveTab] = useState('about'); // Default tab is 'about'
 
     const authContext = useContext(AuthContext);
@@ -20,8 +20,8 @@ const [panditDetails,setPanditDetails]=useState<{}>({})
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // console.log("authcontext is", authContext);
-        // const userInfo=authContext?.userInfo
+        console.log("authcontext is", authContext);
+        const userInfo=authContext?.userInfo
         // const { loginfo,userInfo } = authContext;
 
         // if (!loginfo) {
@@ -30,9 +30,9 @@ const [panditDetails,setPanditDetails]=useState<{}>({})
         // }
 
         // const response = await loginfo();
-        // console.log("response is", userInfo);
+        console.log("response is", userInfo);
         //yo userinfo change vako vai garera yo function run gareko garei garyo
-        setUser(pandit);
+        setUser(userInfo);
 // console.log("üserinfo is",userInfo)
       } catch (error) {
         console.log("Error fetching data:", error.message);
@@ -76,7 +76,7 @@ fetchPanditData();
             height={170}
             style={{
               width: "auto",
-              height: "270px", 
+              height: "auto", 
             }}
           />
           {/* <div className="absolute bottom-8 right-1 z-10 xsm:bottom-4 xsm:right-4">
@@ -338,4 +338,4 @@ fetchPanditData();
   );
 };
 
-export default PanditProfile;
+export default PanditPersonalProfile;

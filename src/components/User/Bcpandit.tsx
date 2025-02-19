@@ -1,11 +1,22 @@
 import React from 'react'
 import Bctab from '../Bctab'
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useEffect } from "react";
+
+
 
 function Bcpandit() {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // Animation duration in ms
+      easing: "ease-in-out", // Animation easing
+    });
+  })
   return (
     <>
     <div className="container my-20 ">
-    <div className="mx-auto max-w-2xl lg:text-center">
+    <div className="mx-auto max-w-2xl lg:text-center" data-aos="zoom-out">
           <p className="mt-2 text-pretty text-4xl font-semibold tracking-tight text-pandit sm:text-5xl lg:text-balance">
             Want to Become a Pandit?
           </p>

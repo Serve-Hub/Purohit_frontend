@@ -4,16 +4,16 @@ import { useState ,useContext,useEffect} from "react";
 import { Button } from "@/src/components/ui/button";
 import { FormEvent } from "react";
 import  { AuthContext } from "@/src/context/authcontext";
-import axios from "axios";
+import axios, { Axios, AxiosError } from "axios";
 import { useRouter } from 'next/navigation';
-
+import $axios from "@/src/lib/axios.instance";
 
 function page() {
   const router = useRouter();
 
   const authContext = useContext(AuthContext);
-const [fn,setFn]=useState("");
-const [ln,setLn]=useState("");
+const [fn,setFn]=useState<string>("");
+const [ln,setLn]=useState<string>("");
 const[loading,setLoading]=useState(false);
 const[success,setSuccess]=useState(false);
 const[successMessage,setSuccessMessage]=useState("");
@@ -23,7 +23,7 @@ const[errorMessage,setErrorMessage]=useState("");
     const fetchData = async () => {
       try {
         console.log("authcontext is", authContext);
-        const { loginfo } = authContext;
+        const  loginfo  = authContext?.loginfo;
 
         if (!loginfo) {
           console.warn("loginfo is not defined in authContext");
@@ -32,12 +32,18 @@ const[errorMessage,setErrorMessage]=useState("");
 
         const response = await loginfo();
         console.log("response is", response);
-        setFn(response.firstName);
-        setLn(response.lastName);
+        if(response){
+
+          setFn(response.firstName);
+          setLn(response.lastName);
+        }
 console.log("eta",fn,ln);
         // Fetch poojas with currentPage, itemsPerPage, and filters
       } catch (error) {
-        console.error("Error fetching data:", error.message);
+        if(error instanceof AxiosError){
+
+          console.log("Error fetching data:", error.message);
+        }
       }
     };
 
@@ -198,16 +204,11 @@ console.log("eta",fn,ln);
       Authorization: `Bearer ${token}`,
     });
     try {
-      const response = await axios.post(
-        "https://purohit-backend.onrender.com/api/v1/kyp/fillKYP",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await $axios.post("/api/v1/kyp/fillKYP", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       console.log("resopne", response);
       router.push(`/user`)
 
@@ -274,7 +275,7 @@ console.log("eta",fn,ln);
     // Add other districts and their municipalities as needed
   };
 
-  const handleProvinceChange = (e) => {
+  const handleProvinceChange = (e:React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const province = e.target.value;
     setProvince(e.target.value);
     setDistrict(""); // Reset district and municipality when province changes
@@ -360,7 +361,7 @@ console.log("eta",fn,ln);
     }));
   };
   
-  const handlePermanentTolChange = (e) => {
+  const handlePermanentTolChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
   
     setFormData((prev) => ({

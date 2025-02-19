@@ -4,7 +4,7 @@ import React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import SidebarItem from "@/src/components/pandit/Sidebar/SidebarItem";
+import SidebarItem from "@/src/components/User/Sidebar/SidebarItem";
 import ClickOutside from "@/src/components/ClickOutside";
 import useLocalStorage from "@/src/hooks/useLocalStorage";
 
@@ -107,7 +107,7 @@ const menuGroups = [
         </svg>
         
         ),
-        label: " Bookings",
+        label: "Bookings",
         route: "/UserDashboard/allbookings",
       },
       {
@@ -149,7 +149,7 @@ const menuGroups = [
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const pathname = usePathname();
 
-  const [pageName, setPageName] = useLocalStorage("selectedMenu", "dashboard");
+  const [pageName, setPageName] = useLocalStorage("selectedMenu", "Dashboard");
 
   return (
     <ClickOutside onClick={() => setSidebarOpen(false)}>
