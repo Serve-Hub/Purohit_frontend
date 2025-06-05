@@ -23,6 +23,9 @@ import {
   FormMessage,
 } from "@/src/components/ui/form";
 import $axios from "@/src/lib/axios.instance";
+import { Booking } from "@/src/types/userType";
+
+
 // Define the schema using Zod
 const bookingSchema = z.object({
   date: z.date().nullable().refine((val) => val !== null, "Date is required"),
@@ -66,6 +69,7 @@ const BookingForm = ({id}:{id:string}) => {
       district: "",
       municipality: "",
       tollAddress: "",
+      amount:1000
     },
   });
 
@@ -77,7 +81,7 @@ const BookingForm = ({id}:{id:string}) => {
 
   const token = localStorage.getItem("token_id");
 
-const onSubmit = async (data) => {
+const onSubmit = async (data:Booking) => {
   setIsBookLoading(true);
   console.log("data is ",data)
   try {
@@ -109,7 +113,7 @@ const onSubmit = async (data) => {
       setIsBookLoading(false);
 
     }
-  } catch (error:Error) {
+  } catch (error:any) {
     if (error.response) {
       // The request was made, and the server responded with a status code
       // that falls out of the range of 2xx
@@ -188,8 +192,9 @@ useEffect(()=>{
                       >
                         <Calendar
                           mode="single"
-                          selected={field.value}
+                          selected={field.value ?? undefined}
                           onSelect={(date) => field.onChange(date)}
+                          disabled={(date) => date < new Date()} 
                           initialFocus
                         />
                       </PopoverContent>
@@ -269,7 +274,7 @@ useEffect(()=>{
                       disabled={!form.getValues("province")}
                     >
                       <option value="">Select District</option>
-                      {provinces[form.getValues("province")]?.map((dist) => (
+                      {provinces[form.getValues("province") as keyof typeof provinces]?.map((dist) => (
                         <option key={dist} value={dist}>
                           {dist}
                         </option>
@@ -294,7 +299,7 @@ useEffect(()=>{
                       disabled={!form.getValues("district")}
                     >
                       <option value="">Select Municipality</option>
-                      {municipalities[form.getValues("district")]?.map(
+                      {municipalities[form.getValues("district") as keyof typeof municipalities]?.map(
                         (mun) => (
                           <option key={mun} value={mun}>
                             {mun}
@@ -333,7 +338,7 @@ useEffect(()=>{
           <Button
   type="submit"
   className={`w-full bg-[#F25B2C] text-white ${hasbooked|| isBooked || isBookLoading ? "bg-gray-400" : "bg-[#F25B2C]"}`}
-  disabled={isBooked || isBookLoading ||hasbooked}
+  disabled={Boolean(isBooked || isBookLoading ||hasbooked)}
 >
   {/* {isBookLoading ? (
     <div className="flex justify-center items-center space-x-2">

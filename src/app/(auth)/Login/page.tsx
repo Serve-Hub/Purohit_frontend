@@ -43,12 +43,13 @@ function Login() {
       console.log("eta maathi");
       const res = await $axios.post("/api/v1/users/login", formData);
       // const res = await axios.post("https://purohit-backend.onrender.com/api/v1/users/login", formData);
-      console.log(
-        "laadmin and pandit",
-        res.data.data.user.isAdmin,
-        res.data.data.user.isAdmin
-      );
+      // console.log(
+      //   "laadmin and pandit",
+      //   res.data.data.user.isAdmin,
+      //   res.data.data.user.isAdmin
+      // );
       // console.log(res.data.data)
+console.log(res.data);
       if (res.data.success) {
         console.log("done login");
         console.log("accesstokenis ", res.data.data.accessToken);
@@ -64,17 +65,16 @@ function Login() {
           return router.push(`/admin`);
         }
         if (res.data.data.user.isPandit) {
-          return router.push("/pandit");
+          return router.push("/pandit/Profile");
         }
         router.push(`/user`);
-      } else {
-        alert("Login failed");
-      }
+      } 
     } catch (error: any) {
-      console.error("Error during login:", error);
+      console.log("Error during login:", error);
       setError(true);
       setWait(false);
       setErrordata(error.response?.data?.error);
+      return;
       // alert("There was an error during the login process. Please try again.");
     }
   }
@@ -220,11 +220,11 @@ function Login() {
                 )}
               </button>
 
-              <div className="my-2  ">
+              {/* <div className="my-2  ">
                 <Link href="/" className="text-blue-600">
                   Forgot password?
                 </Link>
-              </div>
+              </div> */}
               <div className="flex items-center justify-center gap-4  w-80  ">
                 <hr className="w-15 text-white" />
                 <h1 className="text-white">OR</h1> <hr className="w-15" />
@@ -245,7 +245,7 @@ function Login() {
               <div className="mt-4 text-center text-white">
                 <p>
                   Don't have an account?{" "}
-                  <Link href="/Signup" className="text-blue-600">
+                  <Link href="/Signup" className="text-pg font-semibold">
                     Sign up
                   </Link>
                 </p>

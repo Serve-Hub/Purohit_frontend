@@ -1,4 +1,4 @@
-"use client";
+'use client';
 // import "jsvectormap/dist/css/jsvectormap.css";
 // import "flatpickr/dist/flatpickr.min.css";
 // import "@/css/satoshi.css";
@@ -31,12 +31,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
-      {/* <DefaultLayout> */}
+     
 <AuthProvider>
         <Toaster />
+        {/* {children} */}
         {loading ? <Loader /> : children}
 </AuthProvider>
-      {/* </DefaultLayout> */}
+  
       </body>
     </html>
   );

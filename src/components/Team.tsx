@@ -1,3 +1,4 @@
+'use client';
 import React from 'react'
 import AOS from 'aos';
 import { useEffect } from 'react';
@@ -19,16 +20,16 @@ function Team() {
     const Team:Team[]=[
         {Name:"Suyog Lamsal",
          Description:"Web developer",
-         img:"img/profile_1.jpg"   
+         img:"/img/profile_1.jpg"   
         },
         {Name:"Kuber Pathak",
             Description:"Backend developer",
-            img:"img/profile_2.jpg"   
+            img:"/img/profile_2.jpg"   
            },
            {
             Name:"Akhil Joshi",
             Description:"App Developer",
-            img:"img/profile_3.jpg"
+            img:"/img/profile_3.jpg"
            }
 ,
         {Name:"Rishi k Marseni",

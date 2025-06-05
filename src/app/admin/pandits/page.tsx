@@ -14,9 +14,67 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import $axios from "@/src/lib/axios.instance";
 
+import { Terminal } from "lucide-react"
+ 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/src/components/ui/alert-dialog"
+import { Button } from "@/src/components/ui/button"
+import { toast } from "@/hooks/use-toast";
+
+
+interface Address {
+  province?: string;
+  district?: string;
+  municipality?: string;
+  tolAddress?: string;
+}
+
+interface DateOfBirth {
+  day?: number;
+  month?: number;
+  year?: number;
+}
+
+interface Documents {
+  qualificationCertificate?: string;
+  citizenshipFrontPhoto?: string;
+  citizenshipBackPhoto?: string;
+}
+
+interface UserDetails {
+  _id: string;
+  avatar?: string;
+  firstName?: string;
+  lastName?: string;
+}
+
+interface Pandit {
+  _id:string;
+  userDetails: UserDetails;
+  panditID?: string;
+  phoneNumber?: string;
+  status?: "accepted" | "pending" | "rejected";
+  temporaryAddress?: Address;
+  permanentAddress?: Address;
+  dateOfBirth?: DateOfBirth;
+  institution?: string;
+  experience?: string;
+  qualification?: string;
+  documents?: Documents;
+}
+
 
 function page() {
-  const [panditData, setPanditData] = useState([]); // State to store pandit data
+  const [panditData, setPanditData] = useState<Pandit[]>([]); // State to store pandit data
   const [loading, setLoading] = useState(false);
   const [rejectloading, setRejectloading] = useState(false);
 
@@ -29,6 +87,16 @@ function page() {
   const [totalPages, setTotalPages] = useState(0);
   const [fetchloader, setFetchloader] = useState(true);
   const token = localStorage.getItem("token_id");
+
+
+  const [description, setDescription] = useState<string>(''); // State to store textarea value
+
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setDescription(e.target.value);
+    console.log("description is",description);
+  }
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,12 +121,12 @@ function page() {
     fetchData();
   }, [panditData]);
 
-  const handleAccept = async (kypID) => {
+  const handleAccept = async (kypID:string) => {
     setLoading(true);
     try {
       const response = await axios.patch(
         `https://purohit-backend.onrender.com/api/v1/kyp/updateKYPStatus/${kypID}`,
-        { status: "accepted" },
+        { status: "accepted",message:description },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -68,9 +136,14 @@ function page() {
       console.log(response);
       if (response.status === 200) {
         console.log("Pandit accepted successfully:", response.data);
-        setSuccess(true);
-        setSuccessMessage("successfull");
+        // setSuccess(true);
+        // setSuccessMessage("successfull");
         setLoading(false);
+        toast({
+          title: "Update info",
+          description: "Pandit has been accepted !!",
+          className:"bg-pg border-green-500 text-green-700 font-semibold w-60"
+        })
       }
     } catch (error) {
       setError(true);
@@ -81,12 +154,12 @@ function page() {
     }
   };
 
-  const handleReject = async (panditID) => {
+  const handleReject = async (panditID:string) => {
     setRejectloading(true);
     try {
       const response = await axios.patch(
         `https://purohit-backend.onrender.com/api/v1/kyp/updateKYPStatus/${panditID}`,
-        { status: "rejected" },
+        { status: "rejected",message:description  },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -98,8 +171,14 @@ function page() {
         // Optionally update your state to reflect the rejected pandit
         console.log("Pandit rejected successfully:", response.data);
         // You may want to re-fetch the data to update the list of pandits
-        setSuccess(true);
-        setSuccessMessage(response.data.message);
+        // setSuccess(true);
+        // setSuccessMessage(response.data.message);
+
+        toast({
+          title: "Update info",
+          description: "Pandit has been accepted !!",
+          className:"bg-red-200 border-red-500 text-red-700 font-semibold w-60"
+        })
         setRejectloading(false);
       }
     } catch (error) {
@@ -112,15 +191,19 @@ function page() {
     }
   };
 
-  const onPageChange = (page) => {
+  const onPageChange = (page:number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page); // Update the current page
     }
   };
+  
 
   return (
     <>
       {/* <DefaultLayout> */}
+
+      
+
       <Breadcrumb pageName="Pandit" />
       {/* {fetchloader } */}
 
@@ -180,7 +263,7 @@ function page() {
             {panditData.map((pandit) => (
               <>
                 <tr key={pandit.userDetails._id}>
-                  <td className="border-b flex  gap-2 items-center border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
+                  <td className="border-b flex  gap-2 items-center border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11"  >
                     <div className="w-19 h-10 border">
                       <img
                         src={`${pandit.userDetails?.avatar}`}
@@ -196,17 +279,17 @@ function page() {
                       </span>
                     </h5>
                   </td>
-                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark" >
                     <p className="text-black dark:text-white">
                       {/* {packageItem.invoiceDate} */}
                       {pandit?.temporaryAddress?.tolAddress},
                       {pandit?.temporaryAddress?.district}
                     </p>
                   </td>
-                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark"  >
                     {pandit?.phoneNumber}
                   </td>
-                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark" >
                     <p
                       className={`inline-flex rounded-full bg-opacity-10 px-3 py-1 text-sm font-medium ${
                         pandit?.status === "accepted"
@@ -255,7 +338,7 @@ function page() {
                                 </h2>
 
                                 <div
-                                  key={pandit?.panditID}
+                                
                                   className="space-y-8  p-4 rounded-md"
                                 >
                                   {/* Personal Information Section */}
@@ -396,83 +479,148 @@ function page() {
 
                                   {/* Accept and Reject Buttons */}
                                 </div>
-                                <div className="flex justify-between space-x-4 mt-4">
+
+                                <hr  className="h-2"/>
+                                             
                                   {pandit.status === "accepted" ? (
-                                    <button
+                                    <>
+                                <div className="flex justify-between space-x-4 mt-4">
+                             
+                                <button
                                       className="px-4 py-2 bg-green-500 text-white rounded-md w-40 flex justify-center"
                                       disabled
                                     >
                                       Accepted
                                     </button>
+                                    </div>
+                                              </>
                                   ) : (
                                     <>
-                                      <button
-                                        onClick={() => handleAccept(pandit._id)}
-                                        className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 w-40 flex gap-1 justify-center"
-                                      >
-                                        {loading ? (
-                                          <>
-                                            Please wait
-                                            <svg
-                                              className="ml-2 animate-spin h-5 w-5 text-white"
-                                              xmlns="http://www.w3.org/2000/svg"
-                                              fill="none"
-                                              viewBox="0 0 24 24"
-                                            >
-                                              <circle
-                                                className="opacity-25"
-                                                cx="12"
-                                                cy="12"
-                                                r="10"
-                                                stroke="currentColor"
-                                                strokeWidth="4"
-                                              ></circle>
-                                              <path
-                                                className="opacity-75"
-                                                fill="currentColor"
-                                                d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z"
-                                              ></path>
-                                            </svg>
-                                          </>
-                                        ) : (
-                                          <>Accept</>
-                                        )}
-                                      </button>
-                                      <button
-                                        onClick={() => handleReject(pandit._id)}
-                                        className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 w-40 flex gap-2 justify-center"
-                                      >
-                                        {rejectloading ? (
-                                          <>
-                                            Please wait
-                                            <svg
-                                              className="ml-2 animate-spin h-5 w-5 text-white"
-                                              xmlns="http://www.w3.org/2000/svg"
-                                              fill="none"
-                                              viewBox="0 0 24 24"
-                                            >
-                                              <circle
-                                                className="opacity-25"
-                                                cx="12"
-                                                cy="12"
-                                                r="10"
-                                                stroke="currentColor"
-                                                strokeWidth="4"
-                                              ></circle>
-                                              <path
-                                                className="opacity-75"
-                                                fill="currentColor"
-                                                d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z"
-                                              ></path>
-                                            </svg>
-                                          </>
-                                        ) : (
-                                          <>Reject</>
-                                        )}
-                                      </button>
+                                  <>
+                                  <div className="mb-5.5">
+                      <label
+                        className="mb-3 block text-sm font-medium text-black dark:text-white"
+                        htmlFor="puja"
+                      >
+                       Reply to pandit
+                      </label>
+                      <div className="relative">
+                        <span className="absolute left-4.5 top-4">
+                          <svg
+                            className="fill-current"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <g opacity="0.8" clipPath="url(#clip0_88_10224)">
+                              <path
+                                fillRule="evenodd"
+                                clipRule="evenodd"
+                                d="M1.56524 3.23223C2.03408 2.76339 2.66997 2.5 3.33301 2.5H9.16634C9.62658 2.5 9.99967 2.8731 9.99967 3.33333C9.99967 3.79357 9.62658 4.16667 9.16634 4.16667H3.33301C3.11199 4.16667 2.90003 4.25446 2.74375 4.41074C2.58747 4.56702 2.49967 4.77899 2.49967 5V16.6667C2.49967 16.8877 2.58747 17.0996 2.74375 17.2559C2.90003 17.4122 3.11199 17.5 3.33301 17.5H14.9997C15.2207 17.5 15.4326 17.4122 15.5889 17.2559C15.7452 17.0996 15.833 16.8877 15.833 16.6667V10.8333C15.833 10.3731 16.2061 10 16.6663 10C17.1266 10 17.4997 10.3731 17.4997 10.8333V16.6667C17.4997 17.3297 17.2363 17.9656 16.7674 18.4344C16.2986 18.9033 15.6627 19.1667 14.9997 19.1667H3.33301C2.66997 19.1667 2.03408 18.9033 1.56524 18.4344C1.0964 17.9656 0.833008 17.3297 0.833008 16.6667V5C0.833008 4.33696 1.0964 3.70107 1.56524 3.23223Z"
+                                fill=""
+                              />
+                              <path
+                                fillRule="evenodd"
+                                clipRule="evenodd"
+                                d="M16.6664 2.39884C16.4185 2.39884 16.1809 2.49729 16.0056 2.67253L8.25216 10.426L7.81167 12.188L9.57365 11.7475L17.3271 3.99402C17.5023 3.81878 17.6008 3.5811 17.6008 3.33328C17.6008 3.08545 17.5023 2.84777 17.3271 2.67253C17.1519 2.49729 16.9142 2.39884 16.6664 2.39884ZM14.8271 1.49402C15.3149 1.00622 15.9765 0.732178 16.6664 0.732178C17.3562 0.732178 18.0178 1.00622 18.5056 1.49402C18.9934 1.98182 19.2675 2.64342 19.2675 3.33328C19.2675 4.02313 18.9934 4.68473 18.5056 5.17253L10.5889 13.0892C10.4821 13.196 10.3483 13.2718 10.2018 13.3084L6.86847 14.1417C6.58449 14.2127 6.28409 14.1295 6.0771 13.9225C5.87012 13.7156 5.78691 13.4151 5.85791 13.1312L6.69124 9.79783C6.72787 9.65131 6.80364 9.51749 6.91044 9.41069L14.8271 1.49402Z"
+                                fill=""
+                              />
+                            </g>
+                            <defs>
+                              <clipPath id="clip0_88_10224">
+                                <rect width="20" height="20" fill="white" />
+                              </clipPath>
+                            </defs>
+                          </svg>
+                        </span>
+
+                        <textarea
+                          className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-pg focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                          id="puja"
+                          rows={3}
+                          placeholder="Reply to the pandit for his acception or rejection"
+                          defaultValue=""
+                          name="description"
+                          // value={formData.description}
+                          onChange={handleChange}
+                          required
+                        ></textarea>
+                      </div>
+                    </div>
+                                <div className="flex justify-between space-x-4 mt-4">
+                             
+                                                <button
+                                                  onClick={() => handleAccept(pandit._id)}
+                                                  className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 w-40 flex gap-1 justify-center"
+                                                >
+                                                  {loading ? (
+                                                    <>
+                                                      Please wait
+                                                      <svg
+                                                        className="ml-2 animate-spin h-5 w-5 text-white"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                      >
+                                                        <circle
+                                                          className="opacity-25"
+                                                          cx="12"
+                                                          cy="12"
+                                                          r="10"
+                                                          stroke="currentColor"
+                                                          strokeWidth="4"
+                                                        ></circle>
+                                                        <path
+                                                          className="opacity-75"
+                                                          fill="currentColor"
+                                                          d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z"
+                                                        ></path>
+                                                      </svg>
+                                                    </>
+                                                  ) : (
+                                                    <>Accept</>
+                                                  )}
+                                                </button>
+            
+                                                <button
+                                                  onClick={() => handleReject(pandit._id)}
+                                                  className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 w-40 flex gap-2 justify-center"
+                                                >
+                                                  {rejectloading ? (
+                                                    <>
+                                                      Please wait
+                                                      <svg
+                                                        className="ml-2 animate-spin h-5 w-5 text-white"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                      >
+                                                        <circle
+                                                          className="opacity-25"
+                                                          cx="12"
+                                                          cy="12"
+                                                          r="10"
+                                                          stroke="currentColor"
+                                                          strokeWidth="4"
+                                                        ></circle>
+                                                        <path
+                                                          className="opacity-75"
+                                                          fill="currentColor"
+                                                          d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z"
+                                                        ></path>
+                                                      </svg>
+                                                    </>
+                                                  ) : (
+                                                    <>Reject</>
+                                                  )}
+                                                </button>
+                                        </div>
+
+                                              </>
                                     </>
                                   )}
-                                </div>
 
                                 {/* <button
           // onClick={onClose}
@@ -486,7 +634,7 @@ function page() {
                         </div>
                       </Modal>
 
-                      <button className="hover:text-primary">
+                      {/* <button className="hover:text-primary">
                         <svg
                           className="fill-current"
                           width="18"
@@ -512,26 +660,8 @@ function page() {
                             fill=""
                           />
                         </svg>
-                      </button>
-                      {/* <button className="hover:text-primary">
-                        <svg
-                          className="fill-current"
-                          width="18"
-                          height="18"
-                          viewBox="0 0 18 18"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M16.8754 11.6719C16.5379 11.6719 16.2285 11.9531 16.2285 12.3187V14.8219C16.2285 15.075 16.0316 15.2719 15.7785 15.2719H2.22227C1.96914 15.2719 1.77227 15.075 1.77227 14.8219V12.3187C1.77227 11.9812 1.49102 11.6719 1.12539 11.6719C0.759766 11.6719 0.478516 11.9531 0.478516 12.3187V14.8219C0.478516 15.7781 1.23789 16.5375 2.19414 16.5375H15.7785C16.7348 16.5375 17.4941 15.7781 17.4941 14.8219V12.3187C17.5223 11.9531 17.2129 11.6719 16.8754 11.6719Z"
-                            fill=""
-                          />
-                          <path
-                            d="M8.55074 12.3469C8.66324 12.4594 8.83199 12.5156 9.00074 12.5156C9.16949 12.5156 9.31012 12.4594 9.45074 12.3469L13.4726 8.43752C13.7257 8.1844 13.7257 7.79065 13.5007 7.53752C13.2476 7.2844 12.8539 7.2844 12.6007 7.5094L9.64762 10.4063V2.1094C9.64762 1.7719 9.36637 1.46252 9.00074 1.46252C8.66324 1.46252 8.35387 1.74377 8.35387 2.1094V10.4063L5.40074 7.53752C5.14762 7.2844 4.75387 7.31252 4.50074 7.53752C4.24762 7.79065 4.27574 8.1844 4.50074 8.43752L8.55074 12.3469Z"
-                            fill=""
-                          />
-                        </svg>
                       </button> */}
+                   
                     </div>
                   </td>
                 </tr>
@@ -570,48 +700,3 @@ function page() {
 }
 
 export default page;
-// dateOfBirth
-// :
-// {day: 12, month: 12, year: 12}
-// documents
-// :
-// {qualificationCertificate: 'http://res.cloudinary.com/dk9dfh1pn/image/upload/v1734685452/eqflk2nr8en7wv0vsiww.png', citizenshipFrontPhoto: 'http://res.cloudinary.com/dk9dfh1pn/image/upload/v1734685454/fdclv6wrlkpqxbp5yh7d.png', citizenshipBackPhoto: 'http://res.cloudinary.com/dk9dfh1pn/image/upload/v1734685456/zzarijix7xqrjo0agv1y.png'}
-// experience
-// :
-// "5 years"
-// institution
-// :
-// "NCIT"
-// panditID
-// :
-// "67629c2207096f15a95f0ca7"
-// permanentAddress
-// :
-// {province: 'lumbini', district: 'daang', municipality: 'ghorai', tolAddress: 'bhairatan', _id: '67653310abc6f9d1673e0f61'}
-// phoneNumber
-// :
-// "93849244324"
-// qualification
-// :
-// "Bed gyata"
-// status
-// :
-// "accepted"
-// temporaryAddress
-// :
-// {province: 'lumbini', district: 'daang', municipality: 'ghorai', tolAddress: 'bhairatan', _id: '67653310abc6f9d1673e0f60'}
-// __v
-// :
-// 0
-// _id
-// :
-// "67653310abc6f9d1673e0f5f"
-// [[Prototype]]
-// :
-// Object
-// length
-// :
-// 1
-// [[Prototype]]
-// :
-// Array(0)

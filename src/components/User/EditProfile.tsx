@@ -33,7 +33,7 @@ function EditProfile() {
 
   const { toast } = useToast()
 
-  const { userInfo, token } = useContext(AuthContext);
+  const  userInfo = useContext(AuthContext)?.userInfo;
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -92,7 +92,7 @@ function EditProfile() {
         })
 
   }
-    } catch (error) {
+    } catch (error:any) {
       console.log("Error updating profile:", error.response?.data || error.message);
     } finally {
       setLoading(false);
@@ -135,7 +135,9 @@ function EditProfile() {
   useEffect(() => {
     if (userInfo) {
       Object.keys(userInfo).forEach((key) => {
+        if (key in userInfo) {
         form.setValue(key as keyof ProfileFormValues, userInfo[key as keyof ProfileFormValues]);
+        }
       });
     }
   }, [userInfo, form]);
@@ -147,7 +149,9 @@ function EditProfile() {
     console.log("eta ");
     console.log("data is ",profileData)
     const fd = new FormData();
-    fd.append("avatar", profileData.avatar);
+    if (profileData.avatar) {
+      fd.append("avatar", profileData.avatar);
+    }
 console.log("avatar is",fd)
     try {
       setLoading(true);
@@ -166,7 +170,7 @@ console.log("avatar is",fd)
         })
 
   }
-    } catch (error) {
+    } catch (error:any) {
       console.log("Error updating profile:", error.response?.data || error.message);
     } finally {
       setLoading(false);
@@ -175,7 +179,9 @@ console.log("avatar is",fd)
 
   const handleCoverSubmit = async (e:React.FormEvent) => {
     const cd = new FormData();
-    cd.append("coverPhoto", coverData.coverPhoto);
+    if (coverData.coverPhoto) {
+      cd.append("coverPhoto", coverData.coverPhoto);
+    }
 console.log("cover photo is",cd)
     e.preventDefault();
     try {
@@ -195,7 +201,7 @@ console.log("cover photo is",cd)
             })
 
       }
-    } catch (error) {
+    } catch (error:any) {
       console.log("Error updating profile:", error.response?.data || error.message);
     } finally {
       setLoading(false);
@@ -228,7 +234,7 @@ console.log("cover photo is",cd)
                 ):(
                   <img
 
-                  src={userInfo.coverPhoto}
+                  src={userInfo?.coverPhoto}
                   alt="No  cover Image  is uploaded"
                   className="h-full w-full rounded-tl-[10px] rounded-tr-[10px] object-cover object-center border-b border-orange-200"
              
@@ -344,7 +350,7 @@ console.log("cover photo is",cd)
               {userInfo?.firstName}{userInfo?.lastName}
             </h3>
             <p className="font-medium text-slate-400 text-sm">{userInfo?.email}</p>
-            <p className="font-medium text-slate-400 text-sm">{userInfo?.contact}</p>
+            {/* <p className="font-medium text-slate-400 text-sm">{userInfo?.contact}</p> */}
 
           </div>
         </div>
@@ -410,19 +416,6 @@ console.log("cover photo is",cd)
                 </FormItem>
               )}
             />
-            {/* <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel  className="text-slate-400">Phone</FormLabel>
-                  <FormControl>
-                    <input type="text" {...field} className=" p-2 w-full rounded" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
               </div>
 </div>
            

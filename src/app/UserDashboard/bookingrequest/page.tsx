@@ -11,7 +11,8 @@ function Page() {
     pujaID: {
       pujaName: string;
     };
-    _id:string
+    _id:string;
+    status:string;
   }
   
   const [bookingData, setBookingData] = useState<Booking[]>([]);
@@ -36,6 +37,7 @@ function Page() {
           setSelectedPuja(res.data.data.bookingsWithPanditDetails[0].pujaID.pujaName);
         }
       } catch (error) {
+        console.log("error is ",error)
         setError(true);
         setErrorMessage('Failed to fetch booking data');
       }
@@ -67,7 +69,8 @@ function Page() {
             <h1 className='font-semibold text-xl'>Booked Pooja</h1>
             <br />
               <ul>
-                {bookingData.map((booking, index) => (
+                {bookingData
+  .filter((booking) => booking.status === "Pending").map((booking, index) => (
                   <li
                     key={index}
                     className={`p-3 cursor-pointer ${

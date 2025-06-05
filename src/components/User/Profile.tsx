@@ -5,21 +5,20 @@ import Image from "next/image";
 import Link from "next/link";
 // import { userInfo } from "os";
 import LetterAvatar from "../LetterAvatar";
-import ReviewSection from "../ReviewSection";
-// import { userInfo } from "os";
-
+import { User } from "@/src/types/userType";
 const Profile = () => {
   const [activeTab, setActiveTab] = useState('about'); // Default tab is 'about'
 
     const authContext = useContext(AuthContext);
     // const [userInfo, setUserInfo] = useState<any>(null);  // Initialize state to store user info
-const [user,setUser]=useState({})
+const [user,setUser]=useState<User | null>({})
   
   useEffect(() => {
     const fetchData = async () => {
       try {
         console.log("authcontext is", authContext);
-        const { loginfo,userInfo } = authContext;
+     
+        const userInfo  = authContext?.userInfo;
 
         // if (!loginfo) {
         //   console.warn("loginfo is not defined in authContext");
@@ -29,9 +28,12 @@ const [user,setUser]=useState({})
         // const response = await loginfo();
         console.log("response is", userInfo);
         //yo userinfo change vako vai garera yo function run gareko garei garyo
-        setUser(userInfo);
+        if(userInfo){
+
+          setUser(userInfo);
+        }
 // console.log("üserinfo is",userInfo)
-      } catch (error) {
+      } catch (error:any) {
         console.log("Error fetching data:", error.message);
       }
     };
@@ -39,7 +41,7 @@ const [user,setUser]=useState({})
     fetchData();
   }, [authContext]);
 
- console.log("userimage is ",user?.avatar)
+//  console.log("userimage is ",user?.avatar)
 
 
   return (

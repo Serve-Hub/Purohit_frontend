@@ -11,8 +11,29 @@ import {
 import { BookA } from "lucide-react";
 import $axios from "@/src/lib/axios.instance";
 
+
+interface Booking {
+  pujaID?: {
+    pujaName?: string;
+    baseFare?: number;
+  };
+  user?: {
+    _id?: string;
+    firstName?: string;
+    lastName?: string;
+    avatar?: string;
+  };
+  location?: {
+    tollAddress?: string;
+    municipality?: string;
+    district?: string;
+    province?: string;
+  };
+  status?: "Completed" | "pending" | "cancelled" | string;
+}
+
 function BookingPage() {
-  const [bookingData, setBookingData] = useState([]);
+  const [bookingData, setBookingData] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -28,9 +49,9 @@ function BookingPage() {
       const page = currentPage;
       const limit = 4;
       try {
-        const res = await $axios.get("/api/v1/booking/bookings/viewBooking");
+        const res = await $axios.get("/api/v1/booking/bookings/viewPanditBooking");
 
-        console.log("response is",res)
+        console.log("pandit booking is",res)
         setBookingData(res.data.data.bookings);
         setFetchloader(false);
         setTotalPages(res.data.data.totalPages);
@@ -43,7 +64,7 @@ function BookingPage() {
     fetchData();
   }, [currentPage, token]);
 
-  const onPageChange = (page) => {
+  const onPageChange = (page:number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
@@ -105,28 +126,30 @@ function BookingPage() {
                 </td>
               </tr>
             ) : (
-              bookingData.map((booking, key) => (
+              bookingData?.map((booking, key) => (
                 <tr key={key}>
                   <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                     <h5 className="font-medium text-black dark:text-white">
-                      {booking.pujaID.pujaName}
+                      {booking.pujaID?.pujaName}
                     </h5>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <p className="text-black dark:text-white">
-                      eta pandit name 
+                    
+                    {booking.user?.firstName}  {booking.user?.lastName}
+
                       {/* {new Date(booking.bookingDate).toLocaleDateString()} */}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <p className="text-black dark:text-white">
-                      {booking.location.tollAddress}    {booking.location.municipality}     {booking.location.district}     {booking.location.province}  
+                      {booking.location?.tollAddress}    {booking.location?.municipality}     {booking.location?.district}     {booking.location?.province}  
                     </p>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <p
                       className={`inline-flex rounded-full bg-opacity-10 px-3 py-1 text-sm font-medium ${
-                        booking.status === "completed"
+                        booking.status === "Completed"
                           ? "bg-success text-success"
                           : booking.status === "pending"
                           ? "bg-warning text-warning"
@@ -135,16 +158,16 @@ function BookingPage() {
                           : "bg-primary text-primary"
                       }`}
                     >
-                      {booking.status}
+                      {booking?.status}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <p className="text-black dark:text-white">
-                      Rs. {booking.pujaID.baseFare}   
+                      Rs. {booking.pujaID?.baseFare}   
                     </p>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                    <div className="flex items-center space-x-3.5">
+                    <div className="flex items-center space-x-3.5 z-9999">
                       <Modal>
                         <ModalTrigger className="dark:bg-white dark:text-black text-black flex justify-center group/modal-btn">
                         
@@ -174,11 +197,11 @@ function BookingPage() {
                                                       onClick={(e) => e.stopPropagation()} // Prevent closing modal when clicking inside
                                                     >
                                                       <h2 className="text-xl font-bold mb-4">
-                                                        Pandit Information
+                                                        User Information
                                                       </h2>
                       
                                                       <div
-                                                        key={pandit.panditID}
+                                                        // key={booking.user?._id}
                                                         className="space-y-8  p-4 rounded-md"
                                                       >
                                                         {/* Personal Information Section */}
@@ -189,10 +212,10 @@ function BookingPage() {
                                                           <div className="flex justify-end">
                                                             <img
                                                               src={
-                                                                pandit.userDetails.avatar ||
+                                                                booking.user?.avatar ||
                                                                 "/default-photo.jpg"
                                                               } // Use a default photo if not available
-                                                              alt="Pandit Photo"
+                                                              alt="User Photo"
                                                               className="w-24 h-24  object-cover mr-4 border border-black"
                                                             />
                                                           </div>
@@ -203,70 +226,70 @@ function BookingPage() {
                                                               <div>
                                                                 <strong>Name:</strong>{" "}
                                                                 <span className="ms-2">
-                                                                  {pandit.userDetails.firstName}
+                                                                  {booking.user?.firstName}
                                                                 </span>
                                                                 <span className="ms-3">
-                                                                  {pandit.userDetails.lastName}
+                                                                  {booking.user?.lastName}
                                                                 </span>
                                                               </div>
                                                             </div>
                                                             <div>
                                                               <strong>Pandit ID:</strong>{" "}
-                                                              <span>{pandit.panditID}</span>
+                                                              <span>{booking.user?._id}</span>
                                                             </div>
                                                           </div>
-                                                          <div className="flex justify-between">
+                                                          {/* <div className="flex justify-between">
                                                             <strong>Phone Number:</strong>{" "}
-                                                            <span>{pandit.phoneNumber}</span>
-                                                          </div>
+                                                            <span>{booking.phoneNumber}</span>
+                                                          </div> */}
                                                           <div className="flex justify-between">
                                                             <strong>Status:</strong>{" "}
-                                                            <span>{pandit.status}</span>
+                                                            <span>{booking.status}</span>
                                                           </div>
-                                                          <div className="flex justify-between">
+                                                          {/* <div className="flex justify-between">
                                                             <strong>Permanent Address:</strong>
                                                             <span>
-                                                              {pandit.permanentAddress &&
-                                                                `${pandit.permanentAddress.province}, ${pandit.permanentAddress.district}, ${pandit.permanentAddress.municipality}, ${pandit.permanentAddress.tolAddress}`}
+                                                              {booking.user.permanentAddress &&
+                                                                `${booking.permanentAddress.province}, ${booking.permanentAddress.district}, ${booking.permanentAddress.municipality}, ${booking.permanentAddress.tolAddress}`}
                                                             </span>
-                                                          </div>
-                                                          <div className="flex justify-between">
+                                                          </div> */}
+                                                          {/* <div className="flex justify-between">
                                                             <strong>Temporary Address:</strong>
                                                             <span>
-                                                              {pandit.temporaryAddress &&
-                                                                `${pandit.temporaryAddress.province}, ${pandit.temporaryAddress.district}, ${pandit.temporaryAddress.municipality}, ${pandit.temporaryAddress.tolAddress}`}
+                                                              {booking.temporaryAddress &&
+                                                                `${booking.temporaryAddress.province}, ${booking.temporaryAddress.district}, ${booking.temporaryAddress.municipality}, ${booking.temporaryAddress.tolAddress}`}
                                                             </span>
-                                                          </div>
-                                                          <div className="flex justify-between">
+                                                          </div> */}
+                                                          {/* <div className="flex justify-between">
                                                             <strong>Date of Birth:</strong>
                                                             <span>
-                                                              {pandit.dateOfBirth &&
-                                                                `${pandit.dateOfBirth.day}-${pandit.dateOfBirth.month}-${pandit.dateOfBirth.year}`}
+                                                              {booking.dateOfBirth &&
+                                                                `${booking.dateOfBirth.day}-${booking.dateOfBirth.month}-${booking.dateOfBirth.year}`}
                                                             </span>
-                                                          </div>
+                                                          </div> */}
                                                         </div>
                       
                                                         {/* Professional and Education Section */}
-                                                        <div className="flex flex-col space-y-4 mt-8">
+                                                        {/* <div className="flex flex-col space-y-4 mt-8">
                                                           <h2 className="text-lg font-bold border-b pb-2">
                                                             Profession and Education
                                                           </h2>
                                                           <div className="flex justify-between">
                                                             <strong>Institution:</strong>{" "}
-                                                            <span>{pandit.institution}</span>
+                                                            <span>{booking.institution}</span>
                                                           </div>
                                                           <div className="flex justify-between">
                                                             <strong>Experience:</strong>{" "}
-                                                            <span>{pandit.experience}</span>
+                                                            <span>{booking.experience}</span>
                                                           </div>
                                                           <div className="flex justify-between">
                                                             <strong>Qualification:</strong>{" "}
-                                                            <span>{pandit.qualification}</span>
+                                                            <span>{booking.qualification}</span>
                                                           </div>
-                                                        </div>
+                                                        </div> */}
                       
                                                         {/* Certificates Section */}
-                                                        <div className="flex flex-col space-y-8 mt-8">
+                                                        {/* <div className="flex flex-col space-y-8 mt-8">
                                                           <h2 className="text-lg font-bold border-b p-5">
                                                             Certificates
                                                           </h2>
@@ -278,7 +301,7 @@ function BookingPage() {
                                                               <div className="mt-5">
                                                                 <img
                                                                   src={
-                                                                    pandit.documents
+                                                                    booking.documents
                                                                       .qualificationCertificate
                                                                   }
                                                                   alt="Qualification Certificate"
@@ -293,7 +316,7 @@ function BookingPage() {
                                                               <div className="mt-5">
                                                                 <img
                                                                   src={
-                                                                    pandit.documents
+                                                                    booking.documents
                                                                       .citizenshipFrontPhoto
                                                                   }
                                                                   alt="Citizenship Front Photo"
@@ -306,7 +329,7 @@ function BookingPage() {
                                                               <div className="mt-5">
                                                                 <img
                                                                   src={
-                                                                    pandit.documents
+                                                                    booking.documents
                                                                       .citizenshipBackPhoto
                                                                   }
                                                                   alt="Citizenship Back Photo"
@@ -316,11 +339,11 @@ function BookingPage() {
                                                             </li>
                                                           </ul>
                                                         </div>
-                      
+                       */}
                                                         {/* Accept and Reject Buttons */}
                                                       </div>
-                                                      <div className="flex justify-between space-x-4 mt-4">
-                                                        {pandit.status === "accepted" ? (
+                                                      {/* <div className="flex justify-between space-x-4 mt-4">
+                                                        {booking.status === "accepted" ? (
                                                           <button
                                                             className="px-4 py-2 bg-green-500 text-white rounded-md w-40 flex justify-center"
                                                             disabled
@@ -330,7 +353,7 @@ function BookingPage() {
                                                         ) : (
                                                           <>
                                                             <button
-                                                              onClick={() => handleAccept(pandit._id)}
+                                                              onClick={() => handleAccept(booking._id)}
                                                               className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 w-40 flex gap-1 justify-center"
                                                             >
                                                               {loading ? (
@@ -362,7 +385,7 @@ function BookingPage() {
                                                               )}
                                                             </button>
                                                             <button
-                                                              onClick={() => handleReject(pandit._id)}
+                                                              onClick={() => handleReject(booking._id)}
                                                               className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 w-40 flex gap-2 justify-center"
                                                             >
                                                               {rejectloading ? (
@@ -395,7 +418,7 @@ function BookingPage() {
                                                             </button>
                                                           </>
                                                         )}
-                                                      </div>
+                                                      </div> */}
                       
                                                       {/* <button
                                 // onClick={onClose}
@@ -409,7 +432,7 @@ function BookingPage() {
                                               </div>
                       </Modal>
 
-                      <button className="hover:text-primary">
+                      {/* <button className="hover:text-primary">
                         <svg
                           className="fill-current"
                           width="18"
@@ -435,7 +458,7 @@ function BookingPage() {
                             fill=""
                           />
                         </svg>
-                      </button>
+                      </button> */}
                     </div>
                   </td>
                 </tr>

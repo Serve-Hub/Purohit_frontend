@@ -6,6 +6,7 @@ import Breadcrumb from "@/src/components/admin/Breadcrumbs/Breadcrumb";
 import axios from "axios";
 import $axios from "@/src/lib/axios.instance";
 import { useRouter } from "next/navigation";
+import { toast } from "@/hooks/use-toast";
 function page() {
   // AOS.init();
   //   useEffect(() => {
@@ -45,7 +46,7 @@ function page() {
 const [imagepreview, setImagepreview] = useState<string | null>(null);
   
   const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -119,8 +120,14 @@ const [imagepreview, setImagepreview] = useState<string | null>(null);
       console.log("resopne", response);
       setLoading(false);
       if (response.data.success) {
-        setSuccess(true);
-        setSuccessMessage("Puja added successfully!");
+        // setSuccess(true);
+        // setSuccessMessage("Puja added successfully!");
+       
+        toast({
+          title: "Update info",
+          description: "Puja has been added successfully !!",
+          className:"bg-green-500 border-green-500 text-white font-semibold "
+        })
         router.push("/admin/viewpuja");
       }
       // alert("puja ");

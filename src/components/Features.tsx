@@ -61,7 +61,7 @@ type Feature = {
       
   return (
     <>
-    <div className=" py-24 sm:py-32 bg-[url('/img/bg.png')] bg-cover bg-center container mt-20" >
+    <div className=" py-24 sm:py-32 bg-[url('/img/bg.png')] bg-cover bg-center  mt-20" >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center" data-aos="fade-right">
           <h2 className="text-base font-semibold leading-7 text-pandit">Our Services</h2>

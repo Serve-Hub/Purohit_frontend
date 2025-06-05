@@ -1,5 +1,5 @@
 'use client';
-import React from 'react'
+import React, { useState } from 'react'
 import Bcpandit from '@/src/components/User/Bcpandit';
 import { Popularpuja } from '@/src/components/Popularpuja';
 import { Button } from '@/src/components/ui/button';
@@ -10,11 +10,18 @@ import Cookies from 'js-cookie';
 import { updateSessionToken } from '@/utils/sessionHandler';
 import AOS from "aos";
 import "aos/dist/aos.css";
+import $axios from '@/src/lib/axios.instance';
+import Search from '@/src/components/User/Search';
+import Link from 'next/link';
 
 
 
 function page() {
   const currentPath=usePathname();
+
+
+
+  const [kypData, setKypData] = useState([]);
   useEffect(() => {
     AOS.init({
       duration: 1000, // Animation duration in ms
@@ -22,6 +29,8 @@ function page() {
       once: true, // Whether animation should happen only once
     });
 updateSessionToken();
+
+
 
     // console.log("accesstoken  is",Cookies.get(""))
 
@@ -38,7 +47,26 @@ updateSessionToken();
       localStorage.removeItem("selectedMenu");
     }
 
-  
+    const fetchKYPStatus = async () => {
+      try {
+        const response = await $axios.get("/api/v1/kyp/getKYPStatus");
+
+        console.log("kyc status",response)
+        setKypData(response.data.data); 
+        // if (!response.ok) {
+        //   throw new Error(`Error: ${response.statusText}`);
+        // }
+
+        // const data = await response.json();
+        // setKypStatus(data); // Assuming API returns the status directly
+      } catch (error) {
+        console.error("Failed to fetch KYP status:", error);
+      } finally {
+        // setLoading(false);
+      }
+    };
+
+    fetchKYPStatus();
     // Cleanup the event listener when component unmounts
    
   }, [currentPath]); // Only re-run this effect if router.events chang
@@ -95,47 +123,17 @@ console.log("userinfo in the landing page",userInfo);
               celebration. From pujas to weddings, experience seamless booking
               and personalized spiritual services.
             </p>
-            <form action="https://formbold.com/s/unique_form_id" method="POST">
-              <div className="relative"  data-aos="fade-left">
-                <button className="absolute left-2 top-1/2 -translate-y-1/2">
-                  <svg
-                    className="fill-pandit hover:fill-primary dark:fill-bodydark dark:hover:fill-primary"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M9.16666 3.33332C5.945 3.33332 3.33332 5.945 3.33332 9.16666C3.33332 12.3883 5.945 15 9.16666 15C12.3883 15 15 12.3883 15 9.16666C15 5.945 12.3883 3.33332 9.16666 3.33332ZM1.66666 9.16666C1.66666 5.02452 5.02452 1.66666 9.16666 1.66666C13.3088 1.66666 16.6667 5.02452 16.6667 9.16666C16.6667 13.3088 13.3088 16.6667 9.16666 16.6667C5.02452 16.6667 1.66666 13.3088 1.66666 9.16666Z"
-                      fill=""
-                    />
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M13.2857 13.2857C13.6112 12.9603 14.1388 12.9603 14.4642 13.2857L18.0892 16.9107C18.4147 17.2362 18.4147 17.7638 18.0892 18.0892C17.7638 18.4147 17.2362 18.4147 16.9107 18.0892L13.2857 14.4642C12.9603 14.1388 12.9603 13.6112 13.2857 13.2857Z"
-                      fill=""
-                    />
-                  </svg>
-                </button>
-
-                <input
-                  type="text"
-                  placeholder="Search for available pujas"
-                  className="shadow bg-transparent pl-9 pr-4 font-medium focus:outline-none xl:w-90 border border-pandit text-pandit placeholder:text-pandit rounded-full p-3 hidden lg:block "
-               
-                />
-              </div>
-            </form>
-            <div className="flex gap-10">
-              <Button
-                className=" bg-pandit  text-white"
-                variant="default"
-                size="default"
+          <Search/>
+           
+           
+           
+            <div className="flex gap-10" data-aos="fade-right">
+              
+              <Link
+              href='/user/viewPuja'
+                className=" w-40 h-10 px-4  text-white  bg-pandit flex gap-2 items-center rounded-lg z-99"
               >
-                Get started
+              Get started
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -148,13 +146,15 @@ console.log("userinfo in the landing page",userInfo);
                     clipRule="evenodd"
                   />
                 </svg>
-              </Button>
-              <Button
-                className=" bg-transparent  text-black"
-                variant="default"
-                size="default"
+              </Link>
+              <Link
+                className=" border-black  text-black flex gap-2 items-center z-99"
+                href='/user/aboutus'
               >
+  
+                
                 Learn more
+     
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -167,17 +167,19 @@ console.log("userinfo in the landing page",userInfo);
                     clipRule="evenodd"
                   />
                 </svg>
-              </Button>
+              </Link>
+              </div>
+              
+            
+        
             </div>
-          </div>
-{/* <div className="relative w-2/3  "> */}
 
           <img src="/img/userhome.png"
           // style={width:"12px",height:"110px"}
            alt="" className="object-contain w-2/3 "
             data-aos="zoom-out"
            />
-{/* </div> */}
+
         </div>
 
         <div className="flex gap-4 mt-10">
@@ -192,7 +194,7 @@ console.log("userinfo in the landing page",userInfo);
       </div>
     </div>
 {/* end of landing hero */}
-{userInfo && userInfo.isPandit ? null : <Bcpandit />}
+{kypData?.length === 0 ?<Bcpandit /> : null}
 
 <Popularpuja/>
 

@@ -6,10 +6,14 @@ import Link from "next/link";
 // import { userInfo } from "os";
 import LetterAvatar from "../LetterAvatar";
 import ReviewSection from "../ReviewSection";
+import { User } from "@/src/types/userType";
 // import { userInfo } from "os";
 
-const UserProfile = ({user}) => {
-  const [activeTab, setActiveTab] = useState('about'); // Default tab is 'about'
+interface UserProfileProps {
+  user: User;
+}
+const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
+  const [activeTab, setActiveTab] = useState('about'); 
 
     const authContext = useContext(AuthContext);
     // const [userInfo, setUserInfo] = useState<any>(null);  // Initialize state to store user info
@@ -31,7 +35,7 @@ const UserProfile = ({user}) => {
         //yo userinfo change vako vai garera yo function run gareko garei garyo
         // setUser(userInfo);
 // console.log("üserinfo is",userInfo)
-      } catch (error) {
+      } catch (error:any) {
         console.log("Error fetching data:", error.message);
       }
     };
@@ -146,26 +150,26 @@ const UserProfile = ({user}) => {
             <p className="font-medium text-slate-400 text-sm">{user?.email}</p>
             <p className="font-medium text-slate-400 text-sm">{user?.contact}</p>
 
-            <div className="text-pandit mx-auto mb-5.5 mt-5 grid max-w-[600px] grid-cols-1 rounded-[5px] border border-orange-200 py-[9px] shadow-1 dark:border-dark-3 dark:bg-dark-2 dark:shadow-card">
+            {/* <div className="text-pandit mx-auto mb-5.5 mt-5 grid max-w-[600px] grid-cols-1 rounded-[5px] border border-orange-200 py-[9px] shadow-1 dark:border-dark-3 dark:bg-dark-2 dark:shadow-card">
               {/* <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-dark-3 xsm:flex-row">
                 <span className="font-medium text-dark dark:text-white">
                   259
                 </span>
                 <span className="text-body-sm ">Blogs</span>
               </div> */}
-              <div className="flex flex-col items-center justify-center gap-2 border-r border-stroke px-4 dark:border-dark-3 xsm:flex-row">
+              {/* <div className="flex flex-col items-center justify-center gap-2 border-r border-stroke px-4 dark:border-dark-3 xsm:flex-row">
                 <span className="font-medium text-dark dark:text-white">
                   129
                 </span>
                 <span className="text-body-sm-sm">Puja Completed</span>
-              </div>
+              </div> */}
               {/* <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row">
                 <span className="font-medium text-dark dark:text-white">
                   2
                 </span>
                 <span className="text-body-sm">Reviews</span>
               </div> */}
-            </div>
+            {/* </div> */}
             <div className="mx-auto max-w-[720px]">
       {/* Tab buttons */}
       <div className="flex space-x-4 border-b border-gray-300 dark:border-gray-700">

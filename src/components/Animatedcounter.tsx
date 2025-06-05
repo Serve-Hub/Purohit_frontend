@@ -20,7 +20,6 @@ const AnimatedCounter: React.FC = () => {
           num.innerText = `${finalVal}`; 
         }
       };
-
       updateNumber();
     });
   }, []);
@@ -48,7 +47,7 @@ const AnimatedCounter: React.FC = () => {
         <img src="img/counter_3.png" alt="" className=' w-20' />
 <div className="flex-col  text-pandit">
           <h1 className="text-4xl font-bold count" data-count="223">0</h1>
-          <p>Yojaman</p>
+          <p>Jojaman</p>
 
 </div>
         </div>

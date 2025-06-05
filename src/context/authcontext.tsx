@@ -10,9 +10,12 @@ interface UserInfo {
   name: string;
   email: string;
   avatar:string;
+  coverPhoto:string;
   firstName:string;
   lastName:string;
   _id:string;
+  bio?: string | undefined;
+
 }
 type AuthContextType = {
 

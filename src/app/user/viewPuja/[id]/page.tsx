@@ -50,6 +50,9 @@ const [pujaData,setPujaData]=useState<pujaData>({
       "A sacred ceremony dedicated to Lord Shiva, performed with devotion and reverence. The puja includes chanting, offerings, and rituals to invoke the blessings of Lord Shiva for health, prosperity, and spiritual growth.",
     pujaImage: "https://example.com/images/maha-shivaratri.jpg", // Replace with a valid image URL or base64 encoded string for binary data
   };
+
+
+  
   const [date, setDate] = React.useState<Date>()
 
   
@@ -185,11 +188,15 @@ const [pujaData,setPujaData]=useState<pujaData>({
           </div>
           <div className="mainbody flex gap-10">
             <div className="w-4/6">
-              <img
-              src={pujaData?.pujaImage}
-                alt=""
-                className="w-full rounded-xl h-94 object-cover object-center"
-              />
+            {pujaData?.pujaImage ? (
+  <img
+    src={pujaData.pujaImage}
+    alt="Puja Image"
+    className="w-full rounded-xl h-94 object-cover object-center"
+  />
+) : (
+  <p>No image available</p> // You can show a placeholder or any fallback content here
+)}
              <div className="fortab my-10">
       {/* Tab Buttons */}
       <div className="flex border-b border-gray-300 mb-8">

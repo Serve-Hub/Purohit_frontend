@@ -4,18 +4,42 @@ import Link from "next/link";
 import Breadcrumb from "./Breadcrumbs/Breadcrumb";
 import $axios from "@/src/lib/axios.instance";
 
+
+
+interface Notification {
+  _id: string;
+  type: "General" | "Review" | "Booking" |"Payment"; // Add other types if needed
+  status:string;
+  message: string;
+  senderDetails: {
+    firstName: string;
+    lastName: string;
+  };
+  pujaDetails?: {
+    pujaImage: string;
+    baseFare: number;
+  };
+  bookingDetails?: {
+    location: {
+      municipality?: string;
+      tollAddress?: string;
+      province?: string;
+      district?: string;
+    };
+  };
+}
 function NotificationFull() {
-  const [notifications, setNotifications] = useState([]); // State to store notifications
+  const [notifications, setNotifications] = useState<Notification[]>([]); // State to store notifications
   const [currentPage, setCurrentPage] = useState(1); // Current page number
   const [totalPages, setTotalPages] = useState(1); // Total number of pages
   const [loading, setLoading] = useState(false); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const [error, setError] = useState<string | null>(null); // Error state
 
   const notificationsPerPage = 5; // Number of notifications per page
   const apiUrl = "https://purohit-backend.onrender.com/api/v1/booking/notifications";
 
   // Fetch notifications from the backend
-  const fetchNotifications = async (page) => {
+  const fetchNotifications = async (page:number) => {
     setLoading(true);
     setError(null);
     const token = localStorage.getItem("token_id");
@@ -39,7 +63,7 @@ function NotificationFull() {
   };
 
   // Handle page change
-  const handlePageChange = (page) => {
+  const handlePageChange = (page:number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
       fetchNotifications(page);
@@ -78,16 +102,38 @@ function NotificationFull() {
             <div
               key={notification._id}
               className={`p-4 rounded-lg shadow-lg flex justify-between ${
-                notification.type === "info"
+                notification.type === "Payment"
                   ? "bg-blue-100 text-blue-800"
-                  : notification.type === "warning"
+                  : notification.type === "General"
                   ? "bg-yellow-100 text-yellow-800"
-                  : notification.type === "error"
+                  : notification.type === "Review"
                   ? "bg-red-100 text-red-800"
                   : "bg-green-100 text-green-800"
               }`}
             >
-              <div className="flex gap-5 justify-between">
+
+              {notification.type=="General" || notification.type =="Review"? (
+                <>
+ <div className="flex gap-5 justify-between">
+                
+                <div className="flex flex-col">
+                  <p>{notification?.message}</p>
+                  <span className="text-sm text-gray-500">
+                    From: {notification?.senderDetails?.firstName} {notification?.senderDetails?.lastName}
+                  </span>
+
+            
+{/* 
+                  <p className="text-sm">
+                    Status: <span className="font-bold">{notification?.status}</span>
+                  </p> */}
+
+                </div>
+              </div>
+  
+                </>
+              ):(
+                <div className="flex gap-5 justify-between">
                 <img
                   src={notification?.pujaDetails?.pujaImage}
                   alt="Puja"
@@ -117,6 +163,8 @@ function NotificationFull() {
                 </div>
               </div>
   
+              )}
+             
             </div>
           ))}
         </div>

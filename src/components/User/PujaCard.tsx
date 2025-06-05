@@ -1,7 +1,14 @@
 import React from 'react'
 import Link from 'next/link'
 import { useState } from 'react';
-function PujaCard({puja}) {
+import { Puja } from '@/src/types/userType';
+
+
+interface PujaCardProps {
+  puja: Puja;
+}
+
+function PujaCard({puja}:PujaCardProps) {
     const [isBookLoading, setIsBookLoading] = useState(false);
 
   return (

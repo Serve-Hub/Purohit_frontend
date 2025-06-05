@@ -8,6 +8,7 @@ import Loader from "@/src/components/common/Loader";
 import DefaultLayout from "@/src/components/admin/Dashboard/DefaultLayout";
 import PoojaProvider from "@/src/context/poojacontext";
 import AuthProvider from "@/src/context/authcontext";
+import { Toaster } from "@/src/components/ui/toaster";
 
 
 export default function RootLayout({
@@ -30,6 +31,8 @@ export default function RootLayout({
         <div className="dark:bg-boxdark-2 dark:text-bodydark">
           <AuthProvider>
           <DefaultLayout>
+              <Toaster />
+            
             <PoojaProvider>{loading ? <Loader /> : children}</PoojaProvider>
           </DefaultLayout>
           </AuthProvider>

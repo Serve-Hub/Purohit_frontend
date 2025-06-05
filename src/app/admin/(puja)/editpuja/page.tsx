@@ -65,7 +65,13 @@ function page() {
                     </div>
                   </div>
 
-                  <SelectGroupTwo />
+                      {/* <SelectGroupTwo name={""} value={""} 
+                      onChange={()}
+                      /> */}
+                  
+                  {/* name={""} value={""} onChange={function (e: React.ChangeEvent<HTMLSelectElement>): void {
+                    throw new Error("Function not implemented.");
+                  } } /> */}
 
                   <div className="mb-5.5">
                     <label

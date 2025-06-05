@@ -121,13 +121,26 @@
 
 // export default ECommerce;
 import DefaultLayout from "@/src/components/admin/Dashboard/DefaultLayout";
+import DataStatsOne from "@/src/components/admin/DataStats/DataStatsOne";
+import TableOne from "@/src/components/admin/Tables/TableOne";
+import TableThree from "@/src/components/admin/Tables/TableThree";
 import React from "react";
 
 function page() {
   return (
     // <DefaultLayout>
-
-    <div>nice dashboard</div>
+    <>
+<DataStatsOne/>
+     <br />
+     
+     <div className="col-span-12 xl:col-span-6">
+          <TableOne/>
+        </div>
+        <br />
+        <div className="col-span-12 xl:col-span-8">
+          <TableThree/>
+        </div>
+        </>
     // </DefaultLayout>
   );
 }

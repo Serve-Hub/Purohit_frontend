@@ -7,11 +7,14 @@ import TermsAndConditions from '@/src/components/TermsAndConditions';
 import { useRouter } from 'next/navigation'; // Import useRouter
 import Link from 'next/link';
 import $axios from "../lib/axios.instance";
+import { toast } from "@/hooks/use-toast";
 
 const SignupForm = () => {
   const[show,setShow]=useState(false);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [signLoading, setSignLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     email: '',
     firstName: '',
@@ -50,6 +53,7 @@ const SignupForm = () => {
     }));
   };
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    setSignLoading(true);
     event.preventDefault();
     console.log(formData);
     try {
@@ -65,11 +69,14 @@ const SignupForm = () => {
 
   } 
   catch (error: any) {
-      if (error.response?.status === 409) {
-          alert("Email already exists. Please use a different email.");
-      } else {
-          console.log(error);
-      }
+    toast({
+              title: "Sign up Info",
+              description:` ${error.response.data.message} .please try again!`,
+              className:"bg-red-500 border-red-500 text-white font-semibold "
+            })
+     
+  } finally{
+    setSignLoading(false);
   }
 
 
@@ -82,7 +89,9 @@ const handlegoogle = async ()=>{
 
   try {
     // const backendUrl = process.env.REACT_APP_API_URL;
-  window.location.href = "https://purohit-backend.onrender.com/api/v1/users/auth/google"
+    window.location.href = "http://localhost:3000/api/v1/users/auth/google";
+
+  // window.location.href = "https://purohit-backend.onrender.com/api/v1/users/auth/google"
     // const response = await axios.get('https://purohit-backend.onrender.com/api/v1/users/auth/google');
     // console.log("response is",response)
     // console.log('User registered:', response.data);
@@ -260,11 +269,21 @@ return (
 </div>
     <button
       type="submit"
-      className={` text-white font-bold py-2 rounded-md w-80 ${isPasswordValid && isAgreed ? 'bg-orange-600' : 'bg-black cursor-not-allowed'
+      className={`flex items-center gap-2 justify-center text-white font-bold py-2 rounded-md w-80 ${isPasswordValid && isAgreed ? 'bg-orange-600' : 'bg-black cursor-not-allowed'
         }`}
       disabled={!isPasswordValid || !isAgreed}
     >
-      Create an account
+      {signLoading?(
+        <>
+                    wait 
+                    <div className="w-6 h-6 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
+        </>
+      ):(
+        <>
+        Create an account
+        
+        </>
+      )}
     </button>
     </form>
     <br />

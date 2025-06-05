@@ -5,7 +5,7 @@ const LetterAvatar = ({ name = 'User', size = 112, className = '' }) => {
   const firstLetter = name.charAt(0).toUpperCase();
   
   // Generate a consistent background color based on the name
-  const generateColor = (str) => {
+  const generateColor = (str:string) => {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       hash = str.charCodeAt(i) + ((hash << 5) - hash);

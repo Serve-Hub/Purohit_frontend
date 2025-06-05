@@ -21,6 +21,28 @@ function AllPujas() {
   const [minDuration, setMinDuration] = useState<number>(0);
   const [maxDuration, setMaxDuration] = useState<number>(0);
   
+  const [sortOption, setSortOption] = useState("date");
+  const sortedPujas = [...pujas].sort((a, b) => {
+    if (sortOption === "date") {
+      // Sort by recently updated (descending order)
+      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+    } else if (sortOption === "name-asc") {
+      // Sort by pujaName in ascending order (A-Z)
+      return a.pujaName.localeCompare(b.pujaName);
+    } else if (sortOption === "name-desc") {
+      // Sort by pujaName in descending order (Z-A)
+      return b.pujaName.localeCompare(a.pujaName);
+    } else if (sortOption === "price-asc") {
+      // Sort by baseFare in ascending order (low to high)
+      return a.baseFare - b.baseFare;
+    } else if (sortOption === "price-desc") {
+      // Sort by baseFare in descending order (high to low)
+      return b.baseFare - a.baseFare;
+    }
+    return 0; // Default: no sorting
+  });
+
+
   interface Filters {
     selectedFilters: string[];
     minPrice: number;
@@ -55,6 +77,7 @@ function AllPujas() {
             maxDuration: appliedFilters.maxDuration ||Infinity ,
           },
         });
+        console.log("response for all pujas",response);
         if (response.status === 200) {
           setPujas(response.data?.data?.pujas || []);
           setTotalPages(response.data?.data?.totalPages || 1);
@@ -118,7 +141,8 @@ function AllPujas() {
               Categories
             </h3>
             <div className="space-y-3">
-              {["Category1", "Category2", "Category3"].map((option, index) => (
+       
+              {[" Astrology", "Puja", "Homam","Vastu", "Others"].map((option, index) => (
                 <label key={index} className="flex items-center space-x-3">
                   <input
                     type="checkbox"
@@ -148,6 +172,7 @@ function AllPujas() {
                 <input
                   id="minValue"
                   type="number"
+                  min={0}
                   value={minPrice}
                   onChange={(e) => setMinPrice(Number(e.target.value))}
                   placeholder="Min"
@@ -164,6 +189,7 @@ function AllPujas() {
                 <input
                   id="maxValue"
                   type="number"
+                  min={0}
                   value={maxPrice}
                   onChange={(e) => setMaxPrice(Number(e.target.value))}
                   placeholder="Max"
@@ -186,6 +212,7 @@ function AllPujas() {
                   <input
                     id="minDuration"
                     type="number"
+                    min={0}
                     value={minDuration}
                     onChange={(e) => setMinDuration(Number(e.target.value))}
                     placeholder="Min Rs"
@@ -202,6 +229,7 @@ function AllPujas() {
                   <input
                     id="maxDuration"
                     type="number"
+                    min={0}
                     value={maxDuration}
                     onChange={(e) => setMaxDuration(Number(e.target.value))}
                     placeholder="Max hr"
@@ -243,12 +271,15 @@ function AllPujas() {
         <div className=" shadow flex gap-3 mb-10 p-3 h-15 rounded-xl justify-start items-center">
           <p className="">Sort By:</p>
           <select
-            name=""
-            id=""
-            className="rounded-md p-2 border border-pandit text-pandit"
-          >
-            <option value="date">Recently updated</option>
-            <option value="ascending">Ascending order</option>
+          value={sortOption}
+          onChange={(e) => setSortOption(e.target.value)}
+          className="rounded-md p-2 border border-pandit text-pandit"
+        >
+           <option value="date">Recently updated</option>
+          <option value="name-asc">Name (A-Z)</option>
+          <option value="name-desc">Name (Z-A)</option>
+          <option value="price-asc">Price (Low to High)</option>
+          <option value="price-desc">Price (High to Low)</option>
           </select>
         </div>
 
@@ -260,8 +291,8 @@ function AllPujas() {
           ):(
 
          
-          pujas.length > 0 ? (
-            pujas.map((puja) => (
+            sortedPujas.length > 0 ? (
+              sortedPujas.map((puja) => (
              
 
               <PujaCard puja={puja} key={puja._id}/>
@@ -269,7 +300,7 @@ function AllPujas() {
             ))
           ) : (
             <div className=" text-gray-500 text-xl py-8 text-center">
-              Oop!  No puja available:\
+              Oop!  No puja available :|
             </div>
           )
         )}

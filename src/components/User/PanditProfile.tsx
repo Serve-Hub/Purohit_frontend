@@ -7,15 +7,19 @@ import Link from "next/link";
 import LetterAvatar from "../LetterAvatar";
 import ReviewSection from "../ReviewSection";
 import $axios from "@/src/lib/axios.instance";
-// import { userInfo } from "os";
+import { User } from "@/src/types/userType";
 
-const PanditProfile = ({pandit}) => {
+interface PanditProps{
+  pandit:User
+}
+
+const PanditProfile = ({pandit}:PanditProps) => {
   const [activeTab, setActiveTab] = useState('about'); // Default tab is 'about'
 
     const authContext = useContext(AuthContext);
     // const [userInfo, setUserInfo] = useState<any>(null);  // Initialize state to store user info
-const [user,setUser]=useState<{}>({})
-const [panditDetails,setPanditDetails]=useState<{}>({})
+const [user,setUser]=useState<any>({})
+const [panditDetails,setPanditDetails]=useState<any>({})
   
   useEffect(() => {
     const fetchData = async () => {
@@ -34,7 +38,7 @@ const [panditDetails,setPanditDetails]=useState<{}>({})
         //yo userinfo change vako vai garera yo function run gareko garei garyo
         setUser(pandit);
 // console.log("üserinfo is",userInfo)
-      } catch (error) {
+      } catch (error:any) {
         console.log("Error fetching data:", error.message);
       }
     };
@@ -51,7 +55,7 @@ const [panditDetails,setPanditDetails]=useState<{}>({})
       
         
 // console.log("üserinfo is",userInfo)
-      } catch (error) {
+      } catch (error:any) {
         console.log("Error fetching data:", error.message);
       }
     };

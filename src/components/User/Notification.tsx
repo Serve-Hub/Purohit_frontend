@@ -5,19 +5,41 @@ import Link from 'next/link';
 import axios from 'axios';
 import $axios from '@/src/lib/axios.instance';
 
+
+interface Notification {
+  _id: string;
+  type: "General" | "Review" | "Booking"; // Add other types if needed
+  message: string;
+  senderDetails: {
+    firstName: string;
+    lastName: string;
+  };
+  pujaDetails?: {
+    pujaImage: string;
+    baseFare: number;
+  };
+  bookingDetails?: {
+    location: {
+      municipality?: string;
+      tollAddress?: string;
+      province?: string;
+      district?: string;
+    };
+  };
+}
 function Notification() {
 
 // function Notification({ data }) {
- const [notifications, setNotifications] = useState([]); // State to store notifications
+ const [notifications, setNotifications] = useState<Notification[]>([]); // State to store notifications
   const [currentPage, setCurrentPage] = useState(1); // Current page number
   const [totalPages, setTotalPages] = useState(1); // Total number of pages
   const [loading, setLoading] = useState(false); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const [error, setError] = useState<string | null>(null); // Error state
   
   const notificationsPerPage = 5; // Number of notifications per page
   const apiUrl = "https://purohit-backend.onrender.com/api/v1/booking/notifications"; 
   
-  const fetchNotifications = async (page) => {
+  const fetchNotifications = async (page:number) => {
     setLoading(true);
     setError(null);
     const token = localStorage.getItem("token_id");
@@ -86,12 +108,25 @@ console.log("response from view notification",response)
       ) : (
         <div className="space-y-10">
           {notifications.map((notification) => (
+
+              
+
             <div
               key={notification._id}
               className={`p-4 rounded-lg shadow-lg flex justify-between bg-yellow-100 text-yellow-500
               }`}
             >
-              <div className="flex gap-5">
+                {notification.type == "General" || notification.type == "Review"?(
+    <div className="flex gap-5">
+   
+    <div className="flex flex-col">
+      <p className='text-sm'>{notification?.message}</p>
+      <span className="text-sm text-gray-500">From: {notification?.senderDetails.firstName}  {notification?.senderDetails.lastName}</span>
+    </div>
+  </div>
+                ):(
+                  <>
+                      <div className="flex gap-5">
                 <img
                   src={notification?.pujaDetails?.pujaImage}
                   alt="User"
@@ -122,6 +157,9 @@ console.log("response from view notification",response)
               
                 </div>
               </div>
+                  </>
+                )}
+          
            
             </div>
           ))}

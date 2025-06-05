@@ -13,6 +13,9 @@ import PoojaProvider from "@/src/context/poojacontext";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { updateSessionToken } from "@/utils/sessionHandler";
+import DataStatsOne from "@/src/components/admin/DataStats/DataStatsOne";
+import TableOne from "@/src/components/admin/Tables/TableOne";
+import TableThree from "@/src/components/admin/Tables/TableThree";
 
 
 export default function Home() {
@@ -24,7 +27,15 @@ export default function Home() {
     <>
       {/* <DefaultLayout> */}
       {/* <ECommerce /> */}
-      THis is the admin page
+     <DataStatsOne/>
+     <br />
+     <div className="col-span-12 xl:col-span-6">
+          <TableOne/>
+        </div>
+        <br />
+        <div className="col-span-12 xl:col-span-8">
+          <TableThree/>
+        </div>
       {/* </DefaultLayout> */}
     </>
   );

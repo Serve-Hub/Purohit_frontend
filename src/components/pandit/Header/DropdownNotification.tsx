@@ -27,8 +27,8 @@ const pathname = usePathname();
     // console.log("cookie is",Cookies.get("loggedin"))
 
   const connectWebSocket = async() => {
-    // webSocket.current =  await new WebSocket(`ws://localhost:3000/?userID=${userInfo?._id}`); 
-    webSocket.current =  await new WebSocket(`wss://purohit-backend.onrender.com?userID=${userInfo?._id}`); 
+    webSocket.current =  await new WebSocket(`ws://localhost:3000/?userID=${userInfo?._id}`); 
+    // webSocket.current =  await new WebSocket(`wss://purohit-backend.onrender.com?userID=${userInfo?._id}`); 
 
     webSocket.current.onopen = () => {
       

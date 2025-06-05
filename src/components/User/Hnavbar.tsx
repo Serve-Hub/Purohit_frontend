@@ -29,9 +29,8 @@ export default function Hnavbar() {
   const { toast } = useToast()
   const navItems = [
     { name: 'Home', href: '/user' },
-    { name: 'Categories', href: '#' },
-    { name: 'About us', href: '#' },
-    { name: 'Dashboard', href: '/UserDashboard' },
+    { name: 'About us', href: '/aboutus' },
+    { name: 'Dashboard', href: '/UserDashboard/bookingrequest' },
   ];
   
   
@@ -91,9 +90,9 @@ console.log("hnavbar ma",userInfo)
         console.log("cookie is",Cookies.get("loggedin"))
     
       const connectWebSocket = async() => {
-        // webSocket.current =  await new WebSocket(`ws://localhost:3000/?userID=${userInfo?._id}`); 
+        webSocket.current =  await new WebSocket(`ws://localhost:3000/?userID=${userInfo?._id}`); 
         // webSocket.current =  await new WebSocket(`ws://https://purohit-backend.onrender.com/?userID=${userInfo?._id}`); 
-        webSocket.current =  await new WebSocket(`wss://purohit-backend.onrender.com?userID=${userInfo?._id}`); 
+        // webSocket.current =  await new WebSocket(`wss://purohit-backend.onrender.com?userID=${userInfo?._id}`); 
 
         webSocket.current.onopen = () => {
           
@@ -105,12 +104,22 @@ console.log("hnavbar ma",userInfo)
           try {
             const data = JSON.parse(event.data);
             console.log("Notification data is ", data);
-        
-            toast({
-              title: data[4].type,
-              description: data[3].message, 
-              className: "bg-white border border-orange-500 bg-orange-100 text-orange-700",  // Optional styling
-            });
+
+            if(data.type=="General"){
+              toast({
+                title: data.type,
+                description: data.message, 
+                className: "bg-white border border-orange-500 bg-orange-100 text-orange-700",  
+              });
+          
+            }
+        else{
+          toast({
+            title: data[4].type,
+            description: data[3].message, 
+            className: "bg-white border border-orange-500 bg-orange-100 text-orange-700",  // Optional styling
+          });
+        }
         
             console.log("Toast bar should be implemented");
         
@@ -136,6 +145,8 @@ console.log("hnavbar ma",userInfo)
             //     className:"bg-white border border-orange-500 bg-orange-100 text-orange-700  "
             //   })
             // }
+
+console.log("pathname and href is",pathname)
 
   return (
     <Disclosure as="nav" className="bg-white border ">
@@ -164,7 +175,8 @@ console.log("hnavbar ma",userInfo)
             </div>
             <div className="hidden sm:ml-6 sm:block">
             <div className="flex space-x-4">
-            {navItems.map((item) => (
+            {navItems.map((item) => 
+            (
         <Link
           key={item.name}
           href={item.href}
@@ -304,7 +316,7 @@ console.log("hnavbar ma",userInfo)
   <MenuItem>
                    
   <Link
-    href="/pandit"
+    href="/pandit/Profile"
     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
   >
   Switch to pandit

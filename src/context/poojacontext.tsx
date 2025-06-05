@@ -3,9 +3,20 @@ import axios from "axios";
 import $axios from "../lib/axios.instance";
 
 // Define the type for the context
+
+type PoojaFilters = {
+  page?: number;
+  itemsPerPage?: number;
+  category?: string;
+  minPrice?: string;
+  maxPrice?: string;
+  minDuration?: string;
+  maxDuration?: string;
+  limit?:number
+}
 type PoojaContextType = {
   token: string | null;
-  getPooja: () => Promise<any>;
+  getPooja: (filters: PoojaFilters) => Promise<any>; // Updated to accept parameters
 };
 
 // Create the context with the appropriate type
@@ -15,15 +26,15 @@ export const PoojaContext = createContext<PoojaContextType | null>(null);
 function PoojaProvider({ children }: { children: React.ReactNode }) {
   const token = localStorage.getItem("token_id");
 
-  interface PoojaFilters {
-    page?: number;
-    limit?: number;
-    category?: string;
-    minPrice?: number;
-    maxPrice?: number;
-    minDuration?: number;
-    maxDuration?: number;
-  }
+  // interface PoojaFilters {
+  //   page?: number;
+  //   limit?: number;
+  //   category?: string;
+  //   minPrice?: number;
+  //   maxPrice?: number;
+  //   minDuration?: number;
+  //   maxDuration?: number;
+  // }
   // Function to fetch puja data
   const getPooja = async (filters:PoojaFilters = {}) => {
     console.log("Fetching puja data from PoojaContext...");

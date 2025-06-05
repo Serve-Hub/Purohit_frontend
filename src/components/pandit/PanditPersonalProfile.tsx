@@ -9,13 +9,36 @@ import ReviewSection from "../ReviewSection";
 import $axios from "@/src/lib/axios.instance";
 // import { userInfo } from "os";
 
+
+interface User {
+  _id?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  contact?: string;
+  avatar?: string;
+  bio?: string;
+}
+
+interface PanditDetails {
+  totalPujas?: number;
+  totalReviews?: number;
+  avegrageRating?: number[];
+}
+
+interface ProfileProps {
+  user: User;
+  panditDetails: PanditDetails;
+  activeTab: "about" | "reviews";
+  setActiveTab: (tab: "about" | "reviews") => void;
+}
 const PanditPersonalProfile = () => {
   const [activeTab, setActiveTab] = useState('about'); // Default tab is 'about'
 
     const authContext = useContext(AuthContext);
     // const [userInfo, setUserInfo] = useState<any>(null);  // Initialize state to store user info
-const [user,setUser]=useState<{}>({})
-const [panditDetails,setPanditDetails]=useState<{}>({})
+const [user,setUser]=useState<User | null>({})
+const [panditDetails,setPanditDetails]=useState<PanditDetails>({})
   
   useEffect(() => {
     const fetchData = async () => {
@@ -32,9 +55,11 @@ const [panditDetails,setPanditDetails]=useState<{}>({})
         // const response = await loginfo();
         console.log("response is", userInfo);
         //yo userinfo change vako vai garera yo function run gareko garei garyo
-        setUser(userInfo);
+        if (userInfo) {
+          setUser(userInfo);
+        }
 // console.log("üserinfo is",userInfo)
-      } catch (error) {
+      } catch (error:any) {
         console.log("Error fetching data:", error.message);
       }
     };
@@ -51,7 +76,7 @@ const [panditDetails,setPanditDetails]=useState<{}>({})
       
         
 // console.log("üserinfo is",userInfo)
-      } catch (error) {
+      } catch (error:any) {
         console.log("Error fetching data:", error.message);
       }
     };
@@ -181,7 +206,8 @@ fetchPanditData();
         </div>
       ) : (
         <div className="mt-4">
-         <ReviewSection  panditId={user?._id} panditDetails={panditDetails?.avegrageRating[0]}/>
+         <ReviewSection  panditId={user?._id}   panditDetails={panditDetails?.avegrageRating?.[0] ?? 0}
+         />
         </div>
       )}
              </div>

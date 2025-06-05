@@ -24,17 +24,6 @@ import {
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/react/20/solid'
 
-const products = [
-  { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
-  { name: 'Engagement', description: 'Speak directly to your customers', href: '#', icon: CursorArrowRaysIcon },
-  { name: 'Security', description: 'Your customers’ data will be safe and secure', href: '#', icon: FingerPrintIcon },
-  { name: 'Integrations', description: 'Connect with third-party tools', href: '#', icon: SquaresPlusIcon },
-  { name: 'Automations', description: 'Build strategic funnels that will convert', href: '#', icon: ArrowPathIcon },
-]
-const callsToAction = [
-  { name: 'Watch demo', href: '#', icon: PlayCircleIcon },
-  { name: 'Contact sales', href: '#', icon: PhoneIcon },
-]
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -140,15 +129,10 @@ export default function Navbar() {
             </PopoverPanel> */}
           </Popover>
 
-          <Link href="/" className="text-sm  font-medium leading-6 text-[#ABABAB]">
+          {/* <Link href="/" className="text-sm  font-medium leading-6 text-[#ABABAB]">
             Home
-          </Link>
-          <a href="#" className="text-sm font-medium leading-6 text-[#ABABAB]">
-            Features
-          </a>
-          <a href="#" className="text-sm font-medium leading-6 text-[#ABABAB]">
-            About us
-          </a>
+          </Link> */}
+        
 
         </PopoverGroup>
         <div className="hidden space-x-4 lg:flex lg:flex-1 lg:justify-end items-center">

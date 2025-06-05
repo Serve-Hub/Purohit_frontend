@@ -12,7 +12,7 @@ import Cookies from "js-cookie";
 const DropdownUser = () => {
   const authcontext=useContext(AuthContext);
   // console.log("authcontext is ",authcontext);
-  const userInfo=authcontext.userInfo;
+  const userInfo=authcontext?.userInfo;
   
   // console.log("userinfo is ",userInfo)
   const [dropdownOpen, setDropdownOpen] = useState(false);

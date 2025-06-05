@@ -6,11 +6,40 @@ import { useRouter } from 'next/navigation';
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
 // import $axios from "@src/lib/axios.instance.ts";
-import $axios from '@/src/lib/axios.instance';
+import $axios from '@/src/lib/axios.instance'; 
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+ 
+import { toast } from "@/hooks/use-toast";
+import { Button } from "@/src/components/ui/button"
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/src/components/ui/form"
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+  InputOTPSeparator,
+
+} from "@/src/components/ui/input-otp"
+ 
+
+
+
+
 
 
 
 const OTPVerification = () => {
+
+
   const [otp, setOtp] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -24,9 +53,23 @@ const OTPVerification = () => {
   const email = searchParams.get('email');
 console.log(token,email);
 
+ 
+const FormSchema = z.object({
+  pin: z.string().min(6, {
+    message: "Your one-time password must be 6 characters.",
+  }),
+})
+ 
+const form = useForm<z.infer<typeof FormSchema>>({
+  resolver: zodResolver(FormSchema),
+  defaultValues: {
+    pin: "",
+  },
+})
+
   const sendOtp=async ()=>{
     setOtpSent(true);
-
+    
     const response = await $axios.post("/api/v1/users/register/sendEmailOTP", { email, token }, {
       headers: {
         "Content-Type": "application/json",
@@ -40,8 +83,17 @@ console.log(token,email);
 // console.log("success token",restoken)
 
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    // toast({
+    //   title: "You submitted the following values:",
+    //   description: (
+    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+    //     </pre>
+    //   ),
+    // })
+
+    // event.preventDefault();
     setError(''); // Clear any existing error message
 
     try {
@@ -49,8 +101,9 @@ console.log(token,email);
 
       console.log("emailtoken in verify",otp,restoken)
       const token=restoken
-      console.log("verify vanda maathi ")
-      const response = await $axios.post("/api/v1/users/register/verifyOtp", { token, otp });
+      console.log("verify vanda maathi ",token,data?.pin)
+      
+      const response = await $axios.post("/api/v1/users/register/verifyOtp", { token, otp :data.pin});
       console.log("verify vayesi",response)
       console.log(response.status)
       if (response.status==200) {
@@ -59,10 +112,21 @@ console.log(token,email);
         // Navigate to dashboard or login page after successful verification
         router.push('/Login');
       } else {
-        setError('Invalid OTP. Please try again.');
+        toast({
+          title: "Otp error",
+          description: "Invalid OTP. Please try again.",
+          className:"bg-red-500 border-red-500 text-white font-semibold ",
+        })
+        // setError('Invalid OTP. Please try again.');
       }
     } catch (err) {
-      setError('Error verifying OTP. Please try again later.');
+      toast({
+        title: "Otp error:",
+        description: "Error verifying OTP. Please try again later.",
+        className:"bg-red-500 border-red-500 text-white font-semibold ",
+
+      })
+      // setError('');
     }
   };
 
@@ -73,21 +137,65 @@ console.log(token,email);
       <div className="p-20 flex flex-col lg:flex-col items-center justify-center min-h-[90vh]  md:flex-row  pt-6 rounded bg-[url('/img/card_2.jpg')] bg-cover bg-center">
         {/* Main Box*/}
         {/* <div className="flex flex-col gap-10 lg:w-3/4 md:w-1/2 ps-4 pt-5 relative z-10  justify-center items-center  rounded  "> */}
-          <div className="flex items-center justify-center w-1/4 h-1/4  backdrop-blur-lg bg-black/10   rounded-xl rounded-shadow-lg lg:p-6">
+          <div className="flex items-center justify-center w-1/3 h-1/4  backdrop-blur-lg bg-black/10   rounded-xl rounded-shadow-lg lg:p-6">
             <div className="  ">
-              <h2 className="text-xl font-semibold mb-4 text-white">
+              <h2 className="text-xl font-semibold mb-4 text-pg">
                 OTP Verification
               </h2>
-
-              {error && <p className="text-red-500">{error}</p>}
               <button
                 type="submit"
-                className="bg-pandit text-white px-4 py-2 rounded-md"
+                className="text-white border border-white hover:bg-white hover:text-black  font-semibold  px-4 py-2 rounded-md"
                 onClick={sendOtp}
               >
                 {otpSent ? "Resend OTP" : "Send OTP"}
               </button>
-              {!success ? (
+              <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+        <FormField
+          control={form.control}
+          name="pin"
+          render={({ field }) => (
+            <FormItem className=' text-white'>
+              <FormLabel>One-Time Password</FormLabel>
+              <FormControl>
+                <InputOTP maxLength={6} {...field} >
+                  <InputOTPGroup >
+                    <InputOTPSlot index={0}  />
+                    <InputOTPSlot index={1}  />
+                    <InputOTPSeparator />
+                </InputOTPGroup>
+                <InputOTPGroup>
+                    <InputOTPSlot index={2} />
+                    <InputOTPSlot index={3} />
+                    </InputOTPGroup>
+                    <InputOTPSeparator />
+
+                    <InputOTPGroup>
+                    <InputOTPSlot index={4} />
+                    <InputOTPSlot index={5} />
+                  </InputOTPGroup>
+                </InputOTP>
+              </FormControl>
+              <FormDescription className='text-pg'>
+                Please enter the one-time password sent to your phone.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+ 
+                  <button
+                    type="submit"
+                    className="bg-pg text-white px-4 py-2 rounded-md"
+                  >
+                    Verify OTP
+                  </button>    
+                    </form>
+    </Form>
+<br />
+              {error && <p className="text-red-500">{error}</p>}
+             
+              {/* {!success ? (
                 <form onSubmit={handleSubmit}>
                   <div className="mb-4  flex justify-start flex-col items-start">
                     <label htmlFor="otp" className="block text-white mb-2">
@@ -116,7 +224,7 @@ console.log(token,email);
                 </form>
               ) : (
                 <p className="text-green-500">OTP Verified Successfully!</p>
-              )}
+              )} */}
               {/* {sucess?<button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-md" onClick={sendOtp}>
               send OTP
             </button>:  <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-md" onClick={sendOtp}>

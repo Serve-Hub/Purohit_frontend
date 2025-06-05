@@ -1,12 +1,15 @@
 'use client'
 
-
+interface TermsAndConditionsProps {
+  isAgreed: boolean;
+  setIsAgreed: (value: boolean) => void;
+}
 const TermsAndConditions = ({
 
     isAgreed,
     setIsAgreed,
 
-}) => {
+}: TermsAndConditionsProps) => {
     return (
       <div className="flex items-center mb-4 text-white">
         <label className="flex items-center">

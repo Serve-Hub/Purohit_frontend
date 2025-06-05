@@ -2,12 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import { FaStar, FaThumbsUp, FaReply } from 'react-icons/fa';
 import $axios from '../lib/axios.instance';
-import axios from 'axios';
 
 
+interface PanditProps{
+  panditId:string;
+panditDetails:any
+}
 
-
-const ReviewSection = ({ panditId,panditDetails }) => {
+const ReviewSection = ({ panditId,panditDetails }:PanditProps) => {
   const [reviews, setReviews] = useState<any[]>([]);
   const [pagination, setPagination] = useState({
     totalReviews: 0,
@@ -57,8 +59,11 @@ const [averageRating,setAverageRating]=useState(panditDetails?.averageRating)
 
       <div className="flex items-center mb-6">
         <div className="mr-4">
-          <p className="text-3xl font-bold">{averageRating.toFixed(1)}</p>
-          <div className="flex">
+        {averageRating ? (
+  <p className="text-3xl font-bold">{averageRating.toFixed(1)}</p>
+) : (
+  <p className="text-3xl font-bold">No ratings yet</p>
+)}          <div className="flex">
             {[1, 2, 3, 4, 5].map((star) => (
               <FaStar
                 key={star}
@@ -69,7 +74,7 @@ const [averageRating,setAverageRating]=useState(panditDetails?.averageRating)
           
           <p className="text-sm text-gray-500">
             {/* {reviews.length} */}
-             2 reviews
+            {panditDetails?.totalReviews}
             </p>
            
         </div>
