@@ -1,25 +1,23 @@
+"use client";
 import React from "react";
 import { TypewriterEffect } from "@/src/components/ui/typewriter-effect";
 import { Button } from "@/src/components/ui/button";
 import Link from "next/link";
 import AOS from "aos";
-import { useEffect ,useState} from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-
 export default function Landinghero() {
- 
-   AOS.init();
-      useEffect(() => {
-        AOS.init({
-          duration: 1000,
-          easing: 'ease-in-out',
-          once: true,
-        });
-      }, []);
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      easing: "ease-in-out",
+      once: true,
+    });
+  }, []);
 
-      const[isLoading,setIsLoading]=useState(false);
-      const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const words = [
     {
       text: "Bringing",
@@ -50,65 +48,59 @@ export default function Landinghero() {
             Easily book qualified pandits for your religious rituals from the
             comfort of your home.
           </p>
-        <div className="flex flex-col  order-1 h-full">
-
-          <div className=" rounded-md bg-[#A2D7A4]/[.2] h-56 w-52  hidden absolute top-16 start-5 lg:block">
-            {" "}
-          </div>
-          <div className=" rounded-md bg-[#A2D7A4]/[.2] h-56 w-52  hidden absolute bottom-8 start-1/3 lg:block">
-            {" "}
-          </div>
-<div className="  mt-5 flex justify-center">
-     
-          <Button
-            className=" bg-[#A2D7A4]  text-white"
-            variant="default"
-            size="default"
-            onClick={() => {
-              setIsLoading(true)  
-              router.push("/Login")
-
-            }}  
-          >
- {isLoading ? (
-    <div className="flex justify-center items-center space-x-3">
-  
-       <span className="text-white font-medium">Processing</span>
-      <div className="w-6 h-6 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
-    </div>
-  ):(
-    <>
-    
-            Get started
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="size-6"
+          <div className="flex flex-col  order-1 h-full">
+            <div className=" rounded-md bg-[#A2D7A4]/[.2] h-56 w-52  hidden absolute top-16 start-5 lg:block">
+              {" "}
+            </div>
+            <div className=" rounded-md bg-[#A2D7A4]/[.2] h-56 w-52  hidden absolute bottom-8 start-1/3 lg:block">
+              {" "}
+            </div>
+            <div className="  mt-5 flex justify-center">
+              <Button
+                className=" bg-[#A2D7A4]  text-white"
+                variant="default"
+                size="default"
+                onClick={() => {
+                  setIsLoading(true);
+                  router.push("/Login");
+                }}
               >
-              <path
-                fillRule="evenodd"
-                d="M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.19l-6.22-6.22a.75.75 0 0 1 0-1.06Z"
-                clipRule="evenodd"
-                />
-            </svg>
-    </>
-
-  )}
-          </Button>
-               
-
-</div>
+                {isLoading ? (
+                  <div className="flex justify-center items-center space-x-3">
+                    <span className="text-white font-medium">Processing</span>
+                    <div className="w-6 h-6 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
+                  </div>
+                ) : (
+                  <>
+                    Get started
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="size-6"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.19l-6.22-6.22a.75.75 0 0 1 0-1.06Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
         </div>
-        </div>
-        <div className="lg:w-1/2 flex lg:order-3 order-2  justify-center items-center" data-aos="fade-left">
+        <div
+          className="lg:w-1/2 flex lg:order-3 order-2  justify-center items-center"
+          data-aos="fade-left"
+        >
           <img
             src="img/fullthali.png"
             alt=""
             className=" object-cover  lg:w-full w-full "
             width={"550"}
           />
-        
         </div>
       </div>
     </>

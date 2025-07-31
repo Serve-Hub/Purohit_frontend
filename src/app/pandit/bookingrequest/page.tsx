@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useState, useEffect } from "react";
 import DefaultLayout from "@/src/components/pandit/Layouts/DefaultLaout";
 import Breadcrumb from "@/src/components/pandit/Breadcrumbs/Breadcrumb";

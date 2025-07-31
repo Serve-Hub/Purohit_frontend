@@ -3,7 +3,6 @@ import React from 'react'
 import AOS from 'aos';
 import { useEffect } from 'react';
 function Team() {
-  AOS.init();
     useEffect(() => {
       AOS.init({
         duration: 1000,

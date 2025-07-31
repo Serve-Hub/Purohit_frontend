@@ -1,3 +1,4 @@
+'use client';
 import DefaultLayout from "@/src/components/admin/Dashboard/DefaultLayout";
 import React from "react";
 import SelectGroupTwo from "@/src/components/SelectGroupTwo";

@@ -1,4 +1,6 @@
-import React, { createContext, useState } from "react";
+'use client';
+
+import React, { createContext, useState,useEffect } from "react";
 import axios from "axios";
 import $axios from "../lib/axios.instance";
 
@@ -24,7 +26,14 @@ export const PoojaContext = createContext<PoojaContextType | null>(null);
 
 // Define the provider component
 function PoojaProvider({ children }: { children: React.ReactNode }) {
-  const token = localStorage.getItem("token_id");
+    const [token, setToken] = useState<string | null>(null);
+
+    useEffect(() => {
+    if (typeof window !== "undefined") {
+      setToken(localStorage.getItem("token_id"));
+    }
+  }, []);
+  // const token = localStorage.getItem("token_id");
 
   // interface PoojaFilters {
   //   page?: number;

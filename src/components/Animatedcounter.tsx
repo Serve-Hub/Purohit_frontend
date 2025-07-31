@@ -1,7 +1,10 @@
+'use client';
 import React, { useEffect } from 'react';
 
 const AnimatedCounter: React.FC = () => {
   useEffect(() => {
+      if (typeof window === "undefined") return;
+
     const mynum = document.querySelectorAll<HTMLHeadingElement>('.count');
     const speed = 200;
 

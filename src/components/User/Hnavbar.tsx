@@ -9,7 +9,6 @@ import { useState,useEffect, useRef, useContext} from 'react'
 import Notification from './Notification';
 import  { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
-import axios from 'axios';
 import { AuthContext } from '@/src/context/authcontext';
 import { useToast } from "@/hooks/use-toast"
 // import { ToastContainer, toast } from "react-toastify";
@@ -69,12 +68,15 @@ console.log("hnavbar ma",userInfo)
 
       console.log("response is ",response)
 
-      localStorage.removeItem('token_id'); // Or any storage key you use
+ if (typeof window !== "undefined") {
+      localStorage.removeItem('token_id');
       Cookies.remove("loggedin");
       Cookies.remove("isPandit");
       Cookies.remove("isAdmin");
       Cookies.remove("accessToken");
       Cookies.remove("refreshToken");
+    }
+
 
       setLoading(false);
 

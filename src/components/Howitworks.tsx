@@ -1,32 +1,30 @@
-'use client';
-import * as React from "react"
-import { Timeline } from "./ui/timeline"
-import Image from "next/image"
+"use client";
+import * as React from "react";
+import { Timeline } from "./ui/timeline";
+import Image from "next/image";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { useEffect } from 'react';
-
+import { useEffect } from "react";
 
 function Howitworks() {
-  AOS.init();
-    useEffect(() => {
-      AOS.init({
-        duration: 1000,
-        easing: 'ease-in-out',
-        once: true,
-      });
-    }, []);
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      easing: "ease-in-out",
+      once: true,
+    });
+  }, []);
   const data = [
     {
       title: " Get Started",
       content: (
         <div>
-            <ol className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
-              <li> Click on the get started or Sign up</li>
-              <li> Signup with your email or whatsapp number</li>
-            </ol>
-             
-           <div className="grid grid-cols-2 gap-4">
+          <ol className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
+            <li> Click on the get started or Sign up</li>
+            <li> Signup with your email or whatsapp number</li>
+          </ol>
+
+          <div className="grid grid-cols-2 gap-4">
             <Image
               src="/img/howitworks/work_1.png"
               alt="hero template"
@@ -56,20 +54,19 @@ function Howitworks() {
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]"
             />
           </div>
-          </div>
-       
+        </div>
       ),
     },
     {
       title: "Search and select poojas",
       content: (
         <div>
-            <ol className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
-              <li> Click on the get started or Sign up</li>
-              <li> Signup with your email or whatsapp number</li>
-            </ol>
-             
-           <div className="grid grid-cols-2 gap-4">
+          <ol className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
+            <li> Click on the get started or Sign up</li>
+            <li> Signup with your email or whatsapp number</li>
+          </ol>
+
+          <div className="grid grid-cols-2 gap-4">
             <Image
               src="/img/howitworks/work_5.png"
               alt="hero template"
@@ -99,9 +96,7 @@ function Howitworks() {
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]"
             />
           </div>
-          </div>
-       
-       
+        </div>
       ),
     },
     {
@@ -109,7 +104,7 @@ function Howitworks() {
       content: (
         <div>
           <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
-          search your required puja either by category or direct search 
+            search your required puja either by category or direct search
           </p>
           <div className="grid grid-cols-2 gap-4">
             <Image
@@ -141,30 +136,30 @@ function Howitworks() {
               className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]"
             />
           </div>
-          </div>
-       
+        </div>
       ),
     },
-  
-  ]
+  ];
   return (
     <>
- <div className="  p-10 bg-[url('/img/bg.png')] bg-cover bg-center  w-full">
-
-<div className="mx-auto py-20 px-4 w-full " data-aos="fade-right">
-        <h2 className="md:pl-20 md:text-5xl font-bold text-neutral-500 dark:text-neutral-500 ">
-          How It works
-        </h2>
-<p className="mt-6 text-lg leading-8 text-gray-600 p-5">
-        The online pandit service purohit works on the basis of choosing the desired pandits for the desired work and booking them for the desired time.
-        <br />
-        It also supports the online consultation of the pandits, which is free of costs.
-      </p>
+      <div className="  p-10 bg-[url('/img/bg.png')] bg-cover bg-center  w-full">
+        <div className="mx-auto py-20 px-4 w-full " data-aos="fade-right">
+          <h2 className="md:pl-20 md:text-5xl font-bold text-neutral-500 dark:text-neutral-500 ">
+            How It works
+          </h2>
+          <p className="mt-6 text-lg leading-8 text-gray-600 p-5">
+            The online pandit service purohit works on the basis of choosing the
+            desired pandits for the desired work and booking them for the
+            desired time.
+            <br />
+            It also supports the online consultation of the pandits, which is
+            free of costs.
+          </p>
+        </div>
+        <Timeline data={data} />
       </div>
-<Timeline data={data} />
-</div>
     </>
-  )
+  );
 }
 
-export default Howitworks
+export default Howitworks;

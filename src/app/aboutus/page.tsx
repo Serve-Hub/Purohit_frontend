@@ -1,3 +1,4 @@
+'use client';
 import Howitworks from '@/src/components/Howitworks'
 import Team from '@/src/components/Team'
 import Hnavbar from '@/src/components/User/Hnavbar'

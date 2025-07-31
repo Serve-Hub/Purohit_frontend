@@ -53,13 +53,15 @@ console.log(res.data);
       if (res.data.success) {
         console.log("done login");
         console.log("accesstokenis ", res.data.data.accessToken);
-        localStorage.setItem("token_id", res.data.data.accessToken);
-        Cookies.set("loggedin", "true");
+if (typeof window !== "undefined") {
+    localStorage.setItem("token_id", res.data.data.accessToken);
+  }        Cookies.set("loggedin", "true");
         Cookies.set("isAdmin", res.data.data.user.isAdmin);
         Cookies.set("isPandit", res.data.data.user.isPandit);
 
-        console.log(localStorage.getItem("token_id"));
-        // alert("Successful registration");
+if (typeof window !== "undefined") {
+    console.log(localStorage.getItem("token_id"));
+  }        // alert("Successful registration");
         console.log("admin is", res.data.data.user.isAdmin);
         if (res.data.data.user.isAdmin) {
           return router.push(`/admin`);
@@ -84,7 +86,10 @@ console.log(res.data);
     try {
       // const backendUrl = process.env.REACT_APP_API_URL;
       // window.location.href = "https://purohit-backend.onrender.com/api/v1/users/auth/google"
+      if (typeof window !== "undefined") {
+
       window.location.href = "http://localhost:3000/api/v1/users/auth/google";
+      }
     } catch (error: any) {
       alert("There was some error while redirecting");
       setIsLoading(false);
