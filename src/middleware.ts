@@ -1,6 +1,18 @@
 import { NextResponse } from "next/server";
 
-export default function middleware(req) {
+interface MiddlewareCookies {
+  get(name: string): { value: string } | undefined;
+}
+
+interface MiddlewareRequest {
+  cookies: MiddlewareCookies;
+  nextUrl: {
+    pathname: string;
+  };
+  url: string;
+}
+
+export default function middleware(req: MiddlewareRequest) {
   const verify = req.cookies.get("loggedin")?.value === "true";  
   const panditVerify = req.cookies.get("isPandit")?.value === "true"; 
   const adminVerify = req.cookies.get("isAdmin")?.value === "true"; 
