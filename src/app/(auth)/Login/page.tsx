@@ -10,7 +10,6 @@ import $axios from "@/src/lib/axios.instance";
 import AOS from "aos";
 
 function Login() {
-  // AOS.init();
   useEffect(() => {
     AOS.init({
       duration: 1000,
@@ -18,6 +17,7 @@ function Login() {
       once: true,
     });
   }, []);
+
   const router = useRouter();
   const [error, setError] = useState(false);
   const [wait, setWait] = useState(false);
@@ -28,40 +28,42 @@ function Login() {
     email: "",
     password: "",
   });
-  const handleInput = (event:React.ChangeEvent<HTMLInputElement>) => {
+
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = event.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === "file" ? (event.target.files ? event.target.files[0] : null) : value,
+      [name]:
+        type === "file"
+          ? event.target.files
+            ? event.target.files[0]
+            : null
+          : value,
     }));
   };
-  async function handleSubmit(event:React.FormEvent) {
+
+  async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     console.log(formData);
     setWait(true);
     try {
       console.log("eta maathi");
       const res = await $axios.post("/api/v1/users/login", formData);
-      // const res = await axios.post("https://purohit-backend.onrender.com/api/v1/users/login", formData);
-      // console.log(
-      //   "laadmin and pandit",
-      //   res.data.data.user.isAdmin,
-      //   res.data.data.user.isAdmin
-      // );
-      // console.log(res.data.data)
-console.log(res.data);
+
+      console.log(res.data);
       if (res.data.success) {
         console.log("done login");
         console.log("accesstokenis ", res.data.data.accessToken);
-if (typeof window !== "undefined") {
-    localStorage.setItem("token_id", res.data.data.accessToken);
-  }        Cookies.set("loggedin", "true");
+        if (typeof window !== "undefined") {
+          localStorage.setItem("token_id", res.data.data.accessToken);
+        }
+        Cookies.set("loggedin", "true");
         Cookies.set("isAdmin", res.data.data.user.isAdmin);
         Cookies.set("isPandit", res.data.data.user.isPandit);
 
-if (typeof window !== "undefined") {
-    console.log(localStorage.getItem("token_id"));
-  }        // alert("Successful registration");
+        if (typeof window !== "undefined") {
+          console.log(localStorage.getItem("token_id"));
+        }
         console.log("admin is", res.data.data.user.isAdmin);
         if (res.data.data.user.isAdmin) {
           return router.push(`/admin`);
@@ -70,25 +72,22 @@ if (typeof window !== "undefined") {
           return router.push("/pandit/Profile");
         }
         router.push(`/user`);
-      } 
+      }
     } catch (error: any) {
       console.log("Error during login:", error);
       setError(true);
       setWait(false);
       setErrordata(error.response?.data?.error);
       return;
-      // alert("There was an error during the login process. Please try again.");
     }
   }
+
   const handlegoogle = async () => {
     setIsLoading(true);
 
     try {
-      // const backendUrl = process.env.REACT_APP_API_URL;
-      // window.location.href = "https://purohit-backend.onrender.com/api/v1/users/auth/google"
       if (typeof window !== "undefined") {
-
-      window.location.href = "http://localhost:3000/api/v1/users/auth/google";
+        window.location.href = "https://purohit-backend-uhqv.onrender.com/api/v1/users/auth/google";
       }
     } catch (error: any) {
       alert("There was some error while redirecting");
@@ -100,13 +99,15 @@ if (typeof window !== "undefined") {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col items-center justify-center min-h-[90vh] bg-white md:flex-row bg-[url('/img/card_1.jpg')] bg-cover bg-center ">
+      <div className="flex flex-col items-center justify-center min-h-[90vh] bg-white px-4 sm:px-6 md:px-8 lg:px-12 py-6 sm:py-8 md:py-12 bg-[url('/img/card_1.jpg')] bg-cover bg-center">
+        {/* Main Container */}
         <div
-          className="flex flex-col  justify-center   md:flex-row  rounded w-2/4  backdrop-blur-lg bg-black/10 shadow-lg shadow-black/50 p-8"
+          className="flex flex-col lg:flex-row justify-center w-full max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-5xl rounded-lg backdrop-blur-lg bg-black/20 shadow-2xl shadow-black/60 p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12"
           data-aos="fade-left"
         >
-          <div className="flex flex-col  lg:w-2/3 md:w-1/2 p-6 items-center leading-4 justify-center ">
-            <h2 className="mt-4 text-4xl font-semibold  text-white ">
+          {/* Left Side - Hero Text (Hidden on mobile, visible on larger screens) */}
+          <div className="hidden lg:flex flex-col justify-center lg:w-2/5 xl:w-1/2 p-4 lg:p-6 xl:p-8 items-start">
+            <h2 className="text-2xl lg:text-3xl xl:text-4xl font-semibold text-white leading-tight">
               Your Personalized <span className="text-orange-600">Pandit</span>{" "}
               Service,
               <br />
@@ -114,24 +115,29 @@ if (typeof window !== "undefined") {
             </h2>
           </div>
 
-          {/* <div className="flex flex-col items-center justify-center md:w-1/2 lg:w-1/2  rounded-3xl -danger  ">
-          <img src="img/logo.png" alt="Purohit Logo" width={150} height={150} />
-         
-        </div> */}
-          <div className="flex flex-col w-full  lg:w-3/4 md:w-1/2 h-full px-10 pt-14  ">
-            <h1 className="text-3xl font-bold mb-4 text-white ">
+          {/* Right Side - Login Form */}
+          <div className="flex flex-col w-full lg:w-3/5 xl:w-1/2 h-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10 pt-4 sm:pt-6 md:pt-8 lg:pt-10 xl:pt-14">
+            {/* Mobile Hero Text */}
+            <div className="lg:hidden text-center mb-6 sm:mb-8">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white leading-tight">
+                Your Personalized{" "}
+                <span className="text-orange-600">Pandit</span> Service
+              </h2>
+            </div>
+
+            <h1 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4 text-white text-center lg:text-left">
               Log in to your account
             </h1>
-            <p className="mb-4 text-pg ">
+            <p className="mb-4 sm:mb-6 text-gray-300 text-sm sm:text-base text-center lg:text-left">
               Welcome back! Please enter your details.
             </p>
-            <form onSubmit={handleSubmit}>
-              {}
 
-              <div className="mb-4">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+              {/* Email Input */}
+              <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-slate-200"
+                  className="block text-sm sm:text-base font-medium text-slate-200 mb-2"
                 >
                   Email Address
                 </label>
@@ -148,9 +154,8 @@ if (typeof window !== "undefined") {
                       )
                     }
                     onInput={(e) => e.currentTarget.setCustomValidity("")}
-                    className="mt-1 block  rounded-md p-3 ps-10 w-80 text-gray-900   placeholder:text-gray-400  sm:text-sm/6 "
+                    className="block w-full rounded-md p-3 pl-10 pr-3 text-gray-900 placeholder:text-gray-400 text-sm sm:text-base focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200"
                     placeholder="Enter your email"
-                    style={{ color: "black" }}
                     required
                   />
                   <svg
@@ -159,7 +164,7 @@ if (typeof window !== "undefined") {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="size-6 absolute top-2 start-1"
+                    className="w-5 h-5 sm:w-6 sm:h-6 absolute top-3 left-2 text-gray-400"
                   >
                     <path
                       strokeLinecap="round"
@@ -169,12 +174,14 @@ if (typeof window !== "undefined") {
                   </svg>
                 </div>
               </div>
-              <div className="mb-4 ">
+
+              {/* Password Input */}
+              <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-white"
+                  className="block text-sm sm:text-base font-medium text-white mb-2"
                 >
-                Enter Password
+                  Enter Password
                 </label>
                 <div className="relative">
                   <input
@@ -183,9 +190,8 @@ if (typeof window !== "undefined") {
                     name="password"
                     value={formData.password}
                     onChange={handleInput}
-                    className="mt-1 block   -gray-300 rounded-md p-3 ps-10  w-80 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm/6"
+                    className="block w-full rounded-md p-3 pl-10 pr-3 text-gray-900 placeholder:text-gray-400 text-sm sm:text-base focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200"
                     placeholder="Enter Password"
-                    style={{ color: "black" }}
                     required
                   />
                   <svg
@@ -194,7 +200,7 @@ if (typeof window !== "undefined") {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="size-6 absolute top-2 start-1"
+                    className="w-5 h-5 sm:w-6 sm:h-6 absolute top-3 left-2 text-gray-400"
                   >
                     <path
                       strokeLinecap="round"
@@ -204,53 +210,64 @@ if (typeof window !== "undefined") {
                   </svg>
                 </div>
               </div>
-              {/* <div className="flex items-center mb-4">
-                <input type="checkbox" id="remember" className="mr-2" />
-                <label htmlFor="remember" className="text-sm text-white">
-                  Remember for 30 days
-                </label>
-              </div> */}
-              {error && <div className="text-red-500 mb-4">{errordata}</div>}
+
+              {/* Error Message */}
+              {error && (
+                <div className="text-red-400 text-sm sm:text-base p-3 bg-red-900/20 rounded-md border border-red-500/30">
+                  {errordata}
+                </div>
+              )}
+
+              {/* Sign In Button */}
               <button
                 type="submit"
-                className="w-80 bg-pandit flex gap-2 justify-center text-white font-bold py-2 rounded-md"
+                className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 sm:py-4 rounded-md text-sm sm:text-base transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
               >
                 {wait ? (
                   <>
-                    Please Wait
-                    <div className="w-6 h-6 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
+                    <span>Please Wait</span>
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 border-2 border-t-transparent border-white rounded-full animate-spin"></div>
                   </>
                 ) : (
                   "Sign In"
                 )}
               </button>
 
-              {/* <div className="my-2  ">
-                <Link href="/" className="text-blue-600">
-                  Forgot password?
-                </Link>
-              </div> */}
-              <div className="flex items-center justify-center gap-4  w-80  ">
-                <hr className="w-15 text-white" />
-                <h1 className="text-white">OR</h1> <hr className="w-15" />
+              {/* Divider */}
+              <div className="flex items-center justify-center gap-4 py-2 sm:py-3">
+                <hr className="flex-1 border-gray-400" />
+                <span className="text-white text-sm sm:text-base font-medium">
+                  OR
+                </span>
+                <hr className="flex-1 border-gray-400" />
               </div>
+
+              {/* Google Sign In */}
               <div className="relative">
                 <button
-                  className="border bg-white text-black py-2 mx-auto rounded-md w-80 mt-4 hover:bg-red hover:border-white"
+                  type="button"
+                  className="w-full border-2 border-gray-300 bg-white hover:bg-gray-50 text-black font-medium py-3 sm:py-4 rounded-md text-sm sm:text-base transition-all duration-200 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
                   onClick={handlegoogle}
                 >
-                  {isLoading ? "Processing..." : "Continue with Google"}
+                  <img
+                    src="img/google.png"
+                    alt="Google"
+                    className="w-5 h-5 sm:w-6 sm:h-6 object-contain"
+                  />
+                  <span>
+                    {isLoading ? "Processing..." : "Continue with Google"}
+                  </span>
                 </button>
-                <img
-                  src="img/google.png"
-                  alt=""
-                  className="w-10 absolute top-4 start-2"
-                />
               </div>
-              <div className="mt-4 text-center text-white">
-                <p>
+
+              {/* Sign Up Link */}
+              <div className="text-center pt-4 sm:pt-6">
+                <p className="text-white text-sm sm:text-base">
                   Don't have an account?{" "}
-                  <Link href="/Signup" className="text-pg font-semibold">
+                  <Link
+                    href="/Signup"
+                    className="text-orange-400 hover:text-orange-300 font-semibold underline transition-colors duration-200"
+                  >
                     Sign up
                   </Link>
                 </p>

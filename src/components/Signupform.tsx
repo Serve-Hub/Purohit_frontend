@@ -115,7 +115,7 @@ const handlegoogle = async ()=>{
 
   try {
     // const backendUrl = process.env.REACT_APP_API_URL;
-    window.location.href = "http://localhost:3000/api/v1/users/auth/google";
+    window.location.href = "https://purohit-backend-uhqv.onrender.com/api/v1/users/auth/google";
 
   // window.location.href = "https://purohit-backend.onrender.com/api/v1/users/auth/google"
     // const response = await axios.get('https://purohit-backend.onrender.com/api/v1/users/auth/google');
