@@ -57,15 +57,41 @@ const SignupForm = () => {
     event.preventDefault();
     console.log(formData);
     try {
+      // Step 1: Register the user
       const response = await $axios.post("/api/v1/users/register", formData);
       console.log('User registered:', response.data);
-            const token = response.data.data.token;
-            const email = formData.email;      
-      const userData = { token, email };
-      
-      router.push(`/verification?token=${token}&email=${email}`);
-      // Navigate to the verification page, passing userData if needed
-      // alert("Navigating to verification page,Please wait!")
+      const token = response.data.data.token;
+      const email = formData.email;
+
+      // Step 2: Send OTP automatically
+      try {
+        const otpResponse = await $axios.post("/api/v1/users/register/sendEmailOTP", 
+          { email, token }, 
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        
+        if (otpResponse.data.success) {
+          toast({
+            title: "Registration Successful",
+            description: "OTP has been sent to your email address.",
+            className: "bg-green-500 border-green-500 text-white font-semibold"
+          });
+          
+          // Navigate to verification page with all required parameters
+          router.push(`/verification?token=${token}&email=${email}`);
+        }
+      } catch (otpError: any) {
+        toast({
+          title: "OTP Error",
+          description: "Failed to send OTP. Please try again.",
+          className: "bg-red-500 border-red-500 text-white font-semibold"
+        });
+        throw otpError; // Re-throw to be caught by outer catch block
+      }
 
   } 
   catch (error: any) {

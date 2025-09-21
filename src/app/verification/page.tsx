@@ -1,18 +1,18 @@
-'use client';
-import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+"use client";
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 // import axios from 'axios';
-import { useRouter } from 'next/navigation';
-import Navbar from '@/src/components/Navbar';
-import Footer from '@/src/components/Footer';
+import { useRouter } from "next/navigation";
+import Navbar from "@/src/components/Navbar";
+import Footer from "@/src/components/Footer";
 // import $axios from "@src/lib/axios.instance.ts";
-import $axios from '@/src/lib/axios.instance'; 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
- 
+import $axios from "@/src/lib/axios.instance";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
 import { toast } from "@/hooks/use-toast";
-import { Button } from "@/src/components/ui/button"
+import { Button } from "@/src/components/ui/button";
 import {
   Form,
   FormControl,
@@ -21,67 +21,59 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/src/components/ui/form"
+} from "@/src/components/ui/form";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
   InputOTPSeparator,
-
-} from "@/src/components/ui/input-otp"
- 
-
-
-
-
-
-
+} from "@/src/components/ui/input-otp";
 
 const OTPVerification = () => {
-
-
-  const [otp, setOtp] = useState('');
-  const [error, setError] = useState('');
+  const [otp, setOtp] = useState("");
+  const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-  const [restoken,setRestoken]=useState('');
+  const [restoken, setRestoken] = useState("");
   const router = useRouter(); // Using the Next.js router for navigation
   const [otpSent, setOtpSent] = useState(false); // State to track OTP status
 
   // Handle OTP submission
   const searchParams = useSearchParams();
-  const token = searchParams.get('token');
-  const email = searchParams.get('email');
-console.log(token,email);
+  const token = searchParams.get("token");
+  const email = searchParams.get("email");
+  console.log(token, email);
 
- 
-const FormSchema = z.object({
-  pin: z.string().min(6, {
-    message: "Your one-time password must be 6 characters.",
-  }),
-})
- 
-const form = useForm<z.infer<typeof FormSchema>>({
-  resolver: zodResolver(FormSchema),
-  defaultValues: {
-    pin: "",
-  },
-})
+  const FormSchema = z.object({
+    pin: z.string().min(6, {
+      message: "Your one-time password must be 6 characters.",
+    }),
+  });
 
-  const sendOtp=async ()=>{
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      pin: "",
+    },
+  });
+
+  const sendOtp = async () => {
     setOtpSent(true);
-    
-    const response = await $axios.post("/api/v1/users/register/sendEmailOTP", { email, token }, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (response.data.success) {
-        alert('OTP sent successfully!');
-        setRestoken(response.data.data.token)
-    }     
-};  
-// console.log("success token",restoken)
 
+    const response = await $axios.post(
+      "/api/v1/users/register/sendEmailOTP",
+      { email, token },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (response.data.success) {
+      alert("OTP sent successfully!");
+      setRestoken(response.data.data.token);
+    }
+  };
+  // console.log("success token",restoken)
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     // toast({
@@ -94,38 +86,40 @@ const form = useForm<z.infer<typeof FormSchema>>({
     // })
 
     // event.preventDefault();
-    setError(''); // Clear any existing error message
+    setError(""); // Clear any existing error message
 
     try {
       // Send OTP to backend for verification
 
-      console.log("emailtoken in verify",otp,restoken)
-      const token=restoken
-      console.log("verify vanda maathi ",token,data?.pin)
-      
-      const response = await $axios.post("/api/v1/users/register/verifyOtp", { token, otp :data.pin});
-      console.log("verify vayesi",response)
-      console.log(response.status)
-      if (response.status==200) {
+      console.log("emailtoken in verify", otp, restoken);
+      const token = restoken;
+      console.log("verify vanda maathi ", token, data?.pin);
+
+      const response = await $axios.post("/api/v1/users/register/verifyOtp", {
+        token,
+        otp: data.pin,
+      });
+      console.log("verify vayesi", response);
+      console.log(response.status);
+      if (response.status == 200) {
         setSuccess(true);
-        alert('OTP verified successfully, Please Login!');
+        alert("OTP verified successfully, Please Login!");
         // Navigate to dashboard or login page after successful verification
-        router.push('/Login');
+        router.push("/Login");
       } else {
         toast({
           title: "Otp error",
           description: "Invalid OTP. Please try again.",
-          className:"bg-red-500 border-red-500 text-white font-semibold ",
-        })
+          className: "bg-red-500 border-red-500 text-white font-semibold ",
+        });
         // setError('Invalid OTP. Please try again.');
       }
     } catch (err) {
       toast({
         title: "Otp error:",
         description: "Error verifying OTP. Please try again later.",
-        className:"bg-red-500 border-red-500 text-white font-semibold ",
-
-      })
+        className: "bg-red-500 border-red-500 text-white font-semibold ",
+      });
       // setError('');
     }
   };
@@ -137,65 +131,72 @@ const form = useForm<z.infer<typeof FormSchema>>({
       <div className="p-20 flex flex-col lg:flex-col items-center justify-center min-h-[90vh]  md:flex-row  pt-6 rounded bg-[url('/img/card_2.jpg')] bg-cover bg-center">
         {/* Main Box*/}
         {/* <div className="flex flex-col gap-10 lg:w-3/4 md:w-1/2 ps-4 pt-5 relative z-10  justify-center items-center  rounded  "> */}
-          <div className="flex items-center justify-center w-1/3 h-1/4  backdrop-blur-lg bg-black/10   rounded-xl rounded-shadow-lg lg:p-6">
-            <div className="  ">
-              <h2 className="text-xl font-semibold mb-4 text-pg">
-                OTP Verification
-              </h2>
-              <button
-                type="submit"
-                className="text-white border border-white hover:bg-white hover:text-black  font-semibold  px-4 py-2 rounded-md"
-                onClick={sendOtp}
+        <div className="flex items-center justify-center w-1/3 h-1/4  backdrop-blur-lg bg-black/10   rounded-xl rounded-shadow-lg lg:p-6">
+          <div className="  ">
+            <h2 className="text-xl font-semibold mb-4 text-pg">
+              OTP Verification
+            </h2>
+            <p className="text-white mb-4">
+              Please enter the OTP sent to your email address
+            </p>
+            {/* Keeping the resend functionality but with better UX */}
+            <button
+              type="button"
+              className="text-pg hover:text-white text-sm mb-4"
+              onClick={sendOtp}
+            >
+              Didn't receive the OTP? Click to resend
+            </button>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="w-2/3 space-y-6"
               >
-                {otpSent ? "Resend OTP" : "Send OTP"}
-              </button>
-              <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-        <FormField
-          control={form.control}
-          name="pin"
-          render={({ field }) => (
-            <FormItem className=' text-white'>
-              <FormLabel>One-Time Password</FormLabel>
-              <FormControl>
-                <InputOTP maxLength={6} {...field} >
-                  <InputOTPGroup >
-                    <InputOTPSlot index={0}  />
-                    <InputOTPSlot index={1}  />
-                    <InputOTPSeparator />
-                </InputOTPGroup>
-                <InputOTPGroup>
-                    <InputOTPSlot index={2} />
-                    <InputOTPSlot index={3} />
-                    </InputOTPGroup>
-                    <InputOTPSeparator />
+                <FormField
+                  control={form.control}
+                  name="pin"
+                  render={({ field }) => (
+                    <FormItem className=" text-white">
+                      <FormLabel>One-Time Password</FormLabel>
+                      <FormControl>
+                        <InputOTP maxLength={6} {...field}>
+                          <InputOTPGroup>
+                            <InputOTPSlot index={0} />
+                            <InputOTPSlot index={1} />
+                            <InputOTPSeparator />
+                          </InputOTPGroup>
+                          <InputOTPGroup>
+                            <InputOTPSlot index={2} />
+                            <InputOTPSlot index={3} />
+                          </InputOTPGroup>
+                          <InputOTPSeparator />
 
-                    <InputOTPGroup>
-                    <InputOTPSlot index={4} />
-                    <InputOTPSlot index={5} />
-                  </InputOTPGroup>
-                </InputOTP>
-              </FormControl>
-              <FormDescription className='text-pg'>
-                Please enter the one-time password sent to your phone.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
- 
-                  <button
-                    type="submit"
-                    className="bg-pg text-white px-4 py-2 rounded-md"
-                  >
-                    Verify OTP
-                  </button>    
-                    </form>
-    </Form>
-<br />
-              {error && <p className="text-red-500">{error}</p>}
-             
-              {/* {!success ? (
+                          <InputOTPGroup>
+                            <InputOTPSlot index={4} />
+                            <InputOTPSlot index={5} />
+                          </InputOTPGroup>
+                        </InputOTP>
+                      </FormControl>
+                      <FormDescription className="text-pg">
+                        Please enter the one-time password sent to your phone.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <button
+                  type="submit"
+                  className="bg-pg text-white px-4 py-2 rounded-md"
+                >
+                  Verify OTP
+                </button>
+              </form>
+            </Form>
+            <br />
+            {error && <p className="text-red-500">{error}</p>}
+
+            {/* {!success ? (
                 <form onSubmit={handleSubmit}>
                   <div className="mb-4  flex justify-start flex-col items-start">
                     <label htmlFor="otp" className="block text-white mb-2">
@@ -225,17 +226,15 @@ const form = useForm<z.infer<typeof FormSchema>>({
               ) : (
                 <p className="text-green-500">OTP Verified Successfully!</p>
               )} */}
-              {/* {sucess?<button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-md" onClick={sendOtp}>
+            {/* {sucess?<button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-md" onClick={sendOtp}>
               send OTP
             </button>:  <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-md" onClick={sendOtp}>
               resend OTP
             </button>} */}
-              <br />
-
-           
-            </div>
+            <br />
           </div>
-          {/* <SignupForm /> */}
+        </div>
+        {/* <SignupForm /> */}
         {/* </div> */}
       </div>
 

@@ -3,7 +3,7 @@ import axios from "axios";
 const $axios = axios.create({
   // baseURL:"http://localhost:3000", 
 
-  baseURL:"https://purohit-backend.onrender.com", 
+  baseURL:"https://purohit-backend-uhqv.onrender.com", 
 });
 
 // Add a request interceptor
