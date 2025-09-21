@@ -12,33 +12,28 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
-} from "@/src/components/ui/form"; // Adjust the import path
+} from "@/src/components/ui/form";
 import { Button } from "@/src/components/ui/button";
 import Breadcrumb from "./Breadcrumbs/Breadcrumb";
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/hooks/use-toast";
 import $axios from "@/src/lib/axios.instance";
 
 // Define the Zod schema
 const profileSchema = z.object({
   firstName: z.string().min(1, "First Name is required"),
   lastName: z.string().min(1, "Last Name is required"),
-  // email: z.string().email("Invalid email address"),
-  // phone: z.string().regex(/^\d{10}$/, "Phone number must be 10 digits"),
   bio: z.string().optional(),
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
 function EditProfile() {
-
-  const { toast } = useToast()
-
-  const  userInfo = useContext(AuthContext)?.userInfo;
+  const { toast } = useToast();
+  const userInfo = useContext(AuthContext)?.userInfo;
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [coverpreview, setCoverpreview] = useState<string | null>(null);
-  
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
@@ -46,54 +41,38 @@ function EditProfile() {
       firstName: "",
       lastName: "",
       bio: "",
-      // email: "",
-      // phone: "",
     },
   });
-  
+
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = form;
 
-  const provinces = {
-    Province1: ["District1", "District2", "District3"],
-    Province2: ["District4", "District5", "District6"],
-    Province3: ["District7", "District8", "District9"],
-  };
-
-  const municipalities = {
-    District1: ["Municipality1", "Municipality2"],
-    District2: ["Municipality3", "Municipality4"],
-    District3: ["Municipality5", "Municipality6"],
-    District4: ["Municipality7", "Municipality8"],
-    District5: ["Municipality9", "Municipality10"],
-    District6: ["Municipality11", "Municipality12"],
-    District7: ["Municipality13", "Municipality14"],
-    District8: ["Municipality15", "Municipality16"],
-    District9: ["Municipality17", "Municipality18"],
-  };
- 
-
   const onSubmit = async (data: ProfileFormValues) => {
-    console.log("eta handle submit ma",data)
+    console.log("eta handle submit ma", data);
     try {
       setLoading(true);
-      const response = await $axios.patch("/api/v1/users/updateAccountDetails", data);
+      const response = await $axios.patch(
+        "/api/v1/users/updateAccountDetails",
+        data
+      );
 
       console.log("Profile updated successfully:", response.data);
-      if(response.data.statusCode===200){
+      if (response.data.statusCode === 200) {
         console.log("update");
         toast({
-          title:"update message",
-          description:`${response.data.message}`,
-          className:"bg-green-100 text-success border border-green-700"
-        })
-
-  }
-    } catch (error:any) {
-      console.log("Error updating profile:", error.response?.data || error.message);
+          title: "update message",
+          description: `${response.data.message}`,
+          className: "bg-green-100 text-success border border-green-700",
+        });
+      }
+    } catch (error: any) {
+      console.log(
+        "Error updating profile:",
+        error.response?.data || error.message
+      );
     } finally {
       setLoading(false);
     }
@@ -102,7 +81,7 @@ function EditProfile() {
   const [profileData, setProfileData] = useState<{ avatar: File | null }>({
     avatar: null,
   });
-  
+
   const [coverData, setCoverData] = useState<{ coverPhoto: File | null }>({
     coverPhoto: null,
   });
@@ -119,8 +98,9 @@ function EditProfile() {
     }
   };
 
-  const handleCoverImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-   
+  const handleCoverImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
       setCoverData({ coverPhoto: file });
@@ -136,119 +116,117 @@ function EditProfile() {
     if (userInfo) {
       Object.keys(userInfo).forEach((key) => {
         if (key in userInfo) {
-        form.setValue(key as keyof ProfileFormValues, userInfo[key as keyof ProfileFormValues]);
+          form.setValue(
+            key as keyof ProfileFormValues,
+            userInfo[key as keyof ProfileFormValues]
+          );
         }
       });
     }
   }, [userInfo, form]);
 
-
-
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("eta ");
-    console.log("data is ",profileData)
+    console.log("data is ", profileData);
     const fd = new FormData();
     if (profileData.avatar) {
       fd.append("avatar", profileData.avatar);
     }
-console.log("avatar is",fd)
+    console.log("avatar is", fd);
     try {
       setLoading(true);
       const response = await $axios.patch("/api/v1/Users/profileImage", fd, {
         headers: {
-          "Content-Type": "multipart/form-data", // Ensure the Content-Type is set correctly for form data
+          "Content-Type": "multipart/form-data",
         },
       });
       console.log("Profile updated successfully:", response.data);
-      if(response.data.statusCode===200){
+      if (response.data.statusCode === 200) {
         console.log("update");
         toast({
-          title:"update message",
-          description:`${response.data.message}`,
-          className:"bg-green-100 text-success border border-green-700"
-        })
-
-  }
-    } catch (error:any) {
-      console.log("Error updating profile:", error.response?.data || error.message);
+          title: "update message",
+          description: `${response.data.message}`,
+          className: "bg-green-100 text-success border border-green-700",
+        });
+      }
+    } catch (error: any) {
+      console.log(
+        "Error updating profile:",
+        error.response?.data || error.message
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCoverSubmit = async (e:React.FormEvent) => {
+  const handleCoverSubmit = async (e: React.FormEvent) => {
     const cd = new FormData();
     if (coverData.coverPhoto) {
       cd.append("coverPhoto", coverData.coverPhoto);
     }
-console.log("cover photo is",cd)
+    console.log("cover photo is", cd);
     e.preventDefault();
     try {
       setLoading(true);
       const response = await $axios.patch("/api/v1/users/coverImage", cd, {
         headers: {
-          "Content-Type": "multipart/form-data", // Ensure the Content-Type is set for form data
+          "Content-Type": "multipart/form-data",
         },
       });
       console.log("cover Image updated successfully:", response.data);
-      if(response.data.statusCode===200){
-            console.log("update");
-            toast({
-              title:"update message",
-              description:`${response.data.message}`,
-              className:"bg-green-100 text-success border border-green-700"
-            })
-
+      if (response.data.statusCode === 200) {
+        console.log("update");
+        toast({
+          title: "update message",
+          description: `${response.data.message}`,
+          className: "bg-green-100 text-success border border-green-700",
+        });
       }
-    } catch (error:any) {
-      console.log("Error updating profile:", error.response?.data || error.message);
+    } catch (error: any) {
+      console.log(
+        "Error updating profile:",
+        error.response?.data || error.message
+      );
     } finally {
       setLoading(false);
     }
   };
 
-
- 
   return (
-    <div>
-      <Breadcrumb pageName="Edit Profile"></Breadcrumb>
-         
+    <div className="min-h-screen bg-gray-50 p-3 sm:p-4 md:p-6">
+      <div className="max-w-4xl mx-auto">
+        <Breadcrumb pageName="Edit Profile" />
 
-
-      <form className="s" onSubmit={(e)=>{handleCoverSubmit(e)}}>
-      <div className="relative  h-30 md:h-65">
-                {/* {console.log("data is ")} */}
-                {coverpreview?(
-                   <img
-                   src={coverpreview}
-                   alt="No  cover Image  is uploaded"
-                   className="h-full w-full rounded-tl-[10px] rounded-tr-[10px] object-cover object-center border-b border-orange-200"
-                  //  width={970}
-                  //  height={230}
-                   style={{
-                    //  width: "900px",
-                     height: "290px", 
-                   }}
-                   />
-                ):(
-                  <img
-
-                  src={userInfo?.coverPhoto}
-                  alt="No  cover Image  is uploaded"
-                  className="h-full w-full rounded-tl-[10px] rounded-tr-[10px] object-cover object-center border-b border-orange-200"
-             
-                  style={{
-                    //  width: "900px",
-                     height: "290px", 
-                   }}
+        {/* Main Content Container */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mt-4 sm:mt-6">
+          {/* Cover Photo Section */}
+          <form
+            onSubmit={(e) => {
+              handleCoverSubmit(e);
+            }}
+          >
+            <div className="relative h-32 sm:h-40 md:h-48 lg:h-56 xl:h-64">
+              {coverpreview ? (
+                <img
+                  src={coverpreview}
+                  alt="Cover Image Preview"
+                  className="h-full w-full object-cover object-center"
                 />
-                )}
-              
-                <div className="absolute bottom-8 right-1 xsm:bottom-4 xsm:right-4">
+              ) : (
+                <img
+                  src={userInfo?.coverPhoto || "/img/default-cover.jpg"}
+                  alt="Cover Image"
+                  className="h-full w-full object-cover object-center"
+                />
+              )}
+
+              {/* Cover Photo Edit Button */}
+              <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 md:bottom-6 md:right-6">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                   <label
                     htmlFor="coverPhoto"
-                    className="flex cursor-pointer items-center justify-center gap-2 rounded-[3px] bg-pandit px-[15px] py-[5px] text-body-sm font-medium text-white hover:bg-opacity-90"
+                    className="flex cursor-pointer items-center justify-center gap-1 sm:gap-2 rounded-md bg-black bg-opacity-70 backdrop-blur-sm px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-white hover:bg-opacity-80 transition-all duration-200"
                   >
                     <input
                       type="file"
@@ -258,193 +236,284 @@ console.log("cover photo is",cd)
                       onChange={handleCoverImageChange}
                       accept="image/png, image/jpg, image/jpeg"
                     />
-                    <span>
-                      <svg
-                        className="fill-current"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 18 18"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                          d="M5.69882 3.365C5.89894 2.38259 6.77316 1.6875 7.77475 1.6875H10.2252C11.2268 1.6875 12.1011 2.38259 12.3012 3.36499C12.3474 3.59178 12.5528 3.75814 12.7665 3.75814H12.7788L12.7911 3.75868C13.8437 3.80471 14.6521 3.93387 15.3271 4.37668C15.7524 4.65568 16.1182 5.01463 16.4033 5.43348C16.7579 5.9546 16.9143 6.55271 16.9893 7.27609C17.0625 7.98284 17.0625 8.86875 17.0625 9.99079V10.0547C17.0625 11.1767 17.0625 12.0626 16.9893 12.7694C16.9143 13.4927 16.7579 14.0909 16.4033 14.612C16.1182 15.0308 15.7524 15.3898 15.3271 15.6688C14.7995 16.0149 14.1947 16.1675 13.461 16.2408C12.7428 16.3125 11.8418 16.3125 10.6976 16.3125H7.30242C6.15824 16.3125 5.25725 16.3125 4.53897 16.2408C3.80534 16.1675 3.20049 16.0149 2.67289 15.6688C2.24761 15.3898 1.88179 15.0308 1.59674 14.612C1.24209 14.0909 1.08567 13.4927 1.01072 12.7694C0.937488 12.0626 0.937494 11.1767 0.9375 10.0547V9.9908C0.937494 8.86875 0.937488 7.98284 1.01072 7.27609C1.08567 6.55271 1.24209 5.9546 1.59674 5.43348C1.88179 5.01463 2.24761 4.65568 2.67289 4.37668C3.34787 3.93387 4.15635 3.80471 5.20892 3.75868L5.2212 3.75814H5.2335C5.44716 3.75814 5.65262 3.59179 5.69882 3.365ZM7.77475 2.8125C7.29392 2.8125 6.89179 3.14475 6.80118 3.58955C6.65443 4.30994 6.01575 4.8764 5.24725 4.88308C4.23579 4.92802 3.69402 5.05227 3.28998 5.31733C2.98732 5.51589 2.72814 5.77058 2.52679 6.06643C2.31968 6.37076 2.19522 6.75994 2.12973 7.39203C2.06321 8.03405 2.0625 8.8617 2.0625 10.0227C2.0625 11.1838 2.06321 12.0114 2.12973 12.6534C2.19522 13.2855 2.31968 13.6747 2.5268 13.979C2.72814 14.2749 2.98732 14.5296 3.28998 14.7281C3.60313 14.9336 4.00383 15.0567 4.65078 15.1213C5.30662 15.1868 6.15145 15.1875 7.33333 15.1875H10.6667C11.8486 15.1875 12.6934 15.1868 13.3492 15.1213C13.9962 15.0567 14.3969 14.9336 14.71 14.7281C15.0127 14.5296 15.2719 14.2749 15.4732 13.979C15.6803 13.6747 15.8048 13.2855 15.8703 12.6534C15.9368 12.0114 15.9375 11.1838 15.9375 10.0227C15.9375 8.8617 15.9368 8.03405 15.8703 7.39203C15.8048 6.75994 15.6803 6.37076 15.4732 6.06643C15.2719 5.77058 15.0127 5.51589 14.71 5.31733C14.306 5.05227 13.7642 4.92802 12.7528 4.88308C11.9843 4.8764 11.3456 4.30994 11.1988 3.58955C11.1082 3.14475 10.7061 2.8125 10.2252 2.8125H7.77475ZM9 8.0625C8.06802 8.0625 7.3125 8.81802 7.3125 9.75C7.3125 10.682 8.06802 11.4375 9 11.4375C9.93198 11.4375 10.6875 10.682 10.6875 9.75C10.6875 8.81802 9.93198 8.0625 9 8.0625ZM6.1875 9.75C6.1875 8.1967 7.4467 6.9375 9 6.9375C10.5533 6.9375 11.8125 8.1967 11.8125 9.75C11.8125 11.3033 10.5533 12.5625 9 12.5625C7.4467 12.5625 6.1875 11.3033 6.1875 9.75ZM12.9375 7.5C12.9375 7.18934 13.1893 6.9375 13.5 6.9375H14.25C14.5607 6.9375 14.8125 7.18934 14.8125 7.5C14.8125 7.81066 14.5607 8.0625 14.25 8.0625H13.5C13.1893 8.0625 12.9375 7.81066 12.9375 7.5Z"
-                          fill=""
-                        />
-                      </svg>
-                    </span>
-                    <span>Edit</span>
+                    <svg
+                      className="w-4 h-4 sm:w-5 sm:h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                    <span className="hidden sm:inline">Edit Cover</span>
+                    <span className="sm:hidden">Edit</span>
                   </label>
+
                   <button
-    type="submit" 
-    className="mt-3 px-5 py-2 bg-pandit text-white rounded-lg"
-  >
-   Save Changes 
-  </button>
+                    type="submit"
+                    disabled={loading || !coverData.coverPhoto}
+                    className="px-3 py-2 sm:px-4 sm:py-2 bg-pandit hover:bg-pandit/90 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-md text-xs sm:text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md"
+                  >
+                    {loading ? (
+                      <div className="flex items-center gap-1 sm:gap-2">
+                        <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-t-transparent border-white rounded-full animate-spin"></div>
+                        <span className="hidden sm:inline">Saving...</span>
+                      </div>
+                    ) : (
+                      <span>Save</span>
+                    )}
+                  </button>
                 </div>
               </div>
-              </form>
-
-              <form onSubmit={(e) => handleProfileSubmit(e)}>
-              <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
-          <div className="relative  mx-auto -mt-22 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-[176px] sm:p-3">
-            <div className="relative drop-shadow-2">
-            {preview?(
-        <img
-          src={preview}
-          style={{ height: "160px", width: "160px" }}
-          alt="Profile Preview"
-          className="overflow-hidden rounded-full object-cover"
-        />
-      ):(
-            
-            <img
-  src={userInfo?.avatar}
-  style={{ height: "160px", width: "160px" }}
-  className="overflow-hidden rounded-full border object-cover"
-  alt="profile"
-/>
-)}
             </div>
-         
-            <label
-              htmlFor="profilePhoto"
-              className="absolute bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-pandit text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2"
-            >
-              <svg
-                className="fill-current"
-                width="18"
-                height="18"
-                viewBox="0 0 18 18"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M5.69882 3.365C5.89894 2.38259 6.77316 1.6875 7.77475 1.6875H10.2252C11.2268 1.6875 12.1011 2.38259 12.3012 3.36499C12.3474 3.59178 12.5528 3.75814 12.7665 3.75814H12.7788L12.7911 3.75868C13.8437 3.80471 14.6521 3.93387 15.3271 4.37668C15.7524 4.65568 16.1182 5.01463 16.4033 5.43348C16.7579 5.9546 16.9143 6.55271 16.9893 7.27609C17.0625 7.98284 17.0625 8.86875 17.0625 9.99079V10.0547C17.0625 11.1767 17.0625 12.0626 16.9893 12.7694C16.9143 13.4927 16.7579 14.0909 16.4033 14.612C16.1182 15.0308 15.7524 15.3898 15.3271 15.6688C14.7995 16.0149 14.1947 16.1675 13.461 16.2408C12.7428 16.3125 11.8418 16.3125 10.6976 16.3125H7.30242C6.15824 16.3125 5.25725 16.3125 4.53897 16.2408C3.80534 16.1675 3.20049 16.0149 2.67289 15.6688C2.24761 15.3898 1.88179 15.0308 1.59674 14.612C1.24209 14.0909 1.08567 13.4927 1.01072 12.7694C0.937488 12.0626 0.937494 11.1767 0.9375 10.0547V9.9908C0.937494 8.86875 0.937488 7.98284 1.01072 7.27609C1.08567 6.55271 1.24209 5.9546 1.59674 5.43348C1.88179 5.01463 2.24761 4.65568 2.67289 4.37668C3.34787 3.93387 4.15635 3.80471 5.20892 3.75868L5.2212 3.75814H5.2335C5.44716 3.75814 5.65262 3.59179 5.69882 3.365ZM7.77475 2.8125C7.29392 2.8125 6.89179 3.14475 6.80118 3.58955C6.65443 4.30994 6.01575 4.8764 5.24725 4.88308C4.23579 4.92802 3.69402 5.05227 3.28998 5.31733C2.98732 5.51589 2.72814 5.77058 2.52679 6.06643C2.31968 6.37076 2.19522 6.75994 2.12973 7.39203C2.06321 8.03405 2.0625 8.8617 2.0625 10.0227C2.0625 11.1838 2.06321 12.0114 2.12973 12.6534C2.19522 13.2855 2.31968 13.6747 2.5268 13.979C2.72814 14.2749 2.98732 14.5296 3.28998 14.7281C3.60313 14.9336 4.00383 15.0567 4.65078 15.1213C5.30662 15.1868 6.15145 15.1875 7.33333 15.1875H10.6667C11.8486 15.1875 12.6934 15.1868 13.3492 15.1213C13.9962 15.0567 14.3969 14.9336 14.71 14.7281C15.0127 14.5296 15.2719 14.2749 15.4732 13.979C15.6803 13.6747 15.8048 13.2855 15.8703 12.6534C15.9368 12.0114 15.9375 11.1838 15.9375 10.0227C15.9375 8.8617 15.9368 8.03405 15.8703 7.39203C15.8048 6.75994 15.6803 6.37076 15.4732 6.06643C15.2719 5.77058 15.0127 5.51589 14.71 5.31733C14.306 5.05227 13.7642 4.92802 12.7528 4.88308C11.9843 4.8764 11.3456 4.30994 11.1988 3.58955C11.1082 3.14475 10.7061 2.8125 10.2252 2.8125H7.77475ZM9 8.0625C8.06802 8.0625 7.3125 8.81802 7.3125 9.75C7.3125 10.682 8.06802 11.4375 9 11.4375C9.93198 11.4375 10.6875 10.682 10.6875 9.75C10.6875 8.81802 9.93198 8.0625 9 8.0625ZM6.1875 9.75C6.1875 8.1967 7.4467 6.9375 9 6.9375C10.5533 6.9375 11.8125 8.1967 11.8125 9.75C11.8125 11.3033 10.5533 12.5625 9 12.5625C7.4467 12.5625 6.1875 11.3033 6.1875 9.75ZM12.9375 7.5C12.9375 7.18934 13.1893 6.9375 13.5 6.9375H14.25C14.5607 6.9375 14.8125 7.18934 14.8125 7.5C14.8125 7.81066 14.5607 8.0625 14.25 8.0625H13.5C13.1893 8.0625 12.9375 7.81066 12.9375 7.5Z"
-                  fill=""
-                />
-              </svg>
+          </form>
 
-              <input
-                type="file"
-                name="avatar"
-                id="profilePhoto"
-                className="sr-only"
-                onChange={handleImageChange}
-                accept="image/png, image/jpg, image/jpeg"
-              />
-            </label>
+          {/* Profile Photo and Info Section */}
+          <div className="relative px-4 sm:px-6 md:px-8 pb-6 sm:pb-8 md:pb-10">
+            {/* Profile Photo Upload Form */}
+            <form onSubmit={(e) => handleProfileSubmit(e)}>
+              <div className="flex flex-col sm:flex-row items-center sm:items-end gap-4 sm:gap-6 -mt-12 sm:-mt-16 md:-mt-20">
+                {/* Profile Photo Container */}
+                <div className="relative">
+                  <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full bg-white p-1 sm:p-2 shadow-lg">
+                    {preview ? (
+                      <img
+                        src={preview}
+                        alt="Profile Preview"
+                        className="w-full h-full rounded-full object-cover border-2 border-gray-200"
+                      />
+                    ) : (
+                      <img
+                        src={userInfo?.avatar || "/img/default-avatar.png"}
+                        className="w-full h-full rounded-full object-cover border-2 border-gray-200"
+                        alt="Profile"
+                      />
+                    )}
+
+                    {/* Profile Photo Edit Button */}
+                    <label
+                      htmlFor="profilePhoto"
+                      className="absolute bottom-0 right-0 sm:bottom-1 sm:right-1 md:bottom-2 md:right-2 flex h-7 w-7 sm:h-8 sm:w-8 md:h-10 md:w-10 cursor-pointer items-center justify-center rounded-full bg-pandit text-white hover:bg-pandit/90 transition-all duration-200 shadow-md"
+                    >
+                      <svg
+                        className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                      </svg>
+                      <input
+                        type="file"
+                        name="avatar"
+                        id="profilePhoto"
+                        className="sr-only"
+                        onChange={handleImageChange}
+                        accept="image/png, image/jpg, image/jpeg"
+                      />
+                    </label>
+                  </div>
+
+                  {/* Profile Photo Save Button */}
+                  {profileData.avatar && (
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="absolute -bottom-12 sm:-bottom-14 left-1/2 transform -translate-x-1/2 px-3 py-1.5 sm:px-4 sm:py-2 bg-pandit hover:bg-pandit/90 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-md text-xs sm:text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md whitespace-nowrap"
+                    >
+                      {loading ? (
+                        <div className="flex items-center gap-1 sm:gap-2">
+                          <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-t-transparent border-white rounded-full animate-spin"></div>
+                          <span>Updating...</span>
+                        </div>
+                      ) : (
+                        "Update Photo"
+                      )}
+                    </button>
+                  )}
+                </div>
+
+                {/* User Info */}
+                <div className="text-center sm:text-left mt-8 sm:mt-0 flex-1">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">
+                    {userInfo?.firstName} {userInfo?.lastName}
+                  </h3>
+                  <p className="text-sm sm:text-base text-gray-600 mb-1">
+                    {userInfo?.email}
+                  </p>
+                  {userInfo?.bio && (
+                    <p className="text-xs sm:text-sm text-gray-500 max-w-md">
+                      {userInfo?.bio}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </form>
           </div>
-          <button
-    type="submit" // Submit the form to update the profile photo
-    className="mt-3 px-5 py-2 bg-pandit text-white rounded-lg"
-  >
-    Update
-  </button>
-          <div className="mt-4">
-            <h3 className="mb-1 text-heading-6 font-bold text-dark dark:text-white">
-              {userInfo?.firstName}{userInfo?.lastName}
-            </h3>
-            <p className="font-medium text-slate-400 text-sm">{userInfo?.email}</p>
-            {/* <p className="font-medium text-slate-400 text-sm">{userInfo?.contact}</p> */}
 
+          {/* Personal Information Form */}
+          <div className="border-t border-gray-200 p-4 sm:p-6 md:p-8">
+            <Form {...form}>
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="space-y-6 sm:space-y-8"
+              >
+                {/* Personal Information Section */}
+                <div className="bg-gray-50 p-4 sm:p-6 md:p-8 rounded-lg border border-gray-200">
+                  <div className="flex items-center gap-2 mb-4 sm:mb-6">
+                    <svg
+                      className="w-5 h-5 sm:w-6 sm:h-6 text-pandit"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
+                    </svg>
+                    <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900">
+                      Personal Information
+                    </h2>
+                  </div>
+
+                  {/* Name Fields */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6">
+                    <FormField
+                      control={form.control}
+                      name="firstName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm sm:text-base font-medium text-gray-700 mb-2 block">
+                            First Name
+                          </FormLabel>
+                          <FormControl>
+                            <input
+                              type="text"
+                              {...field}
+                              className="w-full p-3 sm:p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pandit focus:border-pandit transition-all duration-200 text-sm sm:text-base"
+                              placeholder="Enter your first name"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-red-500 text-sm mt-1" />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="lastName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm sm:text-base font-medium text-gray-700 mb-2 block">
+                            Last Name
+                          </FormLabel>
+                          <FormControl>
+                            <input
+                              type="text"
+                              {...field}
+                              className="w-full p-3 sm:p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pandit focus:border-pandit transition-all duration-200 text-sm sm:text-base"
+                              placeholder="Enter your last name"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-red-500 text-sm mt-1" />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Bio Field */}
+                  <FormField
+                    control={form.control}
+                    name="bio"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm sm:text-base font-medium text-gray-700 mb-2 block">
+                          Bio
+                        </FormLabel>
+                        <FormControl>
+                          <textarea
+                            {...field}
+                            rows={4}
+                            className="w-full p-3 sm:p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pandit focus:border-pandit transition-all duration-200 text-sm sm:text-base resize-vertical"
+                            placeholder="Tell us about yourself..."
+                          />
+                        </FormControl>
+                        <FormMessage className="text-red-500 text-sm mt-1" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                {/* Submit Button */}
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center sm:justify-start">
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-pandit hover:bg-pandit/90 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg font-semibold transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-center gap-2"
+                  >
+                    {loading ? (
+                      <>
+                        <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-t-transparent border-white rounded-full animate-spin"></div>
+                        <span>Saving Changes...</span>
+                      </>
+                    ) : (
+                      <>
+                        <svg
+                          className="w-4 h-4 sm:w-5 sm:h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                        <span>Save Changes</span>
+                      </>
+                    )}
+                  </Button>
+
+                  {/* Cancel/Reset Button */}
+                  <button
+                    type="button"
+                    onClick={() => form.reset()}
+                    className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md"
+                  >
+                    Reset Form
+                  </button>
+                </div>
+              </form>
+            </Form>
           </div>
         </div>
-
-
-
-</form>
-
-
-                  <Form {...form}>
-        <form
-    onSubmit={handleSubmit(onSubmit)} 
-         // onSubmit={form.handleSubmit(handleSubmit)}
-          className="space-y-4"
-        >
-          {/* First Name and Last Name */}
-          <div className="shadow  p-5 mb-5 bg-white rounded-lg flex flex-col gap-3">
-<h1 className="text-xl font-semibold">Personal Information</h1>
-<div className="flex gap-5">
-
-            <div className="flex flex-col gap-5">
-            <FormField
-              control={form.control}
-              name="firstName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-slate-400">First Name</FormLabel>
-                  <FormControl>
-                    <input type="text" {...field} className=" p-2 w-full rounded" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-               {/* <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel  className="text-slate-400">Email</FormLabel>
-                  <FormControl>
-                    <input type="email" {...field} className=" p-2 w-full rounded" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
-          
-            </div>
-            <div className="flex flex-col gap-5">
-              
-            <FormField
-              control={form.control}
-              name="lastName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel
-                  className="text-slate-400">Last Name</FormLabel>
-                  <FormControl>
-                    <input type="text" {...field} className=" p-2 w-full rounded" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-              </div>
-</div>
-           
-        
-
-<FormField
-              control={form.control}
-              name="bio"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel  className="text-slate-400">Bio</FormLabel>
-                  <FormControl>
-                    <textarea {...field} className=" p-2 w-full rounded border" rows={3} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-
-          </div>    
-          {/* Toll Address and Bio */}
-        
-
-          <Button type="submit" className="bg-blue-500 text-white p-2 rounded" disabled={loading}>
-            {loading ? "Saving..." : "Save Changes"}
-          </Button>
-        </form>
-      </Form>
+      </div>
     </div>
   );
 }

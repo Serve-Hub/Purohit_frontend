@@ -31,7 +31,7 @@ const ckyp=async()=>{
   return (
     <div className="w-full  -gray-300 p-5 relative ">
       {/* Tab Buttons */}
-      <img src="/img/diyo.png" className='absolute start-59 top-40' alt="" />
+      <img src="/img/diyo.png" className='absolute start-30 lg:start-59 top-40' alt="" />
       <div className="flex gap-4 mb-5  justify-center">
         <button
           className={`px-8 py-1 h-full  rounded-lg focus:outline-none ${
